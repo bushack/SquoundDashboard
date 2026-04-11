@@ -1,7 +1,9 @@
 "use client"
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+import { supabase } from "@/lib/supabaseClient";
 import { buttonStyle, dangerButton, primaryButton, sidebarButton } from "@/styles/ui";
 
 type LayoutProps = {
@@ -12,6 +14,16 @@ type LayoutProps = {
 
 
 export default function Layout({ children, headerTitle, sidebarTitle }: LayoutProps) {
+
+  const router = useRouter();
+
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    router.push("../");
+  };
+
+
   return (
     <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif", fontSize: "10pt", fontWeight: "normal" }}>
 
@@ -55,7 +67,10 @@ export default function Layout({ children, headerTitle, sidebarTitle }: LayoutPr
 
           {/* Placeholder for login/logout */}
           <div>
-            <button style={buttonStyle}>
+            <button
+              style={buttonStyle}
+              onClick={signOut}
+            >
               Logout
             </button>
           </div>
