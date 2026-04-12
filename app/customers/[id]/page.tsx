@@ -1,28 +1,34 @@
-'use client'
+"use client"
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { deleteCustomer, fetchCustomer } from "@/lib/customers";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups";
-import { addRequest, deleteRequest, fetchRequests } from "@/lib/requests"
+import { addRequest, deleteRequest, fetchRequests } from "@/lib/requests";
 import { cardStyle, dangerButton, dangerButton200, dropdownStyle, h3style, inputStyle200, labelStyle, primaryButton, primaryButton200 } from "@/styles/ui";
 
 import Layout from "../../components/layout";
+import type { Category } from "@/types/category";
+import type { Customer } from "@/types/customer";
+import type { Material } from "@/types/material";
+import type { Request } from "@/types/request";
 
 
 export default function CustomerDetailPage() {
+
+  const MESSAGE_TIMEOUT = 5000;
 
   const router = useRouter();
 
   // Customer data.
   const { id } = useParams();
-  const [customer, setCustomer] = useState<any>(null);
+  const [customer, setCustomer] = useState<Customer | null>(null);
   const [cleanAddress, setCleanAddress] = useState<string>();
   const [cleanPhone, setCleanPhone] = useState<string>();
 
   // Requests data.
-  const [requests, setRequests] = useState<any[]>([]);
+  const [requests, setRequests] = useState<Request[]>([]);
   const [categoryId, setCategoryId] = useState("");
   const [materialId, setMaterialId] = useState("");
   const [minWidthMm, setMinWidthMm] = useState("");
@@ -33,69 +39,103 @@ export default function CustomerDetailPage() {
   const [maxDepthMm, setMaxDepthMm] = useState("");
 
   // Lookup arrays for dropdown menus.
-  const [categories, setCategories] = useState<any[]>([]);
-  const [materials, setMaterials] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
+
+  // UI messages.
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Anti-spam.
+  const [isBusy, setIsBusy] = useState<Boolean>(false);
 
 
-  // Load all data required by the page.
-  const loadData = async () => {
-    if (!id || Array.isArray(id)) return;
+  // Display UI success message.
+  const displaySuccessMessage = (message: string) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(""), MESSAGE_TIMEOUT);
+  };
 
-    // Sanitise the customer id.
-    const numericId = Number(id);
-    if (!numericId || isNaN(numericId)) {
-      console.error("Invalid Id:", id);
-      return;
+
+  // Display UI error message.
+  const displayErrorMessage = (message: string) => {
+    setErrorMessage(message);
+    setTimeout(() => setErrorMessage(""), MESSAGE_TIMEOUT);
+  };
+  
+
+  // Load customer details data.
+  const loadCustomer = async (id: number) => {
+
+    const { data, error } = await fetchCustomer(id);
+
+    if (error) {
+      console.error(error);
+    } else if(data) {
+
+      setCustomer(data);
+
+      // Clean address (Note: Prioritise postcode for more efficient searching).
+      setCleanAddress([
+        data.postcode,
+        data.address_line_1,
+        data.address_line_2,
+        data.town_city,
+        data.region
+      ]
+        .map((part) => part?.trim())
+        .filter(Boolean)
+        .join(", ")
+      );
+
+      // Clean phone number.
+      setCleanPhone(
+        data.mobile ?
+          data.mobile.replace(/\s+/g, "") : ""
+      );
+
+      console.log("Successfully loaded customer data");
     }
+  };
 
-    // Run all queries in parallel (faster!)
+
+  // Load customer requests data.
+  const loadRequests = async (id: number) => {
+
+    const { data, error } = await fetchRequests(id);
+
+    if (error) {
+      console.error(error);
+    } else {
+      setRequests(data || []);
+      console.log("Successfully loaded request data");
+    }
+  };
+
+
+  // Load lookup menu data.
+  const loadLookups = async () => {
+
     const [
-      { data: customerData, error: customerError },
-      { data: categoryData },
-      { data: materialData },
-      { data: requestsData, error: requestsError }
+      { data: categoryData, error: categoryError },
+      { data: materialData, error: materialError }
     ] = await Promise.all([
-      fetchCustomer(numericId),
       fetchCategories(),
-      fetchMaterials(),
-      fetchRequests(numericId)
+      fetchMaterials()
     ]);
 
-    // Handle customer.
-    if (customerError) {
-      console.error(customerError);
-    } else if (customerData) {
-      setCustomer(customerData);
+    if (categoryError) {
+      console.error(categoryError);
+    } else {
+      setCategories(categoryData || []);
+      console.log("Successfully loaded category data");
     }
 
-    // Clean address (Note: Prioritise postcode for more efficient searching).
-    setCleanAddress([
-      customerData.postcode,
-      customerData.address_line_1,
-      customerData.address_line_2,
-      customerData.town_city,
-      customerData.region
-    ]
-      .map((part) => part?.trim())
-      .filter(Boolean)
-      .join(", ")
-    );
-
-    // Clean phone.
-    setCleanPhone(
-      customerData.mobile ?
-        customerData.mobile.replace(/\s+/g, "") : ""
-    );
-
-    // Handle lookups.
-    setCategories(categoryData || []);
-    setMaterials(materialData || []);
-
-    // Handle requests.
-    if (requestsError) {
-      console.error(requestsError)
+    if (materialError) {
+      console.error(materialError);
     } else {
-      setRequests(requestsData || []);
+      setMaterials(materialData || []);
+      console.log("Successfully loaded material data");
     }
   };
 
@@ -115,7 +155,25 @@ export default function CustomerDetailPage() {
 
   // Runs when component loads.
   useEffect(() => {
-    loadData();
+    
+    // Check customer id is present.
+    if (!id || Array.isArray(id)) {
+      console.error("No Id: ", id);
+      return;
+    }
+
+    // Sanitise the customer id.
+    const numericId = Number(id);
+    if (isNaN(numericId)) {
+      console.error("Invalid Id: ", id);
+      return;
+    }
+
+    // Load page data.
+    loadCustomer(numericId);
+    loadRequests(numericId);
+    loadLookups();
+
   }, [id]);
 
 
@@ -133,9 +191,9 @@ export default function CustomerDetailPage() {
 
     if (error) {
       console.error(error);
-      alert("Error deleting customer");
+      displayErrorMessage("Error deleting customer");
     } else {
-      alert("The user was deleted");
+      displaySuccessMessage("Customer deleted");
       router.back();
     }
   };
@@ -145,41 +203,75 @@ export default function CustomerDetailPage() {
   const handleAddRequest = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!categoryId.trim()) {
-      alert("Category is required");
+    if (!customer) {
       return;
     }
 
-    const { error } = await addRequest({
-      customer_id: customer.id,
-      category_id: categoryId ? Number(categoryId) : null,
-      material_id: materialId ? Number(materialId) : null,
-      min_width_mm: minWidthMm ? Number(minWidthMm) : null,
-      max_width_mm: maxWidthMm ? Number(maxWidthMm) : null,
-      min_height_mm: minHeightMm ? Number(minHeightMm) : null,
-      max_height_mm: maxHeightMm ? Number(maxHeightMm) : null,
-      min_depth_mm: minDepthMm ? Number(minDepthMm) : null,
-      max_depth_mm: maxDepthMm ? Number(maxDepthMm) : null
-    });
-
-    if (error) {
-      console.error(error);
-      alert("Error saving request")
-    } else {
-      alert("Request added");
+    // Validate category.
+    if (!categoryId.trim()) {
+      displayErrorMessage("Category is required");
+      return;
     }
 
-    // Clear form.
-    handleClearRequest();
+    // Validate width.
+    if (minWidthMm && maxWidthMm && Number(minWidthMm) > Number(maxWidthMm)) {
+      displayErrorMessage("Minimum width cannot be greater than maximum width");
+      return;
+    }
 
-    // Reload list.
-    await loadData();
+    // Validate height.
+    if (minHeightMm && maxHeightMm && Number(minHeightMm) > Number(maxHeightMm)) {
+      displayErrorMessage("Minimum height cannot be greater than maximum height");
+      return;
+    }
+
+    // Validate depth.
+    if (minDepthMm && maxDepthMm && Number(minDepthMm) > Number(maxDepthMm)) {
+      displayErrorMessage("Minimum depth cannot be greater than maximum depth");
+      return;
+    }
+
+    // Sumbit request.
+    try {
+      setIsBusy(true);
+
+      const { error } = await addRequest({
+        customer_id: customer.id,
+        category_id: categoryId ? Number(categoryId) : null,
+        material_id: materialId ? Number(materialId) : null,
+        min_width_mm: minWidthMm ? Number(minWidthMm) : null,
+        max_width_mm: maxWidthMm ? Number(maxWidthMm) : null,
+        min_height_mm: minHeightMm ? Number(minHeightMm) : null,
+        max_height_mm: maxHeightMm ? Number(maxHeightMm) : null,
+        min_depth_mm: minDepthMm ? Number(minDepthMm) : null,
+        max_depth_mm: maxDepthMm ? Number(maxDepthMm) : null
+      });
+
+      if (error) {
+        console.error(error);
+        displayErrorMessage("Error saving request");
+      } else {
+        displaySuccessMessage("Request saved");
+
+        // Clear form.
+        handleClearRequest();
+    
+        // Reload list.
+        await loadRequests(customer.id);
+      }
+    } finally {
+      setIsBusy(false);
+    }
   };
 
 
   // Handle 'Delete Request'.
   const handleDeleteRequest = async (id: number) =>
   {
+    if (!customer) {
+      return;
+    }
+
     const confirmed = confirm(
       "Are you sure you want to delete this request?\n\nThis action is permanent and not reversible.\n\nContinue?"
     );
@@ -191,17 +283,17 @@ export default function CustomerDetailPage() {
 
     if (error) {
       console.error(error);
-      alert("Error deleting request");
+      displayErrorMessage("Error deleting request");
     } else {
-      alert("The request was deleted");
-      loadData();
+      displaySuccessMessage("Request deleted");
+      loadRequests(customer.id);
     }
   };
 
 
   // Page HTML.
   return (
-    <Layout headerTitle="Home / Customers / Details" sidebarTitle="Squound">
+    <Layout headerTitle={`Home / Customers / ${customer?.forename} ${customer?.surname}`} sidebarTitle="Squound">
 
         {/* Loading label */}
         {!customer && <p style={labelStyle}>Loading...</p>}
@@ -259,7 +351,7 @@ export default function CustomerDetailPage() {
               <div style={{ marginBottom: "20px" }}>
                 <p><strong>Email: </strong></p>
                   <p>
-                    <a href="mailto:">{customer.email}</a>
+                    <a href={`mailto:${customer.email}`}>{customer.email}</a>
                   </p>
               </div>
             )}
@@ -366,7 +458,7 @@ export default function CustomerDetailPage() {
             <div key={r.id} style={{ ...cardStyle, border: "3px solid #ddd" }}>
 
               <h3 style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "5px" }}>
-                {r.materials?.name} {r.categories?.name}
+                {[r.materials?.name, r.categories?.name].filter(Boolean).join(" ")}
               </h3>
 
               <p>Width: { r.min_width_mm || "*" }mm min - { r.max_width_mm || "*" }mm max</p>
@@ -488,15 +580,24 @@ export default function CustomerDetailPage() {
               />
             </div>
 
-            {/* Submit & Reset buttons */}
             <div style={{ marginTop: "10px" }}>
-              <button type="submit" style={ primaryButton200 }>Submit</button>
+
+              {/* Submit button */}
+              <button
+                type="submit"
+                disabled={isBusy}
+                style={ primaryButton200 }
+              >Submit
+              </button>
+
+              {/* Reset button */}
               <button
                 type="reset"
                 style={ dangerButton200 }
                 onClick={(e) => {e.stopPropagation(); handleClearRequest()}}
               >Reset
               </button>
+              { successMessage && <span>{successMessage}</span>}
             </div>
           </div>
         </form>
