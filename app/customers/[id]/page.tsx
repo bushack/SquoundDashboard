@@ -14,10 +14,11 @@ import type { Customer } from "@/types/customer";
 import type { Material } from "@/types/material";
 import type { Request } from "@/types/request";
 
+import { UI_MESSAGE_TIMEOUT } from "@/config/app";
+import { MESSAGES } from "@/constants/messages";
+
 
 export default function CustomerDetailPage() {
-
-  const MESSAGE_TIMEOUT = 5000;
 
   const router = useRouter();
 
@@ -53,14 +54,14 @@ export default function CustomerDetailPage() {
   // Display UI success message.
   const displaySuccessMessage = (message: string) => {
     setSuccessMessage(message);
-    setTimeout(() => setSuccessMessage(""), MESSAGE_TIMEOUT);
+    setTimeout(() => setSuccessMessage(""), UI_MESSAGE_TIMEOUT);
   };
 
 
   // Display UI error message.
   const displayErrorMessage = (message: string) => {
     setErrorMessage(message);
-    setTimeout(() => setErrorMessage(""), MESSAGE_TIMEOUT);
+    setTimeout(() => setErrorMessage(""), UI_MESSAGE_TIMEOUT);
   };
   
 
@@ -180,9 +181,7 @@ export default function CustomerDetailPage() {
   // Handle delete customer requests.
   const handleDeleteCustomer = async (id: number) =>
   {
-    const confirmed = confirm(
-      "Are you sure you want to delete this customer?\n\nThis action is permanent and not reversible.\n\nContinue?"
-    );
+    const confirmed = confirm(MESSAGES.CONFIRM_DELETE_CUSTOMER);
     if (confirmed == false) {
       return;
     }
@@ -191,9 +190,9 @@ export default function CustomerDetailPage() {
 
     if (error) {
       console.error(error);
-      displayErrorMessage("Error deleting customer");
+      displayErrorMessage(MESSAGES.GENERIC_ERROR);
     } else {
-      displaySuccessMessage("Customer deleted");
+      displaySuccessMessage(MESSAGES.CUSTOMER_DELETED);
       router.back();
     }
   };
@@ -215,19 +214,19 @@ export default function CustomerDetailPage() {
 
     // Validate width.
     if (minWidthMm && maxWidthMm && Number(minWidthMm) > Number(maxWidthMm)) {
-      displayErrorMessage("Minimum width cannot be greater than maximum width");
+      displayErrorMessage(MESSAGES.ERROR_WIDTH_VALIDATION);
       return;
     }
 
     // Validate height.
     if (minHeightMm && maxHeightMm && Number(minHeightMm) > Number(maxHeightMm)) {
-      displayErrorMessage("Minimum height cannot be greater than maximum height");
+      displayErrorMessage(MESSAGES.ERROR_HEIGHT_VALIDATION);
       return;
     }
 
     // Validate depth.
     if (minDepthMm && maxDepthMm && Number(minDepthMm) > Number(maxDepthMm)) {
-      displayErrorMessage("Minimum depth cannot be greater than maximum depth");
+      displayErrorMessage(MESSAGES.ERROR_DEPTH_VALIDATION);
       return;
     }
 
@@ -249,9 +248,9 @@ export default function CustomerDetailPage() {
 
       if (error) {
         console.error(error);
-        displayErrorMessage("Error saving request");
+        displayErrorMessage(MESSAGES.GENERIC_ERROR);
       } else {
-        displaySuccessMessage("Request saved");
+        displaySuccessMessage(MESSAGES.REQUEST_CREATED);
 
         // Clear form.
         handleClearRequest();
@@ -272,9 +271,7 @@ export default function CustomerDetailPage() {
       return;
     }
 
-    const confirmed = confirm(
-      "Are you sure you want to delete this request?\n\nThis action is permanent and not reversible.\n\nContinue?"
-    );
+    const confirmed = confirm(MESSAGES.CONFIRM_DELETE_REQUEST);
     if (confirmed == false) {
       return;
     }
@@ -283,9 +280,9 @@ export default function CustomerDetailPage() {
 
     if (error) {
       console.error(error);
-      displayErrorMessage("Error deleting request");
+      displayErrorMessage(MESSAGES.GENERIC_ERROR);
     } else {
-      displaySuccessMessage("Request deleted");
+      displaySuccessMessage(MESSAGES.REQUEST_DELETED);
       loadRequests(customer.id);
     }
   };
