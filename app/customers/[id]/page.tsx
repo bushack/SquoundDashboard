@@ -1,5 +1,6 @@
 "use client"
 
+// Functions.
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -8,12 +9,17 @@ import { fetchCategories, fetchMaterials } from "@/lib/lookups";
 import { addRequest, deleteRequest, fetchRequests } from "@/lib/requests";
 import { cardStyle, dangerButton, dangerButton200, dropdownStyle, h3style, inputStyle200, labelStyle, primaryButton, primaryButton200 } from "@/styles/ui";
 
+// Components.
 import Layout from "../../components/layout";
+import CustomerCard from "../../components/customers/customerCard";
+
+// Types.
 import type { Category } from "@/types/category";
 import type { Customer } from "@/types/customer";
 import type { Material } from "@/types/material";
 import type { Request } from "@/types/request";
 
+// Config and constants.
 import { UI_MESSAGE_TIMEOUT } from "@/config/app";
 import { MESSAGES } from "@/constants/messages";
 
@@ -295,156 +301,13 @@ export default function CustomerDetailPage() {
         {/* Loading label */}
         {!customer && <p style={labelStyle}>Loading...</p>}
 
-        {/* Customer details */}
         {customer && (
-          <div style={cardStyle}>
-
-            {/* Name & Id */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-              <h3 style={{ fontSize: "22px", fontWeight: "bold" }}>{customer.forename} {customer.surname.toUpperCase()}</h3>
-              <span style={{ fontSize: "22px", fontWeight: "bold" }}>[{customer.id}]</span>
-            </div>
-
-            {/* Address */}
-            { customer.postcode && (
-              <div style={{ marginBottom: "20px"}}>
-                <p><strong>Address: </strong></p>
-                <p>{customer.address_line_1}</p>
-                <p>{customer.address_line_2}</p>
-                <p>{customer.town_city}</p>
-                <p>{customer.region}</p>
-                <p>{customer.postcode}</p>
-              </div>
-            )}
-
-            {/* No Address */}
-            { !customer.postcode && (
-              <div style={{ marginBottom: "20px"}}>
-                <p><strong>Address: </strong></p>
-                  <p>{"Not provided"}</p>
-              </div>
-            )}
-
-            {/* Phone */}
-            { customer.mobile && (
-              <div style={{ marginBottom: "20px" }}>
-                <p><strong>Phone: </strong></p>
-                  <p>
-                    <a href={`tel:${cleanPhone}`}>{cleanPhone}</a>
-                  </p>
-              </div>
-            )}
-
-            {/* No Mobile */}
-            { !customer.mobile && (
-              <div style={{ marginBottom: "20px" }}>
-                <p><strong>Phone: </strong></p>
-                  <p>Not provided</p>
-              </div>
-            )}
-
-            {/* Email */}
-            { customer.email && (
-              <div style={{ marginBottom: "20px" }}>
-                <p><strong>Email: </strong></p>
-                  <p>
-                    <a href={`mailto:${customer.email}`}>{customer.email}</a>
-                  </p>
-              </div>
-            )}
-
-            {/* No Email */}
-            { !customer.email && (
-              <div style={{ marginBottom: "20px" }}>
-                <p><strong>Email: </strong></p>
-                  <p>Not provided</p>
-              </div>
-            )}
-
-            {/* Notes */}
-            <div style={{ marginBottom: "10px" }}>
-              <p><strong>Notes: </strong></p><p>{customer.notes || "N/A"}</p>
-            </div>
-
-            {/* Buttons */}
-            <div style={{ marginTop: "10px" }}>
-
-              {/* Google Maps */}
-              { customer.postcode && (
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(String(cleanAddress))}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "inline-block",
-                    padding: "10px 30px",
-                    backgroundColor: "#2563eB",
-                    color: "white",
-                    borderRadius: "6px",
-                    textDecoration: "none",
-                    marginTop: "10px",
-                    marginRight: "10px"
-                  }}
-                >
-                  Maps
-                </a>
-              )}
-
-              {/* Telephone */}
-              { cleanPhone && (
-                <a
-                  href={`tel:${cleanPhone}`}
-                  style={{
-                    display: "inline-block",
-                    padding: "10px 30px",
-                    backgroundColor: "#249900",
-                    color: "white",
-                    borderRadius: "6px",
-                    textDecoration: "none",
-                    marginTop: "10px",
-                    marginRight: "10px"
-                  }}
-                >
-                  Call
-                </a>
-              )}
-
-              {/* Email */}
-              { customer.email && (
-                <a
-                  href={`mailto:${customer.email}`}
-                  style={{
-                    display: "inline-block",
-                    padding: "10px 30px",
-                    backgroundColor: "#fc9003",
-                    color: "white",
-                    borderRadius: "6px",
-                    textDecoration: "none",
-                    marginTop: "10px",
-                    marginRight: "10px"
-                  }}
-                >
-                  Email
-                </a>
-              )}
-
-              {/* Edit */}
-              <button style={{ ...primaryButton, backgroundColor: "grey",
-                    marginTop: "10px" }}
-                //onClick={() => startEdit(customer)}
-              >
-                Edit
-              </button>
-
-              {/* Delete */}
-              <button
-                style={{ ...dangerButton, marginTop: "10px" }}
-                onClick={(e) => {e.stopPropagation(); handleDeleteCustomer(Number(customer.id))}}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
+          <CustomerCard
+            customer={customer}
+            cleanAddress={cleanAddress}
+            cleanPhone={cleanPhone}
+            onDelete={handleDeleteCustomer}
+          />
         )}
 
         {/* Existing Requests List */}
@@ -594,6 +457,8 @@ export default function CustomerDetailPage() {
                 onClick={(e) => {e.stopPropagation(); handleClearRequest()}}
               >Reset
               </button>
+
+              {/* Where to put message? Modal/dialog box? */}
               { successMessage && <span>{successMessage}</span>}
             </div>
           </div>
