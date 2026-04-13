@@ -12,6 +12,7 @@ import { cardStyle, dangerButton, dangerButton200, dropdownStyle, h3style, input
 // Components.
 import Layout from "../../components/layout";
 import CustomerCard from "../../components/customers/customerCard";
+import RequestCard from "../../components/requests/requestCard";
 
 // Types.
 import type { Category } from "@/types/category";
@@ -301,6 +302,7 @@ export default function CustomerDetailPage() {
         {/* Loading label */}
         {!customer && <p style={labelStyle}>Loading...</p>}
 
+        {/* Customer Information section */}
         {customer && (
           <CustomerCard
             customer={customer}
@@ -310,29 +312,16 @@ export default function CustomerDetailPage() {
           />
         )}
 
-        {/* Existing Requests List */}
-        <div style={ cardStyle }>
+        {/* Existing Requests section */}
+        <div style={cardStyle}>
           <h3 style={h3style}>Existing Requests</h3>
           {requests.length === 0 && <p>None found</p>}
           {requests.map((r) => (
-            <div key={r.id} style={{ ...cardStyle, border: "3px solid #ddd" }}>
-
-              <h3 style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "5px" }}>
-                {[r.materials?.name, r.categories?.name].filter(Boolean).join(" ")}
-              </h3>
-
-              <p>Width: { r.min_width_mm || "*" }mm min - { r.max_width_mm || "*" }mm max</p>
-              <p>Height: { r.min_height_mm || "*" }mm min - { r.max_height_mm || "*" }mm max</p>
-              <p>Depth: { r.min_depth_mm || "*" }mm min - { r.max_depth_mm || "*" }mm max</p>
-              <p style={{ marginBottom: "20px" }}></p>
-
-              <button
-                style={ dangerButton }
-                onClick={(e) => {e.stopPropagation(); handleDeleteRequest(Number(r.id))}}
-              >
-                Delete
-              </button>
-            </div>
+            <RequestCard
+              key={r.id}
+              request={r}
+              onDelete={handleDeleteRequest}
+            />
           ))}
         </div>
 
