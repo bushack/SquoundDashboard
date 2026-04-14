@@ -13,6 +13,7 @@ import { cardStyle, dangerButton, dangerButton200, dropdownStyle, h3style, input
 import Layout from "../../components/layout";
 import CustomerCard from "../../components/customers/customerCard";
 import RequestCard from "../../components/requests/requestCard";
+import RequestForm from "../../components/requests/requestForm";
 
 // Types.
 import type { Category } from "@/types/category";
@@ -37,39 +38,43 @@ export default function CustomerDetailPage() {
 
   // Requests data.
   const [requests, setRequests] = useState<Request[]>([]);
-  const [categoryId, setCategoryId] = useState("");
+  /*const [categoryId, setCategoryId] = useState("");
   const [materialId, setMaterialId] = useState("");
   const [minWidthMm, setMinWidthMm] = useState("");
   const [maxWidthMm, setMaxWidthMm] = useState("");
   const [minHeightMm, setMinHeightMm] = useState("");
   const [maxHeightMm, setMaxHeightMm] = useState("");
   const [minDepthMm, setMinDepthMm] = useState("");
-  const [maxDepthMm, setMaxDepthMm] = useState("");
+  const [maxDepthMm, setMaxDepthMm] = useState("");*/
 
   // Lookup arrays for dropdown menus.
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [materials, setMaterials] = useState<Material[]>([]);
+  //const [categories, setCategories] = useState<Category[]>([]);
+  //const [materials, setMaterials] = useState<Material[]>([]);
 
   // UI messages.
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  //const [successMessage, setSuccessMessage] = useState("");
+  //const [errorMessage, setErrorMessage] = useState("");
 
   // Anti-spam.
-  const [isBusy, setIsBusy] = useState<Boolean>(false);
+  //const [isBusy, setIsBusy] = useState<Boolean>(false);
 
 
   // Display UI success message.
+  /*
   const displaySuccessMessage = (message: string) => {
     setSuccessMessage(message);
     setTimeout(() => setSuccessMessage(""), UI_MESSAGE_TIMEOUT);
   };
+  */
 
 
   // Display UI error message.
+  /*
   const displayErrorMessage = (message: string) => {
     setErrorMessage(message);
     setTimeout(() => setErrorMessage(""), UI_MESSAGE_TIMEOUT);
   };
+  */
   
 
   // Load customer details data.
@@ -122,7 +127,7 @@ export default function CustomerDetailPage() {
 
 
   // Load lookup menu data.
-  const loadLookups = async () => {
+  /*const loadLookups = async () => {
 
     const [
       { data: categoryData, error: categoryError },
@@ -145,10 +150,11 @@ export default function CustomerDetailPage() {
       setMaterials(materialData || []);
       console.log("Successfully loaded material data");
     }
-  };
+  };*/
 
 
   // Clear 'Add Request' form.
+  /*
   const handleClearRequest = async () => {
     setCategoryId("");
     setMaterialId("");
@@ -159,9 +165,11 @@ export default function CustomerDetailPage() {
     setMinDepthMm("");
     setMaxDepthMm("");
   };
+  */
 
 
   // Runs when component loads.
+  // NOTE: Dependancy array [id], only re-run function if 'id' changes.
   useEffect(() => {
     
     // Check customer id is present.
@@ -180,7 +188,7 @@ export default function CustomerDetailPage() {
     // Load page data.
     loadCustomer(numericId);
     loadRequests(numericId);
-    loadLookups();
+    //loadLookups();
 
   }, [id]);
 
@@ -206,6 +214,7 @@ export default function CustomerDetailPage() {
 
 
   // Handle 'Add Request'.
+  /*
   const handleAddRequest = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -269,6 +278,7 @@ export default function CustomerDetailPage() {
       setIsBusy(false);
     }
   };
+  */
 
 
   // Handle 'Delete Request'.
@@ -295,7 +305,7 @@ export default function CustomerDetailPage() {
   };
 
 
-  // Page HTML.
+  // Render.
   return (
     <Layout headerTitle={`Home / Customers / ${customer?.forename} ${customer?.surname}`} sidebarTitle="Squound">
 
@@ -313,145 +323,27 @@ export default function CustomerDetailPage() {
         )}
 
         {/* Existing Requests section */}
-        <div style={cardStyle}>
-          <h3 style={h3style}>Existing Requests</h3>
-          {requests.length === 0 && <p>None found</p>}
-          {requests.map((r) => (
-            <RequestCard
-              key={r.id}
-              request={r}
-              onDelete={handleDeleteRequest}
-            />
-          ))}
-        </div>
-
-        {/* Add Request Form */}
-        <form name="Request Form" onSubmit={ handleAddRequest }>
-          
-          {/* Category dropdown menu */}
-          <div style={ cardStyle }>
-
-          <h3 style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "10px" }}>Add Request</h3>
-
-            {/* Category dropdown menu */}
-            <div>
-              <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Category:</h3>
-              <select
-                value={ categoryId }
-                onChange={(e) => setCategoryId(e.target.value)}
-                style={dropdownStyle}
-              >
-                <option value="">Select category</option>
-
-                { categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    { c.name }
-                  </option>
-                )) }
-              </select>
-            </div>
-
-            {/* Material dropdown menu */}
-            <div>
-              <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Material:</h3>
-              <select
-                value={ materialId }
-                onChange={(e) => setMaterialId(e.target.value)}
-                style={dropdownStyle}
-              >
-                <option value="">Select material</option>
-
-                { materials.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    { m.name }
-                  </option>
-                )) }
-              </select>
-            </div>
-
-            {/* Width (min/max) inputs */}
-            <div>
-              <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Width (min/max) (mm):</h3>
-              <input
-                type="number"
-                placeholder="Minimum width (mm)"
-                value={minWidthMm}
-                onChange={(e) => setMinWidthMm(e.target.value)}
-                style={ inputStyle200 }
+        {customer && (
+          <div style={cardStyle}>
+            <h3 style={h3style}>Existing Requests</h3>
+            {requests.length === 0 && <p>None found</p>}
+            {requests.map((r) => (
+              <RequestCard
+                key={r.id}
+                request={r}
+                onDelete={handleDeleteRequest}
               />
-
-              <input
-                type="number"
-                placeholder="Maximum width (mm)"
-                value={maxWidthMm}
-                onChange={(e) => setMaxWidthMm(e.target.value)}
-                style={ inputStyle200 }
-              />
-            </div>
-
-            {/* Height (min/max) inputs */}
-            <div>
-              <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Height (min/max) (mm):</h3>
-              <input
-                type="number"
-                placeholder="Minimum height (mm)"
-                value={minHeightMm}
-                onChange={(e) => setMinHeightMm(e.target.value)}
-                style={ inputStyle200 }
-              />
-
-              <input
-                type="number"
-                placeholder="Maximum height (mm)"
-                value={maxHeightMm}
-                onChange={(e) => setMaxHeightMm(e.target.value)}
-                style={ inputStyle200 }
-              />
-            </div>
-
-            {/* Depth (min/max) inputs */}
-            <div>
-              <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Depth (min/max) (mm):</h3>
-              <input
-                type="number"
-                placeholder="Minimum depth (mm)"
-                value={minDepthMm}
-                onChange={(e) => setMinDepthMm(e.target.value)}
-                style={ inputStyle200 }
-              />
-
-              <input
-                type="number"
-                placeholder="Maximum depth (mm)"
-                value={maxDepthMm}
-                onChange={(e) => setMaxDepthMm(e.target.value)}
-                style={ inputStyle200 }
-              />
-            </div>
-
-            <div style={{ marginTop: "10px" }}>
-
-              {/* Submit button */}
-              <button
-                type="submit"
-                disabled={isBusy}
-                style={ primaryButton200 }
-              >Submit
-              </button>
-
-              {/* Reset button */}
-              <button
-                type="reset"
-                style={ dangerButton200 }
-                onClick={(e) => {e.stopPropagation(); handleClearRequest()}}
-              >Reset
-              </button>
-
-              {/* Where to put message? Modal/dialog box? */}
-              { successMessage && <span>{successMessage}</span>}
-            </div>
+            ))}
           </div>
-        </form>
+        )}
+
+        {/* Add Request section */}
+        {customer && (
+          <RequestForm
+            customer={customer}
+            onSuccess={() => loadRequests(customer.id)}
+          />
+        )}
     </Layout>
   );
 }
