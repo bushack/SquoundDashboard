@@ -2,6 +2,7 @@
 
 import { Customer } from "@/types/customer";
 import { cardStyle, dangerButton, primaryButton } from "@/styles/ui";
+import { theme } from "@/styles/themes";
 
 
 type Properties = {
@@ -24,12 +25,16 @@ export default function CustomerCard({
 
             {/* Name & Id */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-                <h3 style={{ fontSize: "22px", fontWeight: "bold" }}>{customer.forename} {customer.surname.toUpperCase()}</h3>
-                <span style={{ fontSize: "22px", fontWeight: "bold" }}>[{customer.id}]</span>
+                <h3 style={{ fontSize: theme.fontSize.heading, fontWeight: theme.fontWeight.heading }}>{customer.forename} {customer.surname.toUpperCase()}</h3>
+                <span style={{ fontSize: theme.fontSize.heading, fontWeight: theme.fontWeight.heading }}>[{customer.id}]</span>
             </div>
 
             {/* Address */}
-            <div style={{marginBottom: "20px"}}>
+            <div style={{
+                marginBottom: "20px",
+                color: theme.colours.text,
+                fontSize: theme.fontSize.regular,
+                fontWeight: theme.fontWeight.regular}}>
                 <strong>Address: </strong>
                 { customer.postcode ? (
                     <>
@@ -45,7 +50,11 @@ export default function CustomerCard({
             </div>
 
             {/* Phone */}
-            <div style={{marginBottom: "20px"}}>
+            <div style={{
+                marginBottom: "20px",
+                color: theme.colours.text,
+                fontSize: theme.fontSize.regular,
+                fontWeight: theme.fontWeight.regular}}>
                 <strong>Phone: </strong>
                 { cleanPhone ? (
                     <p>
@@ -57,7 +66,11 @@ export default function CustomerCard({
             </div>
 
             {/* Email */}
-            <div style={{marginBottom: "20px"}}>
+            <div style={{
+                marginBottom: "20px",
+                color: theme.colours.text,
+                fontSize: theme.fontSize.regular,
+                fontWeight: theme.fontWeight.regular}}>
                 <strong>Email: </strong>
                 { customer.email ? (
                     <p>
@@ -69,7 +82,11 @@ export default function CustomerCard({
             </div>
 
             {/* Notes */}
-            <div style={{marginBottom: "20px"}}>
+            <div style={{
+                marginBottom: "20px",
+                color: theme.colours.text,
+                fontSize: theme.fontSize.regular,
+                fontWeight: theme.fontWeight.regular}}>
                 <strong>Notes: </strong>
                 <p>{customer.notes || "N/A"}</p>
             </div>
@@ -86,8 +103,8 @@ export default function CustomerCard({
                     style={{
                         display: "inline-block",
                         padding: "10px 30px",
-                        backgroundColor: "#2563eB",
-                        color: "white",
+                        backgroundColor: theme.colours.maps,
+                        color: theme.colours.textLight,
                         borderRadius: "6px",
                         textDecoration: "none",
                         marginTop: "10px",
@@ -105,8 +122,8 @@ export default function CustomerCard({
                     style={{
                         display: "inline-block",
                         padding: "10px 30px",
-                        backgroundColor: "#249900",
-                        color: "white",
+                        backgroundColor: theme.colours.telephone,
+                        color: theme.colours.textLight,
                         borderRadius: "6px",
                         textDecoration: "none",
                         marginTop: "10px",
@@ -126,8 +143,8 @@ export default function CustomerCard({
                     style={{
                         display: "inline-block",
                         padding: "10px 30px",
-                        backgroundColor: "#fc9003",
-                        color: "white",
+                        backgroundColor: theme.colours.email,
+                        color: theme.colours.textLight,
                         borderRadius: "6px",
                         textDecoration: "none",
                         marginTop: "10px",
@@ -140,7 +157,7 @@ export default function CustomerCard({
 
                 {/* Edit button */}
                 <button
-                    style={{ ...primaryButton, backgroundColor: "grey", marginTop: "10px" }}
+                    style={{ ...primaryButton, backgroundColor: theme.colours.neutral, marginTop: "10px" }}
                     //onClick={() => startEdit(customer)}
                 >
                     Edit

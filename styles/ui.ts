@@ -1,6 +1,8 @@
+import { theme } from "./themes";
+
 export const h3style = {
-  fontSize: "16pt",
-  fontWeight: "bold",
+  fontSize: theme.fontSize.heading,
+  fontWeight: theme.fontWeight.heading,
   marginBottom: "10px"
 };
 
@@ -8,7 +10,7 @@ export const labelStyle = {
   padding: "0px 10px",
   marginBottom: "5px",
   width: "100%",
-  color: "black"
+  color: theme.colours.text,
 };
 
 export const inputStyleFit = {
@@ -16,8 +18,8 @@ export const inputStyleFit = {
   marginRight: "10px",
   marginBottom: "10px",
   borderRadius: "6px",
-  border: "1px solid #ccc",
-  color: "black"
+  border: `1px solid ${theme.colours.inputBorder}`,
+  color: theme.colours.text,
 };
 
 export const inputStyleStretch = {
@@ -37,22 +39,29 @@ export const buttonStyle = {
   cursor: "pointer",
   marginRight: "10px",
   marginBottom: "10px",
-  backgroundColor: "#393939",
-  color: "white",
-  fontSize: "10pt",
-  fontWeight: "normal"
+  backgroundColor: theme.colours.unselected,
+  color: theme.colours.textLight,
+  fontSize: theme.fontSize.regular,
+  fontWeight: theme.fontWeight.regular,
 };
 
 export const primaryButton = {
   ...buttonStyle,
-  backgroundColor: "#2563eB",
-  color: "white",
+  backgroundColor: theme.colours.primary,
+  color: theme.colours.textLight,
 };
 
 export const dangerButton = {
   ...buttonStyle,
-  backgroundColor: "#dc2626",
-  color: "white"
+  backgroundColor: theme.colours.danger,
+  color: theme.colours.textLight,
+};
+
+export const importantButton = {
+  ...buttonStyle,
+  backgroundColor: theme.colours.important,
+  color: theme.colours.textLight,
+  margin: "0px",
 };
 
 export const primaryButton200 = {
@@ -68,18 +77,25 @@ export const dangerButton200 = {
 export const sidebarButton = {
   ...buttonStyle,
   padding: "10px 20px",
-  backgroundColor: "#656565",
-  color: "white",
+  backgroundColor: theme.colours.unselected,
+  color: theme.colours.textLight,
   marginBottom: "10px"
 };
 
+export const tabButton = {
+  ...buttonStyle,
+  backgroundColor: theme.colours.unselected,
+  color: theme.colours.textLight,
+  marginBottom: "0px"
+};
+
 export const cardStyle = {
-  border: "1px solid #e5e7eb",
+  //border: "1px solid #e5e7eb",
   borderRadius: "10px",
   padding: "15px",
   marginBottom: "15px",
-  color: "black",
-  backgroundColor: "#f9fafb"
+  color: theme.colours.text,
+  backgroundColor: theme.colours.card,
 };
 
 export const dropdownStyle = {
@@ -88,7 +104,7 @@ export const dropdownStyle = {
   padding: "10px",
   marginRight: "10px",
   marginBottom: "10px",
-  color: "black",
-  backgroundColor: "white",
+  color: theme.colours.text,
+  backgroundColor: theme.colours.inputBackground,
   minWidth: "200px"
 };

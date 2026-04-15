@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { buttonStyle, dangerButton, primaryButton, sidebarButton } from "@/styles/ui";
+import { importantButton, dangerButton, primaryButton, sidebarButton } from "@/styles/ui";
+import { theme } from "@/styles/themes"
 
 type LayoutProps = {
   children: ReactNode;
@@ -25,41 +26,47 @@ export default function Layout({ children, headerTitle, sidebarTitle }: LayoutPr
 
 
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "sans-serif", fontSize: "10pt", fontWeight: "normal" }}>
+    <div style={{ display: "flex", height: "100vh" }}>
 
       {/* Sidebar */}
       <aside style={{
         width: "220px",
-        backgroundColor: "#999999",
-        color: "white",
+        backgroundColor: theme.colours.sidebar,
+        color: theme.colours.textLight,
         padding: "20px",
         display: "flex",
         flexDirection: "column"
       }}>
-        <h2 style={{ marginBottom: "20px", fontSize: "20px", fontWeight: "bold" }}>{sidebarTitle || "Sidebar"}</h2>
-        <Link href="/" style={sidebarButton}>Home</Link>
-        <Link href="/add-customer" style={sidebarButton}>Add Customer</Link>
-        <Link href="/customers" style={sidebarButton}>Search Customers</Link>
-        <Link href="/finder" style={sidebarButton}>Find Customers</Link>
-        <Link href="/add-product" style={sidebarButton}>Add Product</Link>
-        <Link href="/products" style={sidebarButton}>Search Products</Link>
+        <h2 style={{
+          marginBottom: "20px",
+          fontSize: theme.fontSize.heading,
+          fontWeight: theme.fontWeight.heading
+        }}>
+          {sidebarTitle || "Sidebar"}
+        </h2>
+          <Link href="/" style={sidebarButton}>Home</Link>
+          <Link href="/add-customer" style={sidebarButton}>Add Customer</Link>
+          <Link href="/customers" style={sidebarButton}>Search Customers</Link>
+          <Link href="/finder" style={sidebarButton}>Find Customers</Link>
+          <Link href="/add-product" style={sidebarButton}>Add Product</Link>
+          <Link href="/products" style={sidebarButton}>Search Products</Link>
       </aside>
 
       {/* Main Content */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", backgroundColor: "#dedede"}}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", backgroundColor: theme.colours.background}}>
 
         {/* Header */}
         <header style={{
           height: "60px",
           flexShrink: 0,
-          backgroundColor: "#6e6e6e",
-          color: "white",
+          backgroundColor: theme.colours.neutral,
+          color: theme.colours.textLight,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           padding: "0px 20px",
-          fontSize: "14pt",
-          fontWeight: "bold"
+          fontSize: theme.fontSize.heading,
+          fontWeight: theme.fontWeight.heading
         }}>
           
           {/* Dynamic Title */ }
@@ -68,10 +75,10 @@ export default function Layout({ children, headerTitle, sidebarTitle }: LayoutPr
           {/* Placeholder for login/logout */}
           <div>
             <button
-              style={buttonStyle}
+              style={importantButton}
               onClick={signOut}
             >
-              Logout
+              Sign out
             </button>
           </div>
         </header>

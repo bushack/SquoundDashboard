@@ -2,6 +2,7 @@
 
 import { Request } from "@/types/request";
 import { cardStyle, dangerButton } from "@/styles/ui";
+import { colours } from "@/styles/colours";
 
 
 type Properties = {
@@ -16,7 +17,7 @@ export default function RequestCard({
 }: Properties) {
 
     return (
-        <div style={{...cardStyle, border: "3px solid #ddd"}}>
+        <div style={{...cardStyle}}>
             <h3 style={{fontSize: "22px", fontWeight: "bold", marginBottom: "5px"}}>
             {[request.materials?.name, request.categories?.name].filter(Boolean).join(" ")}
             </h3>

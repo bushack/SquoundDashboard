@@ -43,7 +43,7 @@ export default function RequestForm({
     // Anti-spam.
     const [isBusy, setIsBusy] = useState<Boolean>(false);
     
-    // UI messages.
+    // UI feedback.
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -169,6 +169,7 @@ export default function RequestForm({
     };
 
 
+    // Handle reset.
     const handleReset = async () => {
         setCategoryId("");
         setMaterialId("");
@@ -181,9 +182,10 @@ export default function RequestForm({
       };
 
 
+    // Render.
     return (
         <div style={cardStyle}>
-            <h3 style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "10px" }}>Add Request ***new***</h3>
+            <h3 style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "10px" }}>New Request</h3>
             <form
                 onSubmit={handleSubmit}
             >
@@ -300,26 +302,10 @@ export default function RequestForm({
                     </button>
 
                     {/* Where to put messages? Modal/dialog box? */}
-                    { successMessage && <span>{successMessage}</span>}
-                    { errorMessage && <span>{errorMessage}</span>}
+                    { successMessage && <span style={{color: "green"}}>{successMessage}</span>}
+                    { errorMessage && <span style={{color: "red"}}>{errorMessage}</span>}
                 </div>
             </form>
         </div>
     );
 }
-
-
-
-/*
-this should be a standalone component as far as I can tell
-it requires a Customer passed in from the page but nothing else (i think)
-
-...therefore all functions, variables, etc. required to make this RequestForm submission component work
-should be extracted from customerss[id]page and moved into here
-
-when a new request has been submitted, the page needs to refresh it's existing requests card
-
-c&p before removing all the old stuff from the other file
-
-this is complex so be patient
-*/

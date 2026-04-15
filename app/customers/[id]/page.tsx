@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { deleteCustomer, fetchCustomer } from "@/lib/customers";
-import { fetchCategories, fetchMaterials } from "@/lib/lookups";
-import { addRequest, deleteRequest, fetchRequests } from "@/lib/requests";
-import { cardStyle, dangerButton, dangerButton200, dropdownStyle, h3style, inputStyle200, labelStyle, primaryButton, primaryButton200 } from "@/styles/ui";
+import { deleteRequest, fetchRequests } from "@/lib/requests";
+import { cardStyle, h3style, labelStyle, tabButton } from "@/styles/ui";
+import { theme } from "@/styles/themes";
 
-// Components.
+// UI Components.
 import Layout from "../../components/layout";
 import CustomerCard from "../../components/customers/customerCard";
 import RequestCard from "../../components/requests/requestCard";
@@ -25,6 +25,8 @@ import type { Request } from "@/types/request";
 import { UI_MESSAGE_TIMEOUT } from "@/config/app";
 import { MESSAGES } from "@/constants/messages";
 
+type Tab = "details" | "edit" | "requests" | "newRequest";
+
 
 export default function CustomerDetailPage() {
 
@@ -38,43 +40,9 @@ export default function CustomerDetailPage() {
 
   // Requests data.
   const [requests, setRequests] = useState<Request[]>([]);
-  /*const [categoryId, setCategoryId] = useState("");
-  const [materialId, setMaterialId] = useState("");
-  const [minWidthMm, setMinWidthMm] = useState("");
-  const [maxWidthMm, setMaxWidthMm] = useState("");
-  const [minHeightMm, setMinHeightMm] = useState("");
-  const [maxHeightMm, setMaxHeightMm] = useState("");
-  const [minDepthMm, setMinDepthMm] = useState("");
-  const [maxDepthMm, setMaxDepthMm] = useState("");*/
 
-  // Lookup arrays for dropdown menus.
-  //const [categories, setCategories] = useState<Category[]>([]);
-  //const [materials, setMaterials] = useState<Material[]>([]);
-
-  // UI messages.
-  //const [successMessage, setSuccessMessage] = useState("");
-  //const [errorMessage, setErrorMessage] = useState("");
-
-  // Anti-spam.
-  //const [isBusy, setIsBusy] = useState<Boolean>(false);
-
-
-  // Display UI success message.
-  /*
-  const displaySuccessMessage = (message: string) => {
-    setSuccessMessage(message);
-    setTimeout(() => setSuccessMessage(""), UI_MESSAGE_TIMEOUT);
-  };
-  */
-
-
-  // Display UI error message.
-  /*
-  const displayErrorMessage = (message: string) => {
-    setErrorMessage(message);
-    setTimeout(() => setErrorMessage(""), UI_MESSAGE_TIMEOUT);
-  };
-  */
+  // Tabbing.
+  const [activeTab, setActiveTab] = useState<Tab>("details");
   
 
   // Load customer details data.
@@ -126,48 +94,6 @@ export default function CustomerDetailPage() {
   };
 
 
-  // Load lookup menu data.
-  /*const loadLookups = async () => {
-
-    const [
-      { data: categoryData, error: categoryError },
-      { data: materialData, error: materialError }
-    ] = await Promise.all([
-      fetchCategories(),
-      fetchMaterials()
-    ]);
-
-    if (categoryError) {
-      console.error(categoryError);
-    } else {
-      setCategories(categoryData || []);
-      console.log("Successfully loaded category data");
-    }
-
-    if (materialError) {
-      console.error(materialError);
-    } else {
-      setMaterials(materialData || []);
-      console.log("Successfully loaded material data");
-    }
-  };*/
-
-
-  // Clear 'Add Request' form.
-  /*
-  const handleClearRequest = async () => {
-    setCategoryId("");
-    setMaterialId("");
-    setMinWidthMm("");
-    setMaxWidthMm("");
-    setMinHeightMm("");
-    setMaxHeightMm("");
-    setMinDepthMm("");
-    setMaxDepthMm("");
-  };
-  */
-
-
   // Runs when component loads.
   // NOTE: Dependancy array [id], only re-run function if 'id' changes.
   useEffect(() => {
@@ -188,7 +114,6 @@ export default function CustomerDetailPage() {
     // Load page data.
     loadCustomer(numericId);
     loadRequests(numericId);
-    //loadLookups();
 
   }, [id]);
 
@@ -213,74 +138,6 @@ export default function CustomerDetailPage() {
   };
 
 
-  // Handle 'Add Request'.
-  /*
-  const handleAddRequest = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!customer) {
-      return;
-    }
-
-    // Validate category.
-    if (!categoryId.trim()) {
-      displayErrorMessage("Category is required");
-      return;
-    }
-
-    // Validate width.
-    if (minWidthMm && maxWidthMm && Number(minWidthMm) > Number(maxWidthMm)) {
-      displayErrorMessage(MESSAGES.ERROR_WIDTH_VALIDATION);
-      return;
-    }
-
-    // Validate height.
-    if (minHeightMm && maxHeightMm && Number(minHeightMm) > Number(maxHeightMm)) {
-      displayErrorMessage(MESSAGES.ERROR_HEIGHT_VALIDATION);
-      return;
-    }
-
-    // Validate depth.
-    if (minDepthMm && maxDepthMm && Number(minDepthMm) > Number(maxDepthMm)) {
-      displayErrorMessage(MESSAGES.ERROR_DEPTH_VALIDATION);
-      return;
-    }
-
-    // Sumbit request.
-    try {
-      setIsBusy(true);
-
-      const { error } = await addRequest({
-        customer_id: customer.id,
-        category_id: categoryId ? Number(categoryId) : null,
-        material_id: materialId ? Number(materialId) : null,
-        min_width_mm: minWidthMm ? Number(minWidthMm) : null,
-        max_width_mm: maxWidthMm ? Number(maxWidthMm) : null,
-        min_height_mm: minHeightMm ? Number(minHeightMm) : null,
-        max_height_mm: maxHeightMm ? Number(maxHeightMm) : null,
-        min_depth_mm: minDepthMm ? Number(minDepthMm) : null,
-        max_depth_mm: maxDepthMm ? Number(maxDepthMm) : null
-      });
-
-      if (error) {
-        console.error(error);
-        displayErrorMessage(MESSAGES.GENERIC_ERROR);
-      } else {
-        displaySuccessMessage(MESSAGES.REQUEST_CREATED);
-
-        // Clear form.
-        handleClearRequest();
-    
-        // Reload list.
-        await loadRequests(customer.id);
-      }
-    } finally {
-      setIsBusy(false);
-    }
-  };
-  */
-
-
   // Handle 'Delete Request'.
   const handleDeleteRequest = async (id: number) =>
   {
@@ -297,9 +154,9 @@ export default function CustomerDetailPage() {
 
     if (error) {
       console.error(error);
-      displayErrorMessage(MESSAGES.GENERIC_ERROR);
+      //displayErrorMessage(MESSAGES.GENERIC_ERROR);
     } else {
-      displaySuccessMessage(MESSAGES.REQUEST_DELETED);
+      //displaySuccessMessage(MESSAGES.REQUEST_DELETED);
       loadRequests(customer.id);
     }
   };
@@ -309,41 +166,88 @@ export default function CustomerDetailPage() {
   return (
     <Layout headerTitle={`Home / Customers / ${customer?.forename} ${customer?.surname}`} sidebarTitle="Squound">
 
-        {/* Loading label */}
-        {!customer && <p style={labelStyle}>Loading...</p>}
+      {/* Loading label */}
+      {!customer && <p style={labelStyle}>Loading...</p>}
 
-        {/* Customer Information section */}
-        {customer && (
-          <CustomerCard
-            customer={customer}
-            cleanAddress={cleanAddress}
-            cleanPhone={cleanPhone}
-            onDelete={handleDeleteCustomer}
-          />
-        )}
+      {customer && (
+        <div>
 
-        {/* Existing Requests section */}
-        {customer && (
-          <div style={cardStyle}>
-            <h3 style={h3style}>Existing Requests</h3>
-            {requests.length === 0 && <p>None found</p>}
-            {requests.map((r) => (
-              <RequestCard
-                key={r.id}
-                request={r}
-                onDelete={handleDeleteRequest}
-              />
-            ))}
+          {/* Tab buttons */}
+          <div style={{...cardStyle, display: "flex", gap: "10px"}}>
+
+            {/* Customer Details tab */}
+            <button
+              onClick={() => setActiveTab("details")}
+              style={{...tabButton,
+                backgroundColor: activeTab === "details" ? theme.colours.selected : theme.colours.unselected}}
+            >
+              Details
+            </button>
+
+            {/* Edit tab */}
+            <button
+              onClick={() => setActiveTab("edit")}
+              style={{...tabButton,
+                backgroundColor: activeTab === "edit" ? theme.colours.selected : theme.colours.unselected}}
+            >
+              Edit
+            </button>
+
+            {/* Current Requests tab */}
+            <button
+              onClick={() => setActiveTab("requests")}
+              style={{...tabButton,
+                backgroundColor: activeTab === "requests" ? theme.colours.selected : theme.colours.unselected}}
+            >
+              Requests
+            </button>
+
+            {/* New Requests tab */}
+            <button
+              onClick={() => setActiveTab("newRequest")}
+              style={{...tabButton,
+                backgroundColor: activeTab === "newRequest" ? theme.colours.selected : theme.colours.unselected}}
+            >
+              New Request
+            </button>
           </div>
-        )}
 
-        {/* Add Request section */}
-        {customer && (
-          <RequestForm
-            customer={customer}
-            onSuccess={() => loadRequests(customer.id)}
-          />
-        )}
+          {/* Tab content */}
+          <div style={{marginTop: "20px"}}>
+
+            {/* Customer Information content */}
+            {customer && activeTab === "details" && (
+              <CustomerCard
+                customer={customer}
+                cleanAddress={cleanAddress}
+                cleanPhone={cleanPhone}
+                onDelete={handleDeleteCustomer}
+              />
+            )}
+              
+            {/* Existing Requests content */}
+            {customer && activeTab === "requests" && (
+              <div>
+                {requests.map((r) => (
+                  <RequestCard
+                    key={r.id}
+                    request={r}
+                    onDelete={handleDeleteRequest}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Add Request content */}
+            {customer && activeTab === "newRequest" && (
+              <RequestForm
+                customer={customer}
+                onSuccess={() => loadRequests(customer.id)}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }

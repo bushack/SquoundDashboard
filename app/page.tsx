@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { inputStyleStretch, primaryButton200 } from "@/styles/ui" 
+import { inputStyleStretch, importantButton } from "@/styles/ui";
+import { theme } from "@/styles/themes";
 
 
 export default function SignInPage() { 
@@ -57,12 +58,12 @@ export default function SignInPage() {
   return ( 
     <div
       style={{display: "flex", flexWrap: "wrap", justifyContent: "center",
-      height: "100dvh", alignItems: "center", backgroundColor: "#ccc"}}>
+      height: "100dvh", alignItems: "center", backgroundColor: theme.colours.background}}>
         
       <form
         name="UserSignInForm"
         onSubmit={(e) => {e.preventDefault(); signIn();}}
-        style={{fontSize: "14px", color: "#555"}}
+        style={{fontSize: theme.fontSize.regular, color: theme.colours.text}}
       >
 
         {/* Email input */}
@@ -96,7 +97,7 @@ export default function SignInPage() {
           <button
             type="submit"
             disabled={loading}
-            style={{...primaryButton200, width: "100%", backgroundColor: "#eb501c", color: "white"}}
+            style={{...importantButton, width: "100%"}}
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>
