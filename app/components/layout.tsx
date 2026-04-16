@@ -7,6 +7,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { importantButton, dangerButton, primaryButton, sidebarButton } from "@/styles/ui";
 import { theme } from "@/styles/themes"
 
+import { SIDEBAR_TITLE } from "@/config/app";
+
 type LayoutProps = {
   children: ReactNode;
   headerTitle?: string;
@@ -42,7 +44,7 @@ export default function Layout({ children, headerTitle, sidebarTitle }: LayoutPr
           fontSize: theme.fontSize.header,
           fontWeight: theme.fontWeight.header
         }}>
-          {sidebarTitle || "Sidebar"}
+          {sidebarTitle || SIDEBAR_TITLE}
         </h2>
           <Link href="/" style={sidebarButton}>Home</Link>
           <Link href="/add-customer" style={sidebarButton}>Add Customer</Link>

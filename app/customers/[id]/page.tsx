@@ -12,6 +12,7 @@ import { theme } from "@/styles/themes";
 // UI Components.
 import Layout from "../../components/layout";
 import CustomerCard from "../../components/customers/customerCard";
+import CustomerForm from "../../components/customers/customerForm";
 import RequestCard from "../../components/requests/requestCard";
 import RequestForm from "../../components/requests/requestForm";
 
@@ -119,8 +120,8 @@ export default function CustomerDetailPage() {
 
 
   // Handle delete customer requests.
-  const handleDeleteCustomer = async (id: number) =>
-  {
+  const handleDeleteCustomer = async (id: number) => {
+
     const confirmed = confirm(MESSAGES.CONFIRM_DELETE_CUSTOMER);
     if (confirmed == false) {
       return;
@@ -139,8 +140,8 @@ export default function CustomerDetailPage() {
 
 
   // Handle 'Delete Request'.
-  const handleDeleteRequest = async (id: number) =>
-  {
+  const handleDeleteRequest = async (id: number) => {
+
     if (!customer) {
       return;
     }
@@ -162,9 +163,25 @@ export default function CustomerDetailPage() {
   };
 
 
+  const handleCancel = async () => {
+
+    //loadCustomer(id);
+    setActiveTab("details");
+  };
+
+
+  const handleSubmit = async () => {
+
+    loadCustomer(id);
+    setActiveTab("details");
+  };
+
+
   // Render.
   return (
-    <Layout headerTitle={`Home / Customers / ${customer?.forename} ${customer?.surname}`} sidebarTitle="Squound">
+    <Layout
+      headerTitle={`Home / Customers / ${customer?.forename} ${customer?.surname}`}
+    >
 
       {/* Loading label */}
       {!customer && <p style={labelStyle}>Loading...</p>}
@@ -222,6 +239,15 @@ export default function CustomerDetailPage() {
                 cleanAddress={cleanAddress}
                 cleanPhone={cleanPhone}
                 onDelete={handleDeleteCustomer}
+              />
+            )}
+
+            {/* Customer Edit content */}
+            {customer && activeTab === "edit" && (
+              <CustomerForm
+                editingCustomer={customer}
+                onCancel={() => handleCancel()}
+                onSubmit={() => handleSubmit()}
               />
             )}
               

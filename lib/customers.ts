@@ -1,6 +1,7 @@
 "use client";
 
-import { supabase } from "./supabaseClient"
+import { supabase } from "./supabaseClient";
+import { Customer } from "@/types/customer";
 
 const TABLE_NAME = "customers";
 
@@ -34,16 +35,22 @@ export const addCustomer = async (customer: any) => {
     .from(TABLE_NAME)
     .insert([customer]);
 
+    console.log("Add result: ", {data, error});
+
     return { data, error };
 };
 
 
 // Update an existing customer entry within the database.
-export const updateCustomer = async (id: number, customer: any) => {
+export const updateCustomer = async (customer: Partial<Customer>) => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .update(customer)
-    .eq("id", id);
+    .eq("id", customer.id)
+    .select()
+    .single();
+
+    console.log("Update result: ", {customer, data, error});
 
     return { data, error };
 };

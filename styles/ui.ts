@@ -6,6 +6,12 @@ export const h3style = {
   marginBottom: "10px"
 };
 
+export const headerStyle = {
+  fontSize: theme.fontSize.header,
+  fontWeight: theme.fontWeight.header,
+  marginBottom: "10px",
+};
+
 export const labelStyle = {
   padding: "0px 10px",
   marginBottom: "5px",

@@ -5,7 +5,9 @@ export const theme = {
         background: "#dedede",
         card: "#f9fafb",
         danger: "#dc2626",
+        footer: "#6e6e6e",
         header: "#6e6e6e",// "#e04410",
+        important: "#e04410",
         neutral: "#6e6e6e",
         primary: "#2563eB",
         sidebar: "#999999",
@@ -16,7 +18,6 @@ export const theme = {
         telephone: "#249900",
 
         // Selected, highlighted, etc.
-        important: "#e04410",
         selected: "#e04410",
         unselected: "#777",
 
