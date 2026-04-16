@@ -27,7 +27,7 @@ export default function Layout({ children, headerTitle, sidebarTitle }: LayoutPr
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
-
+      
       {/* Sidebar */}
       <aside style={{
         width: "220px",
@@ -39,8 +39,8 @@ export default function Layout({ children, headerTitle, sidebarTitle }: LayoutPr
       }}>
         <h2 style={{
           marginBottom: "20px",
-          fontSize: theme.fontSize.heading,
-          fontWeight: theme.fontWeight.heading
+          fontSize: theme.fontSize.header,
+          fontWeight: theme.fontWeight.header
         }}>
           {sidebarTitle || "Sidebar"}
         </h2>
@@ -59,14 +59,14 @@ export default function Layout({ children, headerTitle, sidebarTitle }: LayoutPr
         <header style={{
           height: "60px",
           flexShrink: 0,
-          backgroundColor: theme.colours.neutral,
+          backgroundColor: theme.colours.header,
           color: theme.colours.textLight,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           padding: "0px 20px",
-          fontSize: theme.fontSize.heading,
-          fontWeight: theme.fontWeight.heading
+          fontSize: theme.fontSize.header,
+          fontWeight: theme.fontWeight.header
         }}>
           
           {/* Dynamic Title */ }

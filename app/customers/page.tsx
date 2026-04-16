@@ -2,21 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { deleteCustomer, fetchCustomers } from "../../lib/customers";
-import { cardStyle, labelStyle } from "../../styles/ui";
+import { cardStyle, inputStyleStretch, labelStyle } from "../../styles/ui";
 import { useRouter } from "next/navigation";
 import Layout from "../components/layout";
 
 
-//
 export default function CustomersPage() {
 
   const [customers, setCustomers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
+  
 
-
-  //
   const loadCustomers = async () => {
     setLoading(true);
     const { data, error } = await fetchCustomers();
@@ -49,9 +47,8 @@ export default function CustomersPage() {
       await loadCustomers();
     }
   };
+  
 
-
-  //
   const filteredCustomers = customers.filter((customer) => {
     const term = searchTerm.toLowerCase();
 
@@ -78,13 +75,8 @@ export default function CustomersPage() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         style={{
-          padding: "10px",
-          marginBottom: "10px",
-          width: "100%",
-          maxWidth: "400px",
-          borderRadius: "6px",
-          //border: "2px solid #000",
-          color: "black"
+          ...inputStyleStretch,
+          maxWidth: "400px"
         }}
       />
 
@@ -92,10 +84,9 @@ export default function CustomersPage() {
       <div style={{ padding: "0px 0px", maxWidth: "800px" }}>
 
         {/* Search metadata */}
-        { loading && <p style={labelStyle}>Loading customers...</p>}
-        { !loading && customers.length === 0 && <p style={labelStyle}>No results</p> }
-        { !loading && customers.length === 1 && <p style={labelStyle}>1 result</p> }
-        { !loading && customers.length > 1 && <p style={labelStyle}>{filteredCustomers.length} results</p> }
+        { loading && <p style={{...labelStyle, padding: "3px"}}>Loading customers...</p>}
+        { !loading && customers.length === 0 && <p style={{...labelStyle, padding: "3px"}}>No results</p> }
+        { !loading && customers.length > 0 && <p style={{...labelStyle, padding: "3px"}}>{filteredCustomers.length} result(s)</p> }
 
         {/* Customer map */}
         { filteredCustomers.map((customer) => (

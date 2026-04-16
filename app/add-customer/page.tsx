@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { addCustomer, updateCustomer } from "../../lib/customers"
 import { cardStyle, dangerButton, inputStyleStretch, labelStyle, primaryButton } from "../../styles/ui";
+import { theme } from "@/styles/themes";
 
 import Layout from "../components/layout"
 
@@ -238,7 +239,7 @@ export default function AddCustomerPage() {
       <form name="CustomerInputForm" style={{ ...cardStyle, maxWidth: "400px" }} onSubmit={handleSubmit}>
 
         {/* Name inputs */}
-        <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Name:</h3>
+        <h3 style={{ ...labelStyle, padding: "3px" }}>Name:</h3>
         <div style={{ paddingBottom: "20px"}}>
 
           {/* Forename input */}
@@ -264,7 +265,7 @@ export default function AddCustomerPage() {
         </div>
 
         {/* Address inputs */}
-        <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Address:</h3>
+        <h3 style={{ ...labelStyle, padding: "3px" }}>Address:</h3>
         <div style={{ paddingBottom: "20px"}}>
 
           {/* Address line 1 input */}
@@ -316,7 +317,7 @@ export default function AddCustomerPage() {
         </div>
 
         {/* Contact inputs */}
-        <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Contact:</h3>
+        <h3 style={{ ...labelStyle, padding: "3px" }}>Contact:</h3>
         <div style={{ paddingBottom: "20px"}}>
 
           {/* Mobile input */}
@@ -340,7 +341,7 @@ export default function AddCustomerPage() {
         </div>
 
         {/* Notes input */}
-        <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Notes:</h3>
+        <h3 style={{ ...labelStyle, padding: "3px" }}>Notes:</h3>
         <div style={{ marginBottom: "30px"}}>
           <textarea
             style={{ ...inputStyleStretch, minHeight: "200px", maxHeight: "500px" }}

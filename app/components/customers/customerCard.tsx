@@ -1,7 +1,7 @@
 "use client"
 
 import { Customer } from "@/types/customer";
-import { cardStyle, dangerButton, primaryButton } from "@/styles/ui";
+import { buttonStyle, cardStyle, dangerButton, primaryButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 
 
@@ -25,8 +25,8 @@ export default function CustomerCard({
 
             {/* Name & Id */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-                <h3 style={{ fontSize: theme.fontSize.heading, fontWeight: theme.fontWeight.heading }}>{customer.forename} {customer.surname.toUpperCase()}</h3>
-                <span style={{ fontSize: theme.fontSize.heading, fontWeight: theme.fontWeight.heading }}>[{customer.id}]</span>
+                <h3 style={{ fontSize: theme.fontSize.header, fontWeight: theme.fontWeight.header }}>{customer.forename} {customer.surname.toUpperCase()}</h3>
+                <span style={{ fontSize: theme.fontSize.header, fontWeight: theme.fontWeight.header }}>[{customer.id}]</span>
             </div>
 
             {/* Address */}
@@ -101,14 +101,10 @@ export default function CustomerCard({
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
+                        ...buttonStyle,
                         display: "inline-block",
-                        padding: "10px 30px",
                         backgroundColor: theme.colours.maps,
                         color: theme.colours.textLight,
-                        borderRadius: "6px",
-                        textDecoration: "none",
-                        marginTop: "10px",
-                        marginRight: "10px"
                     }}
                     >
                         Maps
@@ -120,14 +116,10 @@ export default function CustomerCard({
                     <a
                     href={`tel:${cleanPhone}`}
                     style={{
+                        ...buttonStyle,
                         display: "inline-block",
-                        padding: "10px 30px",
                         backgroundColor: theme.colours.telephone,
                         color: theme.colours.textLight,
-                        borderRadius: "6px",
-                        textDecoration: "none",
-                        marginTop: "10px",
-                        marginRight: "10px"
                     }}
                     >
                         Call
@@ -141,14 +133,10 @@ export default function CustomerCard({
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
+                        ...buttonStyle,
                         display: "inline-block",
-                        padding: "10px 30px",
                         backgroundColor: theme.colours.email,
                         color: theme.colours.textLight,
-                        borderRadius: "6px",
-                        textDecoration: "none",
-                        marginTop: "10px",
-                        marginRight: "10px"
                     }}
                     >
                         Email
@@ -157,7 +145,7 @@ export default function CustomerCard({
 
                 {/* Edit button */}
                 <button
-                    style={{ ...primaryButton, backgroundColor: theme.colours.neutral, marginTop: "10px" }}
+                    style={{ ...buttonStyle, display: "inline-block" }}
                     //onClick={() => startEdit(customer)}
                 >
                     Edit
@@ -165,7 +153,7 @@ export default function CustomerCard({
 
                 {/* Delete button */}
                 <button
-                    style={{ ...dangerButton, marginTop: "10px" }}
+                    style={{ ...dangerButton, display: "inline-block" }}
                     onClick={() => onDelete(customer.id)}
                 >
                     Delete

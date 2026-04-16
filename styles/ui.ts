@@ -1,8 +1,8 @@
 import { theme } from "./themes";
 
 export const h3style = {
-  fontSize: theme.fontSize.heading,
-  fontWeight: theme.fontWeight.heading,
+  fontSize: theme.fontSize.header,
+  fontWeight: theme.fontWeight.header,
   marginBottom: "10px"
 };
 
@@ -11,6 +11,8 @@ export const labelStyle = {
   marginBottom: "5px",
   width: "100%",
   color: theme.colours.text,
+  fontSize: theme.fontSize.label,
+  fontWeight: theme.fontWeight.label,
 };
 
 export const inputStyleFit = {
@@ -19,7 +21,10 @@ export const inputStyleFit = {
   marginBottom: "10px",
   borderRadius: "6px",
   border: `1px solid ${theme.colours.inputBorder}`,
-  color: theme.colours.text,
+  color: theme.colours.inputText,
+  backgroundColor: theme.colours.inputBackground,
+  fontSize: theme.fontSize.regular,
+  fontWeight: theme.fontWeight.regular,
 };
 
 export const inputStyleStretch = {

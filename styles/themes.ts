@@ -5,6 +5,7 @@ export const theme = {
         background: "#dedede",
         card: "#f9fafb",
         danger: "#dc2626",
+        header: "#6e6e6e",// "#e04410",
         neutral: "#6e6e6e",
         primary: "#2563eB",
         sidebar: "#999999",
@@ -21,7 +22,7 @@ export const theme = {
 
         // Inputs
         inputText: "#121212",
-        inputBackground: "#FFFFF",
+        inputBackground: "#fff",
         inputBorder: "#ccc",
 
         // Text
@@ -30,23 +31,26 @@ export const theme = {
         textMuted: "#444",
     },
 
-    fontsFamily: {
+    fontFamily: {
 
-        heading: "sans-serif",
+        label: "sans-serif",
+        header: "sans-serif",
         regular: "sans-serif",
         title: "sans-serif",
     },
 
     fontSize: {
 
-        heading: "16pt",
+        label: "10pt",
+        header: "16pt",
         regular: "10pt",
         title: "30pt",
     },
 
     fontWeight: {
 
-        heading: "bold",
+        label: "bold",
+        header: "bold",
         regular: "normal",
         title: "bold",
     },

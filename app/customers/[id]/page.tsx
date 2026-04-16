@@ -173,7 +173,7 @@ export default function CustomerDetailPage() {
         <div>
 
           {/* Tab buttons */}
-          <div style={{...cardStyle, display: "flex", gap: "10px"}}>
+          <div style={{...cardStyle, display: "flex" }}>
 
             {/* Customer Details tab */}
             <button
