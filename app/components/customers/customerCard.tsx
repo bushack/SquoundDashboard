@@ -1,7 +1,7 @@
 "use client"
 
 import { Customer } from "@/types/customer";
-import { buttonStyle, cardStyle, dangerButton, heading, primaryButton } from "@/styles/ui";
+import { buttonStyle, dangerButton, heading, tabbedCard } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 
 
@@ -21,7 +21,7 @@ export default function CustomerCard({
 }: Properties) {
 
     return (
-        <div style={cardStyle}>
+        <div style={tabbedCard}>
 
             {/* Name & Id */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
@@ -147,12 +147,12 @@ export default function CustomerCard({
                 )}
 
                 {/* Edit button */}
-                <button
+                {/*<button
                     style={{ ...buttonStyle, display: "inline-block" }}
                     //onClick={() => startEdit(customer)}
                 >
                     Edit
-                </button>
+                </button>*/}
 
                 {/* Delete button */}
                 <button

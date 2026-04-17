@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { deleteCustomer, fetchCustomer } from "@/lib/customers";
 import { deleteRequest, fetchRequests } from "@/lib/requests";
-import { cardStyle, labelStyle, tabButton } from "@/styles/ui";
+import { labelStyle, tabButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 
 // UI Components.
@@ -190,13 +190,14 @@ export default function CustomerDetailPage() {
         <div>
 
           {/* Tab buttons */}
-          <div style={{...cardStyle, display: "flex" }}>
+          <div style={{display: "flex" }}>
 
             {/* Customer Details tab */}
             <button
               onClick={() => setActiveTab("details")}
               style={{...tabButton,
-                backgroundColor: activeTab === "details" ? theme.colours.selected : theme.colours.unselected}}
+                backgroundColor: activeTab === "details" ? theme.colours.selectedTab : theme.colours.unselectedTab,
+                color: activeTab === "details" ? theme.colours.text : theme.colours.textMuted}}
             >
               Details
             </button>
@@ -205,7 +206,8 @@ export default function CustomerDetailPage() {
             <button
               onClick={() => setActiveTab("edit")}
               style={{...tabButton,
-                backgroundColor: activeTab === "edit" ? theme.colours.selected : theme.colours.unselected}}
+                backgroundColor: activeTab === "edit" ? theme.colours.selectedTab : theme.colours.unselectedTab,
+                color: activeTab === "edit" ? theme.colours.text : theme.colours.textMuted}}
             >
               Edit
             </button>
@@ -214,7 +216,8 @@ export default function CustomerDetailPage() {
             <button
               onClick={() => setActiveTab("requests")}
               style={{...tabButton,
-                backgroundColor: activeTab === "requests" ? theme.colours.selected : theme.colours.unselected}}
+                backgroundColor: activeTab === "requests" ? theme.colours.selectedTab : theme.colours.unselectedTab,
+                color: activeTab === "requests" ? theme.colours.text : theme.colours.textMuted}}
             >
               Requests
             </button>
@@ -223,14 +226,15 @@ export default function CustomerDetailPage() {
             <button
               onClick={() => setActiveTab("newRequest")}
               style={{...tabButton,
-                backgroundColor: activeTab === "newRequest" ? theme.colours.selected : theme.colours.unselected}}
+                backgroundColor: activeTab === "newRequest" ? theme.colours.selectedTab : theme.colours.unselectedTab,
+                color: activeTab === "newRequest" ? theme.colours.text : theme.colours.textMuted}}
             >
               New Request
             </button>
           </div>
 
           {/* Tab content */}
-          <div style={{marginTop: "20px"}}>
+          <div>
 
             {/* Customer Information content */}
             {customer && activeTab === "details" && (

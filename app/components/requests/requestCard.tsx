@@ -1,7 +1,7 @@
 "use client"
 
 import { Request } from "@/types/request";
-import { cardStyle, dangerButton, heading, textStyle } from "@/styles/ui";
+import { tabbedCard, dangerButton, heading, textStyle } from "@/styles/ui";
 import { colours } from "@/styles/colours";
 
 
@@ -17,7 +17,7 @@ export default function RequestCard({
 }: Properties) {
 
     return (
-        <div style={cardStyle}>
+        <div style={tabbedCard}>
 
             {/* Product Material & Name */}
             <h3 style={heading}>

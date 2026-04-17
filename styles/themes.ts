@@ -7,7 +7,7 @@ export const theme = {
         danger: "#dc2626",
         footer: "#666",             // Background colour of footer bar
         header: "#666",             // Background colour of header bar
-        important: "#e04410",   
+        important: "#454545", //"#e04410",
         neutral: "#6e6e6e",
         primary: "#2563eB",
         sidebar: "#999999",         // Background colour of sidebar component
@@ -16,8 +16,11 @@ export const theme = {
         maps: "#2563eB",            // Background colour of map buttons
         telephone: "#249900",       // Background colour of telephone buttons
         
-        selected: "#e04410",        // Background colour of selected buttons
+        selected: "#454545",        // Background colour of selected buttons
         unselected: "#777",         // Background colour of unselected buttons
+
+        selectedTab: "#f9fafb",     // Background colour of selected tabs
+        unselectedTab: "#bbb",      // Background colour of unselected tabs
         
         inputText: "#121212",       // Colour of input text
         inputBackground: "#fff",    // Background colour of input box
@@ -28,7 +31,7 @@ export const theme = {
         label: "#121212",           // Colour of label text
         text: "#121212",            // Colour of regular text, paragraphs, etc.
         textLight: "white",         // Colour of text when imposed on dark background
-        textMuted: "#444",          // Colour of text when disabled
+        textMuted: "#555",          // Colour of text when disabled or inactive
     },
 
     fontFamily: {

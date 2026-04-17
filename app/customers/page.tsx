@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { deleteCustomer, fetchCustomers } from "../../lib/customers";
-import { cardStyle, heading, inputStyleStretch, labelStyle, textStyle } from "../../styles/ui";
+import { untabbedCard, heading, inputStyleStretch, textStyle } from "../../styles/ui";
 import { useRouter } from "next/navigation";
 import Layout from "../components/layout";
 
@@ -94,7 +94,7 @@ export default function CustomersPage() {
         { filteredCustomers.map((customer) => (
           <div
             key={customer.id}
-            style={{...cardStyle, cursor: "pointer"}}
+            style={{...untabbedCard, cursor: "pointer"}}
             onClick={() => router.push(`/customers/${customer.id}`)}
           >
             {/* Customer card */}

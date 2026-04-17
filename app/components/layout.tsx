@@ -98,7 +98,7 @@ export default function Layout({ children, headerText, sidebarTitle, footerText 
           style={{
             flex: 1,
             overflowY: "auto",
-            padding: "30px",
+            padding: "20px 30px",
             backgroundColor: theme.colours.background
           }}>
           {children}

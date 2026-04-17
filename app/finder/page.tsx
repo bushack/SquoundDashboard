@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups"
 import { searchRequests } from "@/lib/requests"
-import { cardStyle, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200, heading } from "@/styles/ui";
+import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200, heading } from "@/styles/ui";
 import Layout from "../components/layout"
 
 
@@ -97,7 +97,7 @@ export default function FinderPage() {
     <Layout headerText="Home / Customers / Find">
 
       {/* Dropdown menus and inputs */}
-      <div style={cardStyle}>
+      <div style={untabbedCard}>
         <h1 style={{fontSize: "22px", fontWeight: "bold", marginBottom: "5px"}}>Customer Finder</h1>
         <h2 style={{fontSize: "10pt", fontWeight: "normal", marginBottom: "25px"}}>Match a product with potential customers</h2>
 
@@ -208,7 +208,7 @@ export default function FinderPage() {
       </div>
 
       {/* Results map - hidden if results.length is zero */}
-      {results.length > 0 && <div style={cardStyle}>
+      {results.length > 0 && <div style={untabbedCard}>
         
         {results.length === 1 && <h3 style={heading}>1 result</h3>}
         {results.length > 1 && <h3 style={heading}>{results.length} results</h3>}
@@ -222,7 +222,7 @@ export default function FinderPage() {
             key={r.id}
           >
             <div
-              style={{ ...cardStyle, cursor: "pointer", border: "3px solid #ddd" }}
+              style={{ ...untabbedCard, cursor: "pointer", border: "3px solid #ddd" }}
             >
               <h3 style={{ fontSize: "16pt", fontWeight: "bold", marginBottom: "10px"}}>
                 {r.customers?.forename} {r.customers?.surname}

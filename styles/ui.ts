@@ -135,18 +135,29 @@ export const sidebarButton = {
 
 export const tabButton = {
   ...buttonStyle,
-  backgroundColor: theme.colours.unselected,
-  color: theme.colours.textLight,
-  marginBottom: "0px"
+  marginRight: "6px",
+  padding: "8px 30px",
+  backgroundColor: theme.colours.unselectedTab,
+  color: theme.colours.text,
+  marginBottom: "0px",
+  borderTopLeftRadius: "10px",
+  borderTopRightRadius: "10px",
+  borderBottomLeftRadius: "0px",
+  borderBottomRightRadius: "0px",
 };
 
-export const cardStyle = {
+export const untabbedCard = {
   //border: "1px solid #e5e7eb",
   borderRadius: "10px",
   padding: "15px",
   marginBottom: "15px",
   color: theme.colours.text,
   backgroundColor: theme.colours.card,
+};
+
+export const tabbedCard = {
+  ...untabbedCard,
+  borderTopLeftRadius: "0px",
 };
 
 export const dropdownStyle = {
