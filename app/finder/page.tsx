@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups"
 import { searchRequests } from "@/lib/requests"
-import { cardStyle, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200, h3style } from "@/styles/ui";
+import { cardStyle, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200, heading } from "@/styles/ui";
 import Layout from "../components/layout"
 
 
@@ -94,7 +94,7 @@ export default function FinderPage() {
 
 
   return (
-    <Layout headerTitle="Home / Customers / Find" sidebarTitle="Squound">
+    <Layout headerText="Home / Customers / Find">
 
       {/* Dropdown menus and inputs */}
       <div style={cardStyle}>
@@ -210,8 +210,8 @@ export default function FinderPage() {
       {/* Results map - hidden if results.length is zero */}
       {results.length > 0 && <div style={cardStyle}>
         
-        {results.length === 1 && <h3 style={h3style}>1 result</h3>}
-        {results.length > 1 && <h3 style={h3style}>{results.length} results</h3>}
+        {results.length === 1 && <h3 style={heading}>1 result</h3>}
+        {results.length > 1 && <h3 style={heading}>{results.length} results</h3>}
 
         {/* On-click launch new browser tab */}
         {results.map((r) => (

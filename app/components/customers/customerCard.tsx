@@ -1,7 +1,7 @@
 "use client"
 
 import { Customer } from "@/types/customer";
-import { buttonStyle, cardStyle, dangerButton, headerStyle, primaryButton } from "@/styles/ui";
+import { buttonStyle, cardStyle, dangerButton, heading, primaryButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 
 
@@ -25,8 +25,8 @@ export default function CustomerCard({
 
             {/* Name & Id */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-                <h3 style={headerStyle}>{customer.forename} {customer.surname.toUpperCase()}</h3>
-                <span style={headerStyle }>[{customer.id}]</span>
+                <h3 style={heading}>{customer.forename} {customer.surname.toUpperCase()}</h3>
+                <span style={heading }>[{customer.id}]</span>
             </div>
 
             {/* Address */}
@@ -37,13 +37,16 @@ export default function CustomerCard({
                 fontWeight: theme.fontWeight.regular}}>
                 <strong>Address: </strong>
                 { customer.postcode ? (
-                    <>
-                        <p>{customer.address_line_1}</p>
-                        <p>{customer.address_line_2}</p>
-                        <p>{customer.town_city}</p>
-                        <p>{customer.region}</p>
-                        <p>{customer.postcode}</p>
-                    </>
+                    <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(String(cleanAddress))}`}
+                        target="_blank"
+                        rel="noopener noreferrer">
+                            <p>{customer.address_line_1}</p>
+                            <p>{customer.address_line_2}</p>
+                            <p>{customer.town_city}</p>
+                            <p>{customer.region}</p>
+                            <p>{customer.postcode}</p>
+                    </a>
                 ) : (
                     <p>{"Not provided"}</p>
                 )}

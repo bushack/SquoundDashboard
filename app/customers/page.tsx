@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { deleteCustomer, fetchCustomers } from "../../lib/customers";
-import { cardStyle, headerStyle, inputStyleStretch, labelStyle, textStyle } from "../../styles/ui";
+import { cardStyle, heading, inputStyleStretch, labelStyle, textStyle } from "../../styles/ui";
 import { useRouter } from "next/navigation";
 import Layout from "../components/layout";
 
@@ -66,7 +66,7 @@ export default function CustomersPage() {
 
 
   return (
-    <Layout headerTitle="Home / Customers / Search" sidebarTitle="Squound">
+    <Layout headerText="Home / Customers / Search">
 
       {/* Search input */}
       <input
@@ -99,8 +99,8 @@ export default function CustomersPage() {
           >
             {/* Customer card */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <h3 style={headerStyle}>{customer.surname.toUpperCase()}, {customer.forename}</h3>
-              <span style={headerStyle}>[{customer.id}]</span>
+              <h3 style={heading}>{customer.surname.toUpperCase()}, {customer.forename}</h3>
+              <span style={heading}>[{customer.id}]</span>
             </div>
             {/*<p><strong>Address: </strong></p><p style={{ marginBottom: "5px"}}>{customer.address || "N/A"}</p>*/}
             {/*<p><strong>Mobile: </strong></p><p style={{ fontSize: "14px", fontWeight: "normal", marginBottom: "5px"}}>{customer.mobile || "N/A"}</p>*/}

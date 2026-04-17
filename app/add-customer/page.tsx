@@ -8,7 +8,7 @@ export default function AddCustomerPage() {
   
   return (
     <Layout
-      headerTitle="Home / Customers / Add"
+      headerText="Home / Customers / Add"
     >
 
       <CustomerForm

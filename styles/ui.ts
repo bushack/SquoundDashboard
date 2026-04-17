@@ -1,7 +1,32 @@
 import { theme } from "./themes";
 
+export const header = {
+  flexShrink: 0,
+  //display: "flex",
+  //alignItems: "center",
+  //justifyContent: "space-between",
+  minHeight: "20px",
+  padding: "3px",
+  textAlign: "center",
+  fontSize: theme.fontSize.small,
+  fontWeight: theme.fontWeight.small,
+  color: "white",
+  backgroundColor: theme.colours.header,
+};
+
+export const footer = {
+  flexShrink: 0,
+  minHeight: "20px",
+  padding: "3px",
+  textAlign: "center",
+  fontSize: theme.fontSize.small,
+  fontWeight: theme.fontWeight.small,
+  color: "white",
+  backgroundColor: theme.colours.footer,
+};
+
 // Main page titles (<h1>).
-export const titleStyle = {
+export const title = {
   color: theme.colours.text,
   fontSize: theme.fontSize.title,
   fontWeight: theme.fontWeight.title,
@@ -9,23 +34,11 @@ export const titleStyle = {
 };
 
 // Main subheadings (<h3>).
-export const headerStyle = {
+export const heading = {
   color: theme.colours.text,
-  fontSize: theme.fontSize.header,
-  fontWeight: theme.fontWeight.header,
+  fontSize: theme.fontSize.heading,
+  fontWeight: theme.fontWeight.heading,
   marginBottom: "10px",
-};
-
-//
-export const footerStyle = {
-  flexShrink: 0,
-  minHeight: "20px",
-  color: "white",
-  padding: "3px",
-  justifyContent: "center",
-  fontSize: theme.fontSize.small,
-  fontWeight: theme.fontWeight.small,
-  backgroundColor: theme.colours.footer,
 };
 
 // Minor subheadings and labels.
@@ -70,7 +83,7 @@ export const inputStyle200 = {
 
 export const buttonStyle = {
   padding: "10px 30px",
-  borderRadius: "6px",
+  borderRadius: "10px",
   border: "none",
   cursor: "pointer",
   marginRight: "10px",
@@ -95,9 +108,10 @@ export const dangerButton = {
 
 export const importantButton = {
   ...buttonStyle,
+  padding: "10px 20px",
   backgroundColor: theme.colours.important,
   color: theme.colours.textLight,
-  margin: "0px",
+  marginBottom: "0px",
 };
 
 export const primaryButton200 = {
@@ -112,6 +126,7 @@ export const dangerButton200 = {
 
 export const sidebarButton = {
   ...buttonStyle,
+  borderRadius: "10px",
   padding: "10px 20px",
   backgroundColor: theme.colours.unselected,
   color: theme.colours.textLight,

@@ -8,6 +8,7 @@ export const MESSAGES = {
     REQUEST_DELETED: "Request deleted",
 
     // Confirmtion messages.
+    CONFIRM_SIGN_OUT: "Are you sure you want to sign out?",
     CONFIRM_DELETE_CUSTOMER: "Are you sure you want to delete this customer?\n\nThis action is permanent and not reversible.\n\nContinue?",
     CONFIRM_DELETE_REQUEST: "Are you sure you want to delete this request?\n\nThis action is permanent and not reversible.\n\nContinue?",
     

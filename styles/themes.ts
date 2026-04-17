@@ -1,41 +1,40 @@
 export const theme = {
+    
     colours: {
-
-        // General
-        background: "#dedede",
-        card: "#f9fafb",
+        
+        background: "#dedede",      // Background colour of main content
+        card: "#f9fafb",            // Background colour of card components
         danger: "#dc2626",
-        footer: "#e04410",
-        header: "#6e6e6e",// "#e04410",
-        important: "#e04410",
+        footer: "#666",             // Background colour of footer bar
+        header: "#666",             // Background colour of header bar
+        important: "#e04410",   
         neutral: "#6e6e6e",
         primary: "#2563eB",
-        sidebar: "#999999",
+        sidebar: "#999999",         // Background colour of sidebar component
         
-        // Communications
-        email: "#fc9003",
-        maps: "#2563eB",
-        telephone: "#249900",
-
-        // Selected, highlighted, etc.
-        selected: "#e04410",
-        unselected: "#777",
-
-        // Inputs
-        inputText: "#121212",
-        inputBackground: "#fff",
-        inputBorder: "#ccc",
-
-        // Text
-        text: "#121212",
-        textLight: "white",
-        textMuted: "#444",
+        email: "#fc9003",           // Background colour of email buttons
+        maps: "#2563eB",            // Background colour of map buttons
+        telephone: "#249900",       // Background colour of telephone buttons
+        
+        selected: "#e04410",        // Background colour of selected buttons
+        unselected: "#777",         // Background colour of unselected buttons
+        
+        inputText: "#121212",       // Colour of input text
+        inputBackground: "#fff",    // Background colour of input box
+        inputBorder: "#ccc",        // Border colour of input box
+        
+        title: "#121212",           // Colour of title text (<h1>)
+        heading: "#121212",         // Colour of heading text (<h3>)
+        label: "#121212",           // Colour of label text
+        text: "#121212",            // Colour of regular text, paragraphs, etc.
+        textLight: "white",         // Colour of text when imposed on dark background
+        textMuted: "#444",          // Colour of text when disabled
     },
 
     fontFamily: {
 
         title: "sans-serif",
-        header: "sans-serif",
+        heading: "sans-serif",
         label: "sans-serif",
         regular: "sans-serif",
         small: "sans-serif",
@@ -44,7 +43,7 @@ export const theme = {
     fontSize: {
 
         title: "30pt",
-        header: "16pt",
+        heading: "16pt",
         label: "10pt",
         regular: "10pt",
         small: "8pt",
@@ -53,7 +52,7 @@ export const theme = {
     fontWeight: {
 
         title: "bold",
-        header: "bold",
+        heading: "bold",
         label: "bold",
         regular: "normal",
         small: "normal",

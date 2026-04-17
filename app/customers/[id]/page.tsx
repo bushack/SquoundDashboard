@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { deleteCustomer, fetchCustomer } from "@/lib/customers";
 import { deleteRequest, fetchRequests } from "@/lib/requests";
-import { cardStyle, h3style, labelStyle, tabButton } from "@/styles/ui";
+import { cardStyle, labelStyle, tabButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 
 // UI Components.
@@ -180,7 +180,7 @@ export default function CustomerDetailPage() {
   // Render.
   return (
     <Layout
-      headerTitle={`Home / Customers / ${customer?.forename} ${customer?.surname}`}
+      headerText={`Home / Customers / ${customer?.forename} ${customer?.surname}`}
     >
 
       {/* Loading label */}

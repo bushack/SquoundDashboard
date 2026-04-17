@@ -1,7 +1,7 @@
 "use client"
 
 import { Request } from "@/types/request";
-import { cardStyle, dangerButton, headerStyle, textStyle } from "@/styles/ui";
+import { cardStyle, dangerButton, heading, textStyle } from "@/styles/ui";
 import { colours } from "@/styles/colours";
 
 
@@ -20,7 +20,7 @@ export default function RequestCard({
         <div style={cardStyle}>
 
             {/* Product Material & Name */}
-            <h3 style={headerStyle}>
+            <h3 style={heading}>
                 {[request.materials?.name, request.categories?.name].filter(Boolean).join(" ")}
             </h3>
 

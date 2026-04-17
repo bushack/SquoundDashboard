@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { addCustomer, updateCustomer } from "@/lib/customers";
 import { Customer } from "@/types/customer";
-import { buttonStyle, cardStyle, dangerButton, headerStyle, inputStyleStretch,
+import { buttonStyle, cardStyle, dangerButton, heading, inputStyleStretch,
     labelStyle, primaryButton } from "@/styles/ui";
 
 
@@ -248,7 +248,7 @@ export default function CustomerForm({
 
     return (
         <div style={cardStyle}>
-            <h3 style={headerStyle}>{editingCustomer ? "Edit Customer" : "Add Customer"}</h3>
+            <h3 style={heading}>{editingCustomer ? "Edit Customer" : "Add Customer"}</h3>
 
             {/* Editing Existing Customer */}
             <form

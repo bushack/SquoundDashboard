@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups";
 import { addRequest } from "@/lib/requests";
-import { cardStyle, dangerButton200, dropdownStyle, headerStyle, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
+import { cardStyle, dangerButton200, dropdownStyle, heading, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
 
 // Types.
 import { Customer } from "@/types/customer";
@@ -185,7 +185,7 @@ export default function RequestForm({
     // Render.
     return (
         <div style={cardStyle}>
-            <h3 style={headerStyle}>New Request</h3>
+            <h3 style={heading}>New Request</h3>
             <form
                 onSubmit={handleSubmit}
             >
