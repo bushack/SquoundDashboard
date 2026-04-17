@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups";
 import { addRequest } from "@/lib/requests";
-import { cardStyle, dangerButton200, dropdownStyle, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
+import { cardStyle, dangerButton200, dropdownStyle, headerStyle, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
 
 // Types.
 import { Customer } from "@/types/customer";
@@ -185,12 +185,12 @@ export default function RequestForm({
     // Render.
     return (
         <div style={cardStyle}>
-            <h3 style={{ fontSize: "22px", fontWeight: "bold", marginBottom: "10px" }}>New Request</h3>
+            <h3 style={headerStyle}>New Request</h3>
             <form
                 onSubmit={handleSubmit}
             >
                 {/* Category dropdown menu */}
-                <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Category:</h3>
+                <h3 style={{ ...labelStyle, padding: "3px" }}>Category:</h3>
 
                 <select
                     value={categoryId}
@@ -207,7 +207,7 @@ export default function RequestForm({
                 </select>
 
                 {/* Material dropdown menu */}
-                <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Material:</h3>
+                <h3 style={{ ...labelStyle, padding: "3px" }}>Material:</h3>
                 
                 <select
                 value={materialId}
@@ -224,7 +224,7 @@ export default function RequestForm({
                 </select>
 
                 {/* Min Width input */}
-                <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Width (min/max) (mm):</h3>
+                <h3 style={{ ...labelStyle, padding: "3px" }}>Width (min/max) (mm):</h3>
                 <input
                 type="number"
                 placeholder="Minimum width (mm)"
@@ -243,7 +243,7 @@ export default function RequestForm({
                 />
 
                 {/* Min Height input */}
-                <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Height (min/max) (mm):</h3>
+                <h3 style={{ ...labelStyle, padding: "3px" }}>Height (min/max) (mm):</h3>
                 <input
                 type="number"
                 placeholder="Minimum height (mm)"
@@ -262,7 +262,7 @@ export default function RequestForm({
                 />
 
                 {/* Min Depth input */}
-                <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Depth (min/max) (mm):</h3>
+                <h3 style={{ ...labelStyle, padding: "3px" }}>Depth (min/max) (mm):</h3>
                 <input
                 type="number"
                 placeholder="Minimum depth (mm)"

@@ -1,7 +1,7 @@
 "use client"
 
 import { Request } from "@/types/request";
-import { cardStyle, dangerButton } from "@/styles/ui";
+import { cardStyle, dangerButton, headerStyle, textStyle } from "@/styles/ui";
 import { colours } from "@/styles/colours";
 
 
@@ -17,16 +17,21 @@ export default function RequestCard({
 }: Properties) {
 
     return (
-        <div style={{...cardStyle}}>
-            <h3 style={{fontSize: "22px", fontWeight: "bold", marginBottom: "5px"}}>
-            {[request.materials?.name, request.categories?.name].filter(Boolean).join(" ")}
+        <div style={cardStyle}>
+
+            {/* Product Material & Name */}
+            <h3 style={headerStyle}>
+                {[request.materials?.name, request.categories?.name].filter(Boolean).join(" ")}
             </h3>
 
-            <p>Width: {request.min_width_mm || "*"}mm min - {request.max_width_mm || "*"}mm max</p>
-            <p>Height: {request.min_height_mm || "*"}mm min - {request.max_height_mm || "*"}mm max</p>
-            <p>Depth: {request.min_depth_mm || "*"}mm min - {request.max_depth_mm || "*"}mm max</p>
-            <p style={{marginBottom: "20px"}}></p>
+            {/* Dimensions */}
+            <div style={textStyle}>
+                <p>Width: {request.min_width_mm || "*"}mm min - {request.max_width_mm || "*"}mm max</p>
+                <p>Height: {request.min_height_mm || "*"}mm min - {request.max_height_mm || "*"}mm max</p>
+                <p>Depth: {request.min_depth_mm || "*"}mm min - {request.max_depth_mm || "*"}mm max</p>
+            </div>
 
+            {/* Buttons */}
             <button
                 style={dangerButton}
                 onClick={() => {onDelete(request.id)}}

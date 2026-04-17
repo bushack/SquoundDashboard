@@ -5,7 +5,7 @@ export const theme = {
         background: "#dedede",
         card: "#f9fafb",
         danger: "#dc2626",
-        footer: "#6e6e6e",
+        footer: "#e04410",
         header: "#6e6e6e",// "#e04410",
         important: "#e04410",
         neutral: "#6e6e6e",
@@ -34,25 +34,28 @@ export const theme = {
 
     fontFamily: {
 
-        label: "sans-serif",
-        header: "sans-serif",
-        regular: "sans-serif",
         title: "sans-serif",
+        header: "sans-serif",
+        label: "sans-serif",
+        regular: "sans-serif",
+        small: "sans-serif",
     },
 
     fontSize: {
 
-        label: "10pt",
-        header: "16pt",
-        regular: "10pt",
         title: "30pt",
+        header: "16pt",
+        label: "10pt",
+        regular: "10pt",
+        small: "8pt",
     },
 
     fontWeight: {
 
-        label: "bold",
-        header: "bold",
-        regular: "normal",
         title: "bold",
+        header: "bold",
+        label: "bold",
+        regular: "normal",
+        small: "normal",
     },
 };
