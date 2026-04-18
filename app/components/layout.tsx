@@ -23,7 +23,7 @@ export default function Layout({ children, headerText, sidebarTitle, footerText 
   const router = useRouter();
 
 
-  const signOut = async () => {
+  const handleSignOut = async () => {
 
     const confirmed = confirm(MESSAGES.CONFIRM_SIGN_OUT);
     if (!confirmed) {
@@ -85,7 +85,7 @@ export default function Layout({ children, headerText, sidebarTitle, footerText 
           <div>
             <button
               style={{...importantButton, width: "100%"}}
-              onClick={signOut}
+              onClick={handleSignOut}
             >
               Sign out
             </button>

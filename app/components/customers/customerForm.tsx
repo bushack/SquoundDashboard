@@ -6,6 +6,12 @@ import { Customer } from "@/types/customer";
 import { untabbedCard, tabbedCard, dangerButton, heading, inputStyleStretch,
     labelStyle, primaryButton } from "@/styles/ui";
 
+import { MESSAGES } from "@/constants/messages";
+
+//t
+import { Money, initializeMoney } from "@/types/money";
+import { parseCurrencyInput, fromGbp, toGbp } from "@/lib/money";
+
 
 type Properties = {
     editingCustomer?: Customer;
@@ -43,6 +49,9 @@ export default function CustomerForm({
   
     // Email regex (simple and practical, enforces '@', requires domain including '.', excludes spaces).
     const emailRegex = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
+
+    //t
+    const [price, setPrice] = useState<Money>(initializeMoney());
     
     
     // Runs when component loads.
@@ -101,6 +110,11 @@ export default function CustomerForm({
         }
 
         if (editingCustomer) {
+
+            const confirmed = confirm(MESSAGES.CONFIRM_EDIT_CUSTOMER);
+            if (!confirmed) {
+                return;
+            }
 
             // Editing existing customer.
             const { error } = await updateCustomer({
@@ -228,8 +242,18 @@ export default function CustomerForm({
     };
 
 
+    // Cancel button handler.
+    const handleCancel = () => {
+
+        const confirmed = confirm(MESSAGES.CANCEL_EDIT_CUSTOMER);
+        if (confirmed) {
+            onCancel();
+        }
+    };
+
+
     // Reset button handler.
-    const handleReset = async () => {
+    const handleReset = () => {
       setForename("");
       setSurname("");
       setAddressLine1("");
@@ -243,6 +267,12 @@ export default function CustomerForm({
       setEmail("");
       setEmailValid(null);
       setNotes("");
+
+      setPrice({pence: 777, currency: "GBP"});
+      console.log(price.pence);
+      
+      //setPrice(parseCurrencyInput("99.99"));
+      console.log(price.pence);
     };
 
 
@@ -386,11 +416,13 @@ export default function CustomerForm({
                 <button
                     type="button"
                     style={{ ...dangerButton, marginBottom: "10px", width: "100%" }}
-                    onClick={(e) => {e.stopPropagation(); {editingCustomer ? onCancel() : handleReset()}}}
+                    onClick={(e) => {e.stopPropagation(); {editingCustomer ? handleCancel() : handleReset()}}}
                 >
                     {editingCustomer ? "Cancel" : "Reset"}
                 </button>
                 </p>
+
+                <p>{toGbp(price)}</p>
             </form>
         </div>
     );

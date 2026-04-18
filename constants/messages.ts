@@ -9,11 +9,18 @@ export const MESSAGES = {
 
     // Confirmtion messages.
     CONFIRM_SIGN_OUT: "Are you sure you want to sign out?",
-    CONFIRM_DELETE_CUSTOMER: "Are you sure you want to delete this customer?\n\nThis action is permanent and not reversible.\n\nContinue?",
+    CONFIRM_DELETE_CUSTOMER: "Are you sure you want to delete this customer and all associated data?\n\nThis action is permanent and not reversible.\n\nContinue?",
     CONFIRM_DELETE_REQUEST: "Are you sure you want to delete this request?\n\nThis action is permanent and not reversible.\n\nContinue?",
+    CONFIRM_EDIT_CUSTOMER: "Submit changes?",
+    CONFIRM_EDIT_REQUEST: "Submit changes?",
+
+    // Cancellation messages.
+    CANCEL_EDIT_CUSTOMER: "Discard changes?",
+    CANCEL_EDIT_REQUEST: "Discard changes?",
     
     // Error messages.
     ERROR_GENERIC: "Something went wrong",
+    ERROR_PRICE_VALIDATION: "Minimum price cannot be greater than maximum price",
     ERROR_WIDTH_VALIDATION: "Minimum width cannot be greater than maximum width",
     ERROR_HEIGHT_VALIDATION: "Minimum height cannot be greater than maximum height",
     ERROR_DEPTH_VALIDATION: "Minimum depth cannot be greater than maximum depth",

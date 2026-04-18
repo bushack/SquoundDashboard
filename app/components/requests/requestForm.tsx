@@ -11,7 +11,7 @@ import { Category } from "@/types/category";
 import { Material } from "@/types/material";
 
 // Config and constants.
-import { UI_MESSAGE_TIMEOUT } from "@/config/app";
+import { UI_MESSAGE_TIMEOUT, CURRENCY_INPUT_MAX_DIGITS } from "@/config/app";
 import { MESSAGES } from "@/constants/messages";
 
 
@@ -29,6 +29,10 @@ export default function RequestForm({
     // Request metadata.
     const [categoryId, setCategoryId] = useState("");
     const [materialId, setMaterialId] = useState("");
+    const [minPricePounds, setMinPricePounds] = useState("");
+    const [minPricePoundsValid, setMinPricePoundsValid] = useState<boolean | null>(null);
+    const [maxPricePounds, setMaxPricePounds] = useState("");
+    const [maxPricePoundsValid, setMaxPricePoundsValid] = useState<boolean | null>(null);
     const [minWidthMm, setMinWidthMm] = useState("");
     const [maxWidthMm, setMaxWidthMm] = useState("");
     const [minHeightMm, setMinHeightMm] = useState("");
@@ -46,6 +50,9 @@ export default function RequestForm({
     // UI feedback.
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+
+    // Currency formatting regex (strict, enforces two decimal places).
+    const priceRegex = /^\d+(\.\d{2})?$/;
 
 
     // Display UI success message.
@@ -118,6 +125,22 @@ export default function RequestForm({
             return;
         }
 
+        // Validate price.
+        if (minPricePounds && !priceRegex.test(minPricePounds)) {
+            displayErrorMessage(MESSAGES.ERROR_PRICE_VALIDATION);
+            return;
+        }
+
+        if (maxPricePounds && !priceRegex.test(maxPricePounds)) {
+            displayErrorMessage(MESSAGES.ERROR_PRICE_VALIDATION);
+            return;
+        }
+
+        if (minPricePounds && maxPricePounds && Number(minPricePounds) > Number(maxPricePounds)) {
+            displayErrorMessage(MESSAGES.ERROR_PRICE_VALIDATION);
+            return;
+        }
+
         // Validate width.
         if (minWidthMm && maxWidthMm && Number(minWidthMm) > Number(maxWidthMm)) {
             displayErrorMessage(MESSAGES.ERROR_WIDTH_VALIDATION);
@@ -169,10 +192,43 @@ export default function RequestForm({
     };
 
 
+    // Real-time price validation.
+    const handleMinPriceChange = (value: string) => {
+
+        const price = sanitizeCurrencyInput(value);
+        
+        setMinPricePounds(price);
+        setMinPricePoundsValid(priceRegex.test(price));
+    };
+
+
+    // Real-time price validation.
+    const handleMaxPriceChange = (value: string) => {
+
+        const price = sanitizeCurrencyInput(value);
+
+        setMaxPricePounds(price);
+        setMaxPricePoundsValid(priceRegex.test(price));
+    }
+
+
+    // Real-time sanitization of currency input strings.
+    const sanitizeCurrencyInput = (value: string) : string => {
+
+        // Remove all non-numeric characters.
+        value = value.replace(/[^0-9]/gi, "");
+
+        // Enforce upper-limit on number of digits.
+        return value.slice(0, CURRENCY_INPUT_MAX_DIGITS);
+    };
+
+
     // Handle reset.
     const handleReset = async () => {
         setCategoryId("");
         setMaterialId("");
+        setMinPricePounds("");
+        setMaxPricePounds("");
         setMinWidthMm("");
         setMaxWidthMm("");
         setMinHeightMm("");
@@ -223,61 +279,80 @@ export default function RequestForm({
                 ))}
                 </select>
 
-                {/* Min Width input */}
-                <h3 style={{ ...labelStyle, padding: "3px" }}>Width (min/max) (mm):</h3>
+                {/* Min Price input */}
+                <h3 style={{...labelStyle, padding: "3px"}}>Price (min/max) (£):</h3>
                 <input
-                type="number"
-                placeholder="Minimum width (mm)"
-                value={minWidthMm}
-                onChange={(e) => setMinWidthMm(e.target.value)}
-                style={ inputStyle200 }
+                    type="currency"
+                    placeholder="Minimum price (£)"
+                    value={minPricePounds}
+                    onChange={(e) => handleMinPriceChange(e.target.value)}
+                    style={inputStyle200}
+                />
+
+                {/* Max Price input */}
+                <input
+                    type="currency"
+                    placeholder="Maximum price (£)"
+                    value={maxPricePounds}
+                    onChange={(e) => handleMaxPriceChange(e.target.value)}
+                    style={inputStyle200}
+                />
+
+                {/* Min Width input */}
+                <h3 style={{...labelStyle, padding: "3px"}}>Width (min/max) (mm):</h3>
+                <input
+                    type="number"
+                    placeholder="Minimum width (mm)"
+                    value={minWidthMm}
+                    onChange={(e) => setMinWidthMm(e.target.value)}
+                    style={inputStyle200}
                 />
 
                 {/* Max Width input */}
                 <input
-                type="number"
-                placeholder="Maximum width (mm)"
-                value={maxWidthMm}
-                onChange={(e) => setMaxWidthMm(e.target.value)}
-                style={ inputStyle200 }
+                    type="number"
+                    placeholder="Maximum width (mm)"
+                    value={maxWidthMm}
+                    onChange={(e) => setMaxWidthMm(e.target.value)}
+                    style={inputStyle200}
                 />
 
                 {/* Min Height input */}
-                <h3 style={{ ...labelStyle, padding: "3px" }}>Height (min/max) (mm):</h3>
+                <h3 style={{...labelStyle, padding: "3px"}}>Height (min/max) (mm):</h3>
                 <input
-                type="number"
-                placeholder="Minimum height (mm)"
-                value={minHeightMm}
-                onChange={(e) => setMinHeightMm(e.target.value)}
-                style={ inputStyle200 }
+                    type="number"
+                    placeholder="Minimum height (mm)"
+                    value={minHeightMm}
+                    onChange={(e) => setMinHeightMm(e.target.value)}
+                    style={inputStyle200}
                 />
 
                 {/* Max Height input */}
                 <input
-                type="number"
-                placeholder="Maximum height (mm)"
-                value={maxHeightMm}
-                onChange={(e) => setMaxHeightMm(e.target.value)}
-                style={ inputStyle200 }
+                    type="number"
+                    placeholder="Maximum height (mm)"
+                    value={maxHeightMm}
+                    onChange={(e) => setMaxHeightMm(e.target.value)}
+                    style={inputStyle200}
                 />
 
                 {/* Min Depth input */}
-                <h3 style={{ ...labelStyle, padding: "3px" }}>Depth (min/max) (mm):</h3>
+                <h3 style={{...labelStyle, padding: "3px"}}>Depth (min/max) (mm):</h3>
                 <input
-                type="number"
-                placeholder="Minimum depth (mm)"
-                value={minDepthMm}
-                onChange={(e) => setMinDepthMm(e.target.value)}
-                style={ inputStyle200 }
+                    type="number"
+                    placeholder="Minimum depth (mm)"
+                    value={minDepthMm}
+                    onChange={(e) => setMinDepthMm(e.target.value)}
+                    style={inputStyle200}
                 />
 
                 {/* Max Depth input */}
                 <input
-                type="number"
-                placeholder="Maximum depth (mm)"
-                value={maxDepthMm}
-                onChange={(e) => setMaxDepthMm(e.target.value)}
-                style={ inputStyle200 }
+                    type="number"
+                    placeholder="Maximum depth (mm)"
+                    value={maxDepthMm}
+                    onChange={(e) => setMaxDepthMm(e.target.value)}
+                    style={inputStyle200}
                 />
 
                 {/* Buttons */}
