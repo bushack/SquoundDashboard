@@ -8,10 +8,6 @@ import { untabbedCard, tabbedCard, dangerButton, heading, inputStyleStretch,
 
 import { MESSAGES } from "@/constants/messages";
 
-//t
-import { Money, initializeMoney } from "@/types/money";
-import { parseCurrencyInput, fromGbp, toGbp } from "@/lib/money";
-
 
 type Properties = {
     editingCustomer?: Customer;
@@ -49,9 +45,6 @@ export default function CustomerForm({
   
     // Email regex (simple and practical, enforces '@', requires domain including '.', excludes spaces).
     const emailRegex = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
-
-    //t
-    const [price, setPrice] = useState<Money>(initializeMoney());
     
     
     // Runs when component loads.
@@ -421,8 +414,6 @@ export default function CustomerForm({
                     {editingCustomer ? "Cancel" : "Reset"}
                 </button>
                 </p>
-
-                <p>{toGbp(price)}</p>
             </form>
         </div>
     );

@@ -26,6 +26,7 @@ export default function RequestCard({
 
             {/* Dimensions */}
             <div style={textStyle}>
+                <p>Price: £{request.min_price_pence/100 || "*"} min - £{request.max_price_pence/100 || "*"} max</p>
                 <p>Width: {request.min_width_mm || "*"}mm min - {request.max_width_mm || "*"}mm max</p>
                 <p>Height: {request.min_height_mm || "*"}mm min - {request.max_height_mm || "*"}mm max</p>
                 <p>Depth: {request.min_depth_mm || "*"}mm min - {request.max_depth_mm || "*"}mm max</p>

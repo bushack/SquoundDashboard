@@ -2,8 +2,36 @@
 import { Money } from "@/types/money";
 
 
-// Converts a Money object to a string object (formatted as pounds).
-export const toGbp = (money: Money) : string => {
+// Converts a Money object to a string object (formatted as GBP).
+/*export const toGbp = (money: Money) : string => {
+
+    return new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: money.currency,
+    }).format(fromMoney(money));
+};*/
+
+/*export const toGbp = (pence: number) : string => {
+
+    return new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: "GBP",
+    }).format(Math.round(pence / 100));
+};*/
+
+
+// Converts a number object (as pounds) to a Money object (as pence).
+export const toMoney = (
+    pounds: number,
+    currency: Money["currency"] = "GBP"
+) : Money => ({
+    pence: Math.round(pounds * 100),
+    currency,
+});
+
+
+// Converts a Money object to a number object (as pounds).
+export const fromMoney = (money: Money) : string => {
 
     // Validate amount.
     if (typeof money.pence !== "number" || isNaN(money.pence)) {
@@ -15,22 +43,8 @@ export const toGbp = (money: Money) : string => {
         throw new Error("Invalid currency code");
     }
 
-    return new Intl.NumberFormat("en-GB", {
-        style: "currency",
-        currency: money.currency,
-    }).format(money.pence / 100);
+    return Math.round(money.pence / 100);
 };
-
-
-// Converts a floating point number object (as pounds) to a Money object (as pence).
-// Use this function to convert currency values prior to writing to an API.
-export const fromGbp = (
-    pounds: number,
-    currency: Money["currency"] = "GBP"
-) : Money => ({
-    pence: Math.round(pounds * 100),
-    currency,
-});
 
 
 // Parses a string object (as pounds) to a Money object (as pence).
@@ -42,5 +56,5 @@ export const parseCurrencyInput = (pounds: string) : Money => {
         throw new Error("Value is not a number");
     }
 
-    return fromGbp(parsedInput);
+    return toMoney(parsedInput);
 };

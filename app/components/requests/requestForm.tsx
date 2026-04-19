@@ -5,10 +5,13 @@ import { fetchCategories, fetchMaterials } from "@/lib/lookups";
 import { addRequest } from "@/lib/requests";
 import { tabbedCard, dangerButton200, dropdownStyle, heading, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
 
+import CurrencyInput from "../currency/currencyInput";
+
 // Types.
 import { Customer } from "@/types/customer";
 import { Category } from "@/types/category";
 import { Material } from "@/types/material";
+import { Money } from "@/types/money";
 
 // Config and constants.
 import { UI_MESSAGE_TIMEOUT, CURRENCY_INPUT_MAX_DIGITS } from "@/config/app";
@@ -29,10 +32,8 @@ export default function RequestForm({
     // Request metadata.
     const [categoryId, setCategoryId] = useState("");
     const [materialId, setMaterialId] = useState("");
-    const [minPricePounds, setMinPricePounds] = useState("");
-    const [minPricePoundsValid, setMinPricePoundsValid] = useState<boolean | null>(null);
-    const [maxPricePounds, setMaxPricePounds] = useState("");
-    const [maxPricePoundsValid, setMaxPricePoundsValid] = useState<boolean | null>(null);
+    const [minPrice, setMinPrice] = useState<Money | null>(null);
+    const [maxPrice, setMaxPrice] = useState<Money | null>(null);
     const [minWidthMm, setMinWidthMm] = useState("");
     const [maxWidthMm, setMaxWidthMm] = useState("");
     const [minHeightMm, setMinHeightMm] = useState("");
@@ -124,19 +125,9 @@ export default function RequestForm({
             displayErrorMessage("Category is required");
             return;
         }
-
+        
         // Validate price.
-        if (minPricePounds && !priceRegex.test(minPricePounds)) {
-            displayErrorMessage(MESSAGES.ERROR_PRICE_VALIDATION);
-            return;
-        }
-
-        if (maxPricePounds && !priceRegex.test(maxPricePounds)) {
-            displayErrorMessage(MESSAGES.ERROR_PRICE_VALIDATION);
-            return;
-        }
-
-        if (minPricePounds && maxPricePounds && Number(minPricePounds) > Number(maxPricePounds)) {
+        if (minPrice && maxPrice && minPrice.pence > maxPrice.pence) {
             displayErrorMessage(MESSAGES.ERROR_PRICE_VALIDATION);
             return;
         }
@@ -166,6 +157,8 @@ export default function RequestForm({
                 customer_id: customer.id,
                 category_id: categoryId ? Number(categoryId) : null,
                 material_id: materialId ? Number(materialId) : null,
+                min_price_pence: minPrice ? minPrice.pence : null,
+                max_price_pence: maxPrice ? maxPrice.pence : null,
                 min_width_mm: minWidthMm ? Number(minWidthMm) : null,
                 max_width_mm: maxWidthMm ? Number(maxWidthMm) : null,
                 min_height_mm: minHeightMm ? Number(minHeightMm) : null,
@@ -192,26 +185,6 @@ export default function RequestForm({
     };
 
 
-    // Real-time price validation.
-    const handleMinPriceChange = (value: string) => {
-
-        const price = sanitizeCurrencyInput(value);
-        
-        setMinPricePounds(price);
-        setMinPricePoundsValid(priceRegex.test(price));
-    };
-
-
-    // Real-time price validation.
-    const handleMaxPriceChange = (value: string) => {
-
-        const price = sanitizeCurrencyInput(value);
-
-        setMaxPricePounds(price);
-        setMaxPricePoundsValid(priceRegex.test(price));
-    }
-
-
     // Real-time sanitization of currency input strings.
     const sanitizeCurrencyInput = (value: string) : string => {
 
@@ -227,8 +200,8 @@ export default function RequestForm({
     const handleReset = async () => {
         setCategoryId("");
         setMaterialId("");
-        setMinPricePounds("");
-        setMaxPricePounds("");
+        setMinPrice(null);
+        setMaxPrice(null);
         setMinWidthMm("");
         setMaxWidthMm("");
         setMinHeightMm("");
@@ -281,21 +254,17 @@ export default function RequestForm({
 
                 {/* Min Price input */}
                 <h3 style={{...labelStyle, padding: "3px"}}>Price (min/max) (£):</h3>
-                <input
-                    type="currency"
-                    placeholder="Minimum price (£)"
-                    value={minPricePounds}
-                    onChange={(e) => handleMinPriceChange(e.target.value)}
-                    style={inputStyle200}
+                <CurrencyInput
+                    value={minPrice}
+                    placeholder={"Minimum price (£)"}
+                    onChange={setMinPrice}
                 />
 
                 {/* Max Price input */}
-                <input
-                    type="currency"
-                    placeholder="Maximum price (£)"
-                    value={maxPricePounds}
-                    onChange={(e) => handleMaxPriceChange(e.target.value)}
-                    style={inputStyle200}
+                <CurrencyInput
+                    value={maxPrice}
+                    placeholder={"Maximum price (£)"}
+                    onChange={setMaxPrice}
                 />
 
                 {/* Min Width input */}
