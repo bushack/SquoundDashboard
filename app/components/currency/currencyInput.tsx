@@ -32,7 +32,9 @@ export default function CurrencyInput({
     // Sync input when external value changes.
     useEffect(() => {
         
-        setInput(value ? fromMoney(value) : "");
+        const formatted = value ? fromMoney(value) : "";
+        setInput(prev => (prev !== formatted ? formatted : prev));
+        
     }, [value]);
 
 
@@ -43,7 +45,7 @@ export default function CurrencyInput({
         let digits = rawInput.replace(/[^0-9]/g, "");
 
         // Remove leading zeros.
-        digits = digits.replace(/^0+/, "");
+        digits = digits.replace(/^0+(?=\d)/, "");
 
         // Enforce maximum number of digits.
         digits = digits.slice(0, CURRENCY_INPUT_MAX_DIGITS);

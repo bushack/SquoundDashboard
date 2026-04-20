@@ -150,7 +150,7 @@ export const untabbedCard = {
   //border: "1px solid #e5e7eb",
   borderRadius: "10px",
   padding: "15px",
-  marginBottom: "15px",
+  marginBottom: theme.margin.vspacing,
   color: theme.colours.text,
   backgroundColor: theme.colours.card,
 };
@@ -158,6 +158,28 @@ export const untabbedCard = {
 export const tabbedCard = {
   ...untabbedCard,
   borderTopLeftRadius: "0px",
+};
+
+export const table = {
+  width: "100%",
+  fontSize: theme.fontSize.regular,
+  border: "1px solid #aaa",
+  marginBottom: theme.margin.vspacing,
+  color: theme.colours.text,
+  backgroundColor: theme.colours.card,
+};
+
+export const tableHeader = {
+  textAlign: "left",
+  padding: "10px 10px",
+  color: theme.colours.textLight,
+  backgroundColor: theme.colours.important,
+};
+
+export const tableRow = {
+  padding: "4px 10px",
+  border: "1px solid #bbb",
+  cursor: "pointer"
 };
 
 export const dropdownStyle = {

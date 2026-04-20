@@ -60,4 +60,8 @@ export const theme = {
         regular: "normal",
         small: "normal",
     },
+
+    margin: {
+        vspacing: "15px",
+    },
 };

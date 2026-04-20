@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { deleteCustomer, fetchCustomers } from "../../lib/customers";
 import { untabbedCard, heading, inputStyleStretch, textStyle } from "../../styles/ui";
 import { useRouter } from "next/navigation";
+
 import Layout from "../components/layout";
+import CustomerTable from "../components/customers/customerTable";
 
 
 export default function CustomersPage() {
@@ -78,6 +80,11 @@ export default function CustomersPage() {
           ...inputStyleStretch,
           maxWidth: "400px"
         }}
+      />
+
+      <CustomerTable
+        customers={filteredCustomers}
+        loading={loading}
       />
 
       {/* Display fetched customers */}
