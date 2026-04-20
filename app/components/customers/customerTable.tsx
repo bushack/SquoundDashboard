@@ -2,10 +2,10 @@
 
 import { React } from "react"
 import { Customer } from "@/types/customer";
-
 import { table, tableHeader, tableRow, untabbedCard } from "@/styles/ui";
-
 import { useRouter } from "next/navigation";
+
+import Link from "next/link";
 
 
 type Properties = {
@@ -13,7 +13,9 @@ type Properties = {
     loading: boolean;
 };
 
+
 type Column<T> = {
+    key: string;
     header: string;
     accessor: (item: T) => React.ReactNode;
 };
@@ -31,7 +33,16 @@ export default function CustomerTable({
         { header: "Surname", accessor: (c) => c.surname },
         { header: "Forename", accessor: (c) => c.forename },
         { header: "Phone", accessor: (c) => c.mobile },
-        { header: "Email", accessor: (c) => c.email }
+        { header: "Email", accessor: (c) => c.email },
+        { header: "New tab", accessor: (c) => (
+            <Link
+                href={`/customers/${c.id}`}
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+            >
+                View
+            </Link>
+        ), },
     ];
     
     return (
@@ -49,7 +60,7 @@ export default function CustomerTable({
                     <tr>
                         {columns.map((col) => (
                             <th
-                                key={col}
+                                key={col.key}
                                 style={tableHeader}
                             >
                                 {col.header}
@@ -57,6 +68,7 @@ export default function CustomerTable({
                         ))}
                     </tr>
                 </thead>
+
                 <tbody>
                     {customers.map((customer) => (
                         <tr
@@ -65,7 +77,7 @@ export default function CustomerTable({
                             onClick={() => router.push(`/customers/${customer.id}`)}
                         >
                             {columns.map((col) => (
-                                <td key={col.header} style={tableRow}>{col.accessor(customer)}</td>
+                                <td key={col.key} style={tableRow}>{col.accessor(customer)}</td>
                             ))}
                         </tr>
                     ))}

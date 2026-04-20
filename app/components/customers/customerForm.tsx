@@ -260,12 +260,6 @@ export default function CustomerForm({
       setEmail("");
       setEmailValid(null);
       setNotes("");
-
-      setPrice({pence: 777, currency: "GBP"});
-      console.log(price.pence);
-      
-      //setPrice(parseCurrencyInput("99.99"));
-      console.log(price.pence);
     };
 
 
