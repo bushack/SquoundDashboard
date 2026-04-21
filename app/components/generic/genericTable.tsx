@@ -57,8 +57,8 @@ export default function GenericTable({
                     {data.map((item) => (
                         <tr
                             key={getRowKey(item)}
-                            className={onRowClick ? "hover:bg-gray-100" : ""
-                            onClick={() => onRowClick?.(item))}
+                            className={onRowClick ? "hover:bg-gray-100" : ""}
+                            onClick={() => onRowClick?.(item)}
                         >
                             {columns.map((col) => (
                                 <td key={col.key} className={col.className} style={tableRow}>{col.accessor(item)}</td>
