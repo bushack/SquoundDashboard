@@ -1,4 +1,3 @@
-"use client"
 
 import { React } from "react"
 import { table, tableHeader, tableRow, untabbedCard } from "@/styles/ui";

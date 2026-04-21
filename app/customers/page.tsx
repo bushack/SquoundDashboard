@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import Layout from "../components/layout";
 import { columns } from "../components/customers/customerColumns";
-import CustomerTable from "../components/customers/customerTable";
+import GenericDialog from "../components/generic/genericDialog";
 import GenericTable from "../components/generic/genericTable";
 
 
@@ -16,6 +16,7 @@ export default function CustomersPage() {
   const [customers, setCustomers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [dialogOpen, setDialogOpen] = useState<boolean>(true)
   const router = useRouter();
   
 
@@ -64,17 +65,21 @@ export default function CustomersPage() {
         }}
       />
 
-      <CustomerTable
-        customers={filteredCustomers}
-        loading={loading}
-      />
-
       <GenericTable
         data={filteredCustomers}
         loading={loading}
         columns={columns}
         getRowKey={(c) => c.id}
         onRowClick={(c) => router.push(`/customers/${c.id}`)}
+      />
+
+      <GenericDialog
+        isOpen={dialogOpen}
+        title={"Delete Customer"}
+        message={"Are you sure you want to delete this customer?\n\n" + "This action will result in the deletion of the customer and all associated data. This action is permanent and is not reversible.\n\n" + "Continue?"}
+        //onClose={() => (null)}
+        onCancel={() => setDialogOpen(false)}
+        onConfirm={() => setDialogOpen(false)}
       />
       
     </Layout>
