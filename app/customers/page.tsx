@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 import Layout from "../components/layout";
 import CustomerTable from "../components/customers/customerTable";
+import GenericTable from "../components/generic/genericTable";
 
 
 export default function CustomersPage() {
