@@ -6,6 +6,7 @@ import { untabbedCard, heading, inputStyleStretch, textStyle } from "../../style
 import { useRouter } from "next/navigation";
 
 import Layout from "../components/layout";
+import { columns } from "../components/customers/customerColumns";
 import CustomerTable from "../components/customers/customerTable";
 import GenericTable from "../components/generic/genericTable";
 
@@ -66,6 +67,14 @@ export default function CustomersPage() {
       <CustomerTable
         customers={filteredCustomers}
         loading={loading}
+      />
+
+      <GenericTable
+        data={filteredCustomers}
+        loading={loading}
+        columns={columns}
+        getRowKey={(c) => c.id}
+        onRowClick={(c) => router.push(`/customers/${c.id}`)}
       />
       
     </Layout>

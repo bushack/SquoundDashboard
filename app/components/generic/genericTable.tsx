@@ -8,7 +8,7 @@ type Column<T> = {
     key: string;
     header: string;
     accessor: (item: T) => React.ReactNode;
-    className: string;
+    className?: string;
 };
 
 
@@ -35,8 +35,8 @@ export default function GenericTable({
 
             <div style={{margin: "5px 2px", fontSize: "10pt"}}>
                 { loading && <p>Loading...</p>}
-                { !loading && customers.length === 0 && <p>No results</p> }
-                { !loading && customers.length > 0 && <p>{customers.length} customer(s) found</p> }
+                { !loading && data.length === 0 && <p>No results</p> }
+                { !loading && data.length > 0 && <p>{data.length} result(s)</p> }
             </div>
             
             <table style={table}>
