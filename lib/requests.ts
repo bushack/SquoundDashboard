@@ -1,6 +1,8 @@
 "use client";
 
 import { supabase } from "./supabaseClient"
+//TODO: Import and use the 'Request' type instead of using type 'any'.
+//TODO: Use safe functions (see 'lib/customers' for examples).
 
 const TABLE_NAME = "requests";
 

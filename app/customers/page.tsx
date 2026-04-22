@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { deleteCustomer, fetchCustomers } from "../../lib/customers";
+import { deleteCustomer, fetchCustomersSafe } from "../../lib/customers";
 import { untabbedCard, heading, inputStyleStretch, textStyle } from "../../styles/ui";
 import { useRouter } from "next/navigation";
 
@@ -21,13 +21,16 @@ export default function CustomersPage() {
   
 
   const loadCustomers = async () => {
-    setLoading(true);
-    const { data, error } = await fetchCustomers();
 
-    if (error) {
-      console.error(error);
-    } else {
-      setCustomers(data || []);
+    setLoading(true);
+
+    const result = await fetchCustomersSafe();
+
+    if (!result.success) {
+      //TODO: Display UI message.
+    }
+    else if (result.success && result.data) {
+      setCustomers(result.data || []);
     }
 
     setLoading(false);

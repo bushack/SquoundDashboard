@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { addCustomer, updateCustomer } from "@/lib/customers";
+import { addCustomerSafe, updateCustomerSafe } from "@/lib/customers";
 import { Customer } from "@/types/customer";
 import { untabbedCard, tabbedCard, dangerButton, heading, inputStyleStretch,
     labelStyle, primaryButton } from "@/styles/ui";
@@ -110,7 +110,7 @@ export default function CustomerForm({
             }
 
             // Editing existing customer.
-            const { error } = await updateCustomer({
+            const result = await updateCustomerSafe({
                 id: editingCustomer.id,
                 forename: forename.trim(),
                 surname: surname.trim(),
@@ -124,18 +124,20 @@ export default function CustomerForm({
                 notes: notes || null
             });
 
-            if (error) {
+            if (!result.success) {
                 console.error(error);
+                //TODO: Display UI message.
                 alert("Error updating customer");
             } else {
-                alert("Customer updated")
+                alert("Customer updated");
+                //TODO: Display UI message.
                 onSubmit();
             }
 
         } else {
 
             // Adding new customer.
-            const { error } = await addCustomer ({
+            const result = await addCustomerSafe ({
                 forename: forename.trim(),
                 surname: surname.trim(),
                 address_line_1: addressLine1 || null,
@@ -148,11 +150,13 @@ export default function CustomerForm({
                 notes: notes || null
             });
 
-            if (error) {
+            if (!result.success) {
                 console.error(error);
                 alert("Error adding customer");
+                //TODO: Display UI message.
             } else {
                 alert("Customer added");
+                //TODO: Display UI message.
                 handleReset();
             }
         }

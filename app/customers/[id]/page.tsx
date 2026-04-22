@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { deleteCustomer, fetchCustomer } from "@/lib/customers";
+import { deleteCustomerSafe, fetchCustomerSafe } from "@/lib/customers";
 import { deleteRequest, fetchRequests } from "@/lib/requests";
 import { labelStyle, tabButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
@@ -49,21 +49,24 @@ export default function CustomerDetailPage() {
   // Load customer details data.
   const loadCustomer = async (id: number) => {
 
-    const { data, error } = await fetchCustomer(id);
+    const result = await fetchCustomerSafe(id);
 
-    if (error) {
-      console.error(error);
-    } else if(data) {
+    if (!result.success) {
+      // TODO: Display UI message.
+    }
+    else if (result.success && result.data) {
 
-      setCustomer(data);
+      const customer = result.data;
+
+      setCustomer(customer);
 
       // Clean address (Note: Prioritise postcode for more efficient searching).
       setCleanAddress([
-        data.postcode,
-        data.address_line_1,
-        data.address_line_2,
-        data.town_city,
-        data.region
+        customer.postcode,
+        customer.address_line_1,
+        customer.address_line_2,
+        customer.town_city,
+        customer.region
       ]
         .map((part) => part?.trim())
         .filter(Boolean)
@@ -72,8 +75,8 @@ export default function CustomerDetailPage() {
 
       // Clean phone number.
       setCleanPhone(
-        data.mobile ?
-          data.mobile.replace(/\s+/g, "") : ""
+        customer.mobile ?
+        customer.mobile.replace(/\s+/g, "") : ""
       );
 
       console.log("Successfully loaded customer data");
@@ -127,9 +130,9 @@ export default function CustomerDetailPage() {
       return;
     }
 
-    const { error } = await deleteCustomer(id);
+    const result = await deleteCustomerSafe(id);
 
-    if (error) {
+    if (!result.success) {
       console.error(error);
       displayErrorMessage(MESSAGES.GENERIC_ERROR);
     } else {
