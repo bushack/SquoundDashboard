@@ -4,7 +4,7 @@ import { buttonStyle } from "@/styles/ui";
 
 type Properties = {
     isOpen: boolean;
-    title: string;
+    title?: string;
     message: string;
     onClose?: () => void;
     onCancel?: () => void;

@@ -34,7 +34,7 @@ export async function fetchCustomerSafe(id: number) {
 
 
 // Fetches all customer entries from the database.
-export const fetchCustomers = async () => {
+const fetchCustomers = async () => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .select("*")
@@ -61,7 +61,7 @@ export async function fetchCustomersSafe() {
 
 
 // Add a new customer entry to the database.
-export const addCustomer = async (customer: any) => {
+const addCustomer = async (customer: any) => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .insert([customer]);
@@ -89,7 +89,7 @@ export async function addCustomerSafe(customer: any) {
 
 
 // Update an existing customer entry within the database.
-export const updateCustomer = async (customer: Partial<Customer>) => {
+const updateCustomer = async (customer: Partial<Customer>) => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .update(customer)
@@ -120,7 +120,7 @@ export async function updateCustomerSafe(customer: Partial<Customer>) {
 
 
 // Delete an existing customer entry from the database.
-export const deleteCustomer = async (id: number) => {
+const deleteCustomer = async (id: number) => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .delete()
@@ -130,7 +130,7 @@ export const deleteCustomer = async (id: number) => {
 };
 
 
-//
+// Delete an existing customer entry from the database.
 export async function deleteCustomerSafe(id: number) {
 
   try {
