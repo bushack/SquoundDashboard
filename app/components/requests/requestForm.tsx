@@ -222,6 +222,8 @@ export default function RequestForm({
                 <h3 style={{ ...labelStyle, padding: "3px" }}>Category:</h3>
 
                 <select
+                    id="category"
+                    name="categorySelect"
                     value={categoryId}
                     onChange={(e) => setCategoryId(e.target.value)}
                     style={dropdownStyle}
@@ -239,9 +241,11 @@ export default function RequestForm({
                 <h3 style={{ ...labelStyle, padding: "3px" }}>Material:</h3>
                 
                 <select
-                value={materialId}
-                onChange={(e) => setMaterialId(e.target.value)}
-                style={dropdownStyle}
+                    id="material"
+                    name="materialSelect"
+                    value={materialId}
+                    onChange={(e) => setMaterialId(e.target.value)}
+                    style={dropdownStyle}
                 >
                 <option value="">Select material</option>
 
@@ -255,6 +259,8 @@ export default function RequestForm({
                 {/* Min Price input */}
                 <h3 style={{...labelStyle, padding: "3px"}}>Price (min/max) (£):</h3>
                 <CurrencyInput
+                    id="minPrice"
+                    name="minPriceInput"
                     value={minPrice}
                     placeholder={"Minimum price (£)"}
                     onChange={setMinPrice}
@@ -262,6 +268,8 @@ export default function RequestForm({
 
                 {/* Max Price input */}
                 <CurrencyInput
+                    id="maxPrice"
+                    name="maxPriceInput"
                     value={maxPrice}
                     placeholder={"Maximum price (£)"}
                     onChange={setMaxPrice}
@@ -270,6 +278,8 @@ export default function RequestForm({
                 {/* Min Width input */}
                 <h3 style={{...labelStyle, padding: "3px"}}>Width (min/max) (mm):</h3>
                 <input
+                    id="minWidth"
+                    name="minWidthInput"
                     type="number"
                     placeholder="Minimum width (mm)"
                     value={minWidthMm}
@@ -279,6 +289,8 @@ export default function RequestForm({
 
                 {/* Max Width input */}
                 <input
+                    id="maxWidth"
+                    name="maxWidthInput"
                     type="number"
                     placeholder="Maximum width (mm)"
                     value={maxWidthMm}
@@ -289,6 +301,8 @@ export default function RequestForm({
                 {/* Min Height input */}
                 <h3 style={{...labelStyle, padding: "3px"}}>Height (min/max) (mm):</h3>
                 <input
+                    id="minHeight"
+                    name="minHeightInput"
                     type="number"
                     placeholder="Minimum height (mm)"
                     value={minHeightMm}
@@ -298,6 +312,8 @@ export default function RequestForm({
 
                 {/* Max Height input */}
                 <input
+                    id="maxHeight"
+                    name="maxHeightInput"
                     type="number"
                     placeholder="Maximum height (mm)"
                     value={maxHeightMm}
@@ -308,6 +324,8 @@ export default function RequestForm({
                 {/* Min Depth input */}
                 <h3 style={{...labelStyle, padding: "3px"}}>Depth (min/max) (mm):</h3>
                 <input
+                    id="minDepth"
+                    name="minDepthInput"
                     type="number"
                     placeholder="Minimum depth (mm)"
                     value={minDepthMm}
@@ -317,6 +335,8 @@ export default function RequestForm({
 
                 {/* Max Depth input */}
                 <input
+                    id="maxDepth"
+                    name="maxDepthInput"
                     type="number"
                     placeholder="Maximum depth (mm)"
                     value={maxDepthMm}

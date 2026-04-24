@@ -10,6 +10,8 @@ import { theme } from "@/styles/themes"
 import { FOOTER_TEXT, HEADER_TEXT, SIDEBAR_TITLE } from "@/config/app";
 import { MESSAGES } from "@/constants/messages";
 
+import { DialogProvider, useDialog } from "@/context/dialogContext";
+
 type LayoutProps = {
   children: ReactNode;
   headerText?: string;
@@ -22,16 +24,25 @@ export default function Layout({ children, headerText, sidebarTitle, footerText 
 
   const router = useRouter();
 
+  const { showDialog } = useDialog();
+
 
   const handleSignOut = async () => {
 
-    const confirmed = confirm(MESSAGES.CONFIRM_SIGN_OUT);
-    if (!confirmed) {
-      return;
-    }
-
-    await supabase.auth.signOut();
-    router.push("../");
+    showDialog({
+      title: MESSAGES.CONFIRM_SIGN_OUT_TITLE,
+      message: MESSAGES.CONFIRM_SIGN_OUT_MSG,
+      onConfirm: async () => {
+        try {
+          await supabase.auth.signOut();
+          router.push("../");
+          // TODO: Currently only returning to login page here. Improve?
+        } catch {
+          // TODO: Handle sign out error?
+          console.error(MESSAGES.CONFIRM_SIGN_OUT_ERROR, error);
+        }
+      },
+    });
   };
 
 

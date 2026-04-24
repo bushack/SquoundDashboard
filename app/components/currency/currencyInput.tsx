@@ -13,6 +13,8 @@ import { CURRENCY_INPUT_MAX_DIGITS } from "@/config/app";
 
 
 type Properties = {
+    id: string;
+    name: string;
     value: Money | null;
     onChange: (value: Money | null) => void;
     placeholder?: string;
@@ -21,6 +23,8 @@ type Properties = {
 
 // Receives integer input (as pounds).
 export default function CurrencyInput({
+    id,
+    name,
     value,
     onChange,
     placeholder,
@@ -71,6 +75,8 @@ export default function CurrencyInput({
     return (
         
         <input
+            id={id}
+            name={name}
             type="text"
             inputMode="numeric"             // Disallows decimals, shows numeric keyboard (mobile).
             placeholder={placeholder}

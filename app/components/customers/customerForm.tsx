@@ -286,6 +286,8 @@ export default function CustomerForm({
                 <input
                     autoFocus
                     required
+                    id="forename"
+                    name="forenameInput"
                     type="text"
                     style={inputStyleStretch}
                     placeholder="Forename [Required]"
@@ -296,6 +298,8 @@ export default function CustomerForm({
                 {/* Surname input */}
                 <input
                     required
+                    id="surname"
+                    name="surnameInput"
                     type="text"
                     style={inputStyleStretch}
                     placeholder="Surname [Required]"
@@ -310,6 +314,8 @@ export default function CustomerForm({
         
                 {/* Address line 1 input */}
                 <input
+                    id="addressL1"
+                    name="addressLine1Input"
                     type="text"
                     style={inputStyleStretch}
                     placeholder="Address line 1 [Optional]"
@@ -319,6 +325,8 @@ export default function CustomerForm({
         
                 {/* Address line 2 */}
                 <input
+                    id="addressL2"
+                    name="addressLine2Input"
                     type="text"
                     style={inputStyleStretch}
                     placeholder="Address line 2 [Optional]"
@@ -328,6 +336,8 @@ export default function CustomerForm({
         
                 {/* Town/City input */}
                 <input
+                    id="townOrCity"
+                    name="townOrCityInput"
                     type="text"
                     style={inputStyleStretch}
                     placeholder="Town/City [Optional]"
@@ -337,6 +347,8 @@ export default function CustomerForm({
         
                 {/* Region input */}
                 <input
+                    id="region"
+                    name="regionInput"
                     type="text"
                     style={inputStyleStretch}
                     placeholder="Region [Optional]"
@@ -346,12 +358,12 @@ export default function CustomerForm({
         
                 {/* Postcode input */}
                 <input
-                    type="text"
                     id="postcode"
-                    name="postcode"
-                    value={postcode}
+                    name="postcodeInput"
+                    type="text"
                     style={{...inputStyleStretch, border: `2px solid ${getBorderColor(postcodeValid)}`}}
                     placeholder="Postcode [Optional]"
+                    value={postcode}
                     onChange={(e) => handlePostcodeChange(e.target.value)}
                 />
                 </div>
@@ -362,6 +374,8 @@ export default function CustomerForm({
         
                 {/* Mobile input */}
                 <input
+                    id="phone"
+                    name="phoneInput"
                     type="tel"
                     style={{...inputStyleStretch, border: `2px solid ${getBorderColor(mobileValid)}`}}
                     placeholder="Phone [Optional]"
@@ -371,6 +385,8 @@ export default function CustomerForm({
         
                 {/* Email input */}
                 <input
+                    id="email"
+                    name="emailInput"
                     type="email"
                     title="Enter a valid email address"
                     style={{...inputStyleStretch, border: `2px solid ${getBorderColor(emailValid)}`}}
@@ -384,6 +400,8 @@ export default function CustomerForm({
                 <h3 style={{ ...labelStyle, padding: "3px" }}>Notes:</h3>
                 <div style={{ marginBottom: "30px"}}>
                 <textarea
+                    id="notes"
+                    name="notesInput"
                     style={{ ...inputStyleStretch, minHeight: "200px", maxHeight: "500px" }}
                     placeholder=""
                     value={notes}

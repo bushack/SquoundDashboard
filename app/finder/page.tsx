@@ -104,6 +104,8 @@ export default function FinderPage() {
         {/* Category dropdown menu */}
         <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Category:</h3>
           <select
+            id="category"
+            name="categorySelect"
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
             style={dropdownStyle}
@@ -120,6 +122,8 @@ export default function FinderPage() {
           {/* Material dropdown menu */}
           <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Material:</h3>
           <select
+            id="material"
+            name="materialSelect"
             value={materialId}
             onChange={(e) => setMaterialId(e.target.value)}
             style={dropdownStyle}
@@ -136,6 +140,8 @@ export default function FinderPage() {
           {/* Width (min/max) inputs */}
           <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Width (min/max) (mm):</h3>
           <input
+            id="minWidth"
+            name="minWidthInput"
             type="number"
             placeholder="Minimum width (mm)"
             value={minWidthMm}
@@ -144,6 +150,8 @@ export default function FinderPage() {
           />
 
           <input
+            id="maxWidth"
+            name="maxWidthInput"
             type="number"
             placeholder="Maximum width (mm)"
             value={maxWidthMm}
@@ -154,6 +162,8 @@ export default function FinderPage() {
           {/* Height (min/max) inputs */}
           <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Height (min/max) (mm):</h3>
           <input
+            id="minHeight"
+            name="minHeightInput"
             type="number"
             placeholder="Minimum height (mm)"
             value={minHeightMm}
@@ -162,6 +172,8 @@ export default function FinderPage() {
           />
 
           <input
+            id="maxHeight"
+            name="maxHeightInput"
             type="number"
             placeholder="Maximum height (mm)"
             value={maxHeightMm}
@@ -172,6 +184,8 @@ export default function FinderPage() {
           {/* Depth (min/max) inputs */}
           <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Depth (min/max) (mm):</h3>
           <input
+            id="minDepth"
+            name="minDepthInput"
             type="number"
             placeholder="Minimum depth (mm)"
             value={minDepthMm}
@@ -180,6 +194,8 @@ export default function FinderPage() {
           />
 
           <input
+            id="maxDepth"
+            name="maxDepthInput"
             type="number"
             placeholder="Maximum depth (mm)"
             value={maxDepthMm}

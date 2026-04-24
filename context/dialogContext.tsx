@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { genericDialog } from "@/app/components/genericDialog";
+import GenericDialog from "@/app/components/generic/genericDialog";
 
 
 type DialogOptions = {
@@ -40,12 +40,12 @@ export function DialogProvider({ children }: { children: ReactNode }) {
         <DialogContext.Provider value={{showDialog, closeDialog}}>
             {children}
 
-            <genericDialog
+            <GenericDialog
                 isOpen={!!dialog}
                 title={dialog?.title}
                 message={dialog?.message || ""}
                 onClose={closeDialog}
-                omCancel={closeDialog}
+                onCancel={closeDialog}
                 onConfirm={() => {dialog?.onConfirm?.(); closeDialog();
                 }}
             />

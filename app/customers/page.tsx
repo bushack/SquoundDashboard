@@ -58,6 +58,8 @@ export default function CustomersPage() {
 
       {/* Search input */}
       <input
+        id="search"
+        name="searchInput"
         type="text"
         placeholder="Search"
         value={searchTerm}

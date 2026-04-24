@@ -6,7 +6,6 @@ type Properties = {
     isOpen: boolean;
     title?: string;
     message: string;
-    onClose?: () => void;
     onCancel?: () => void;
     onConfirm?: () => void;
 };
@@ -41,7 +40,6 @@ export default function GenericDialog ({
     isOpen,
     title,
     message,
-    onClose,
     onCancel,
     onConfirm,
 }: Properties) {
@@ -63,13 +61,6 @@ export default function GenericDialog ({
 
                 {/* Buttons */}
                 <div style={{marginTop: "2rem", display: "flex", justifyContent: "right", fontSize: "10pt"}}>
-                    
-                    {/* Close button */}
-                    {onClose && (
-                        <button style={{...buttonStyle }} onClick={onClose}>
-                            Close
-                        </button>
-                    )}
 
                     {/* Cancel button */}
                     {onCancel && (
