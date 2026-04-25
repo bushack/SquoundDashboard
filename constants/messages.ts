@@ -7,18 +7,19 @@ export const MESSAGES = {
     CONFIRM_SIGN_OUT_ERROR: "An error occurred while attepting to sign out",
     
     // Customers.
-    CUSTOMER_CREATED_MSG: "Customer saved",
-    CUSTOMER_DELETED_MSG: "Customer deleted",
+    CONFIRM_CREATE_CUSTOMER_TITLE: "Add customer",
+    CONFIRM_CREATE_CUSTOMER_MSG: "Add customer to the database?",
+    CONFIRM_CREATE_CUSTOMER_ERROR: "An error occurred while attempting to create the customer",
 
     CONFIRM_DELETE_CUSTOMER_TITLE: "Delete customer",
-    CONFIRM_DELETE_CUSTOMER_MSG: "Are you sure you want to delete this customer and all associated data?\n\nThis action is permanent and not reversible.\n\nContinue?",
+    CONFIRM_DELETE_CUSTOMER_MSG: "Are you sure you want to delete this customer?\n\nThis action is irreversible and will result in the deletion of all data associated with the customer.\n\nContinue?",
     CONFIRM_DELETE_CUSTOMER_ERROR: "An error occurred while attempting to delete the customer",
 
     CONFIRM_EDIT_CUSTOMER_TITLE: "Edit customer",
     CONFIRM_EDIT_CUSTOMER_MSG: "Submit changes?",
     CONFIRM_EDIT_CUSTOMER_ERROR: "An error occurred while attempting to submit changes",
 
-    CANCEL_EDIT_CUSTOMER_TITLE: "Cancel edit customer",
+    CANCEL_EDIT_CUSTOMER_TITLE: "Edit customer",
     CANCEL_EDIT_CUSTOMER_MSG: "Discard changes?",
     CANCEL_EDIT_CUSTOMER_ERROR: "",
     
@@ -27,7 +28,7 @@ export const MESSAGES = {
     REQUEST_DELETED_MSG: "Request deleted",
     
     CONFIRM_DELETE_REQUEST_TITLE: "Delete request",
-    CONFIRM_DELETE_REQUEST_MSG: "Are you sure you want to delete this request?\n\nThis action is permanent and not reversible.\n\nContinue?",
+    CONFIRM_DELETE_REQUEST_MSG: "Are you sure you want to delete this request?\n\nThis action is irreversible.\n\nContinue?",
     CONFIRM_DELETE_REQUEST_ERROR: "An error occurred while attempting to delete the request",
 
     CONFIRM_EDIT_REQUEST_TITLE: "Edit request",

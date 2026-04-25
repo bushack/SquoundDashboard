@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { addCustomerSafe, updateCustomerSafe } from "@/lib/customers";
+import { useDialog } from "@/context/dialogContext";
+import { untabbedCard, tabbedCard, dangerButton, heading, inputStyleStretch, labelStyle, primaryButton } from "@/styles/ui";
+
 import { Customer } from "@/types/customer";
-import { untabbedCard, tabbedCard, dangerButton, heading, inputStyleStretch,
-    labelStyle, primaryButton } from "@/styles/ui";
+import { DialogProvider } from "@/context/dialogContext"
 
 import { MESSAGES } from "@/constants/messages";
 
@@ -21,6 +23,8 @@ export default function CustomerForm({
     onCancel,
     onSubmit
 }: Properties) {
+
+    const { showDialog } = useDialog();
     
     // Customer metadata.
     const [forename, setForename] = useState("");
@@ -65,12 +69,7 @@ export default function CustomerForm({
             setEmail(editingCustomer.email || "");
             setNotes(editingCustomer.notes || "");
 
-        } else {
-
-            // Adding new customer.
-            handleReset();
         }
-  
     }, [editingCustomer]);
 
 
@@ -80,8 +79,8 @@ export default function CustomerForm({
 
         // Forename and surname are mandatory.
         if (!forename.trim() || !surname.trim()) {
-          alert("Forename and surname are required");
-          return;
+            alert("Forename and surname are required");
+            return;
         }
     
         // Disallow invalid postcodes.
@@ -98,67 +97,80 @@ export default function CustomerForm({
     
         // Disallow invalid email addresses.
         if (email && !emailRegex.test(email)) {
-          alert("Please enter a valid email address");
-          return;
+            alert("Please enter a valid email address");
+            return;
         }
 
         if (editingCustomer) {
+            showDialog({
+                title: MESSAGES.CONFIRM_EDIT_CUSTOMER_TITLE,
+                message: MESSAGES.CONFIRM_EDIT_CUSTOMER_MSG,
+                onConfirm: async () => {
+                    
+                    try {
+                        // Editing existing customer.
+                        const result = await updateCustomerSafe({
+                            id: editingCustomer.id,
+                            forename: forename.trim(),
+                            surname: surname.trim(),
+                            address_line_1: addressLine1 || null,
+                            address_line_2: addressLine2 || null,
+                            town_city: townOrCity || null,
+                            region: region || null,
+                            postcode: postcode || null,
+                            mobile: mobile || null,
+                            email: email || null,
+                            notes: notes || null
+                        });
 
-            const confirmed = confirm(MESSAGES.CONFIRM_EDIT_CUSTOMER);
-            if (!confirmed) {
-                return;
-            }
-
-            // Editing existing customer.
-            const result = await updateCustomerSafe({
-                id: editingCustomer.id,
-                forename: forename.trim(),
-                surname: surname.trim(),
-                address_line_1: addressLine1 || null,
-                address_line_2: addressLine2 || null,
-                town_city: townOrCity || null,
-                region: region || null,
-                postcode: postcode || null,
-                mobile: mobile || null,
-                email: email || null,
-                notes: notes || null
+                        if (!result.success) {
+                            console.error(error);
+                            //TODO: Display UI message.
+                            alert("Error updating customer");
+                        } else {
+                            alert("Customer updated");
+                            //TODO: Display UI message.
+                            onSubmit();
+                        }
+                    } catch {
+                        console.error(MESSAGES.CONFIRM_EDIT_CUSTOMER_ERROR, error);
+                    }
+                },
             });
-
-            if (!result.success) {
-                console.error(error);
-                //TODO: Display UI message.
-                alert("Error updating customer");
-            } else {
-                alert("Customer updated");
-                //TODO: Display UI message.
-                onSubmit();
-            }
-
         } else {
+            showDialog({
+                title: MESSAGES.CONFIRM_CREATE_CUSTOMER_TITLE,
+                message: MESSAGES.CONFIRM_CREATE_CUSTOMER_MSG,
+                onConfirm: async () => {                
+                    try {
+                        // Adding new customer.
+                        const result = await addCustomerSafe ({
+                            forename: forename.trim(),
+                            surname: surname.trim(),
+                            address_line_1: addressLine1 || null,
+                            address_line_2: addressLine2 || null,
+                            town_city: townOrCity || null,
+                            region: region || null,
+                            postcode: postcode || null,
+                            mobile: mobile || null,
+                            email: email || null,
+                            notes: notes || null
+                        });
 
-            // Adding new customer.
-            const result = await addCustomerSafe ({
-                forename: forename.trim(),
-                surname: surname.trim(),
-                address_line_1: addressLine1 || null,
-                address_line_2: addressLine2 || null,
-                town_city: townOrCity || null,
-                region: region || null,
-                postcode: postcode || null,
-                mobile: mobile || null,
-                email: email || null,
-                notes: notes || null
+                        if (!result.success) {
+                            console.error(error);
+                            alert("Error adding customer");
+                            //TODO: Display UI message.
+                        } else {
+                            alert("Customer added");
+                            //TODO: Display UI message.
+                            clearForm();
+                        }
+                    } catch {
+                        console.error(MESSAGES.CONFIRM_CREATE_CUSTOMER_ERROR, error);
+                    }
+                }
             });
-
-            if (!result.success) {
-                console.error(error);
-                alert("Error adding customer");
-                //TODO: Display UI message.
-            } else {
-                alert("Customer added");
-                //TODO: Display UI message.
-                handleReset();
-            }
         }
     };
     
@@ -242,28 +254,43 @@ export default function CustomerForm({
     // Cancel button handler.
     const handleCancel = () => {
 
-        const confirmed = confirm(MESSAGES.CANCEL_EDIT_CUSTOMER);
-        if (confirmed) {
-            onCancel();
-        }
+        showDialog({
+            title: "Discard changes",
+            message: "Are you sure you want to discard these changes?",
+            onConfirm: async () => {
+                onCancel();
+            },
+        });
     };
 
 
     // Reset button handler.
     const handleReset = () => {
-      setForename("");
-      setSurname("");
-      setAddressLine1("");
-      setAddressLine2("");
-      setTownOrCity("");
-      setRegion("");
-      setPostcode("");
-      setPostcodeValid(null);
-      setMobile("");
-      setMobileValid(null);
-      setEmail("");
-      setEmailValid(null);
-      setNotes("");
+
+        showDialog({
+            title: "Reset",
+            message: "Are you sure you want to reset the form?",
+            onConfirm: () => {
+                clearForm();
+            }
+        });
+    };
+
+
+    const clearForm = () => {
+        setForename("");
+        setSurname("");
+        setAddressLine1("");
+        setAddressLine2("");
+        setTownOrCity("");
+        setRegion("");
+        setPostcode("");
+        setPostcodeValid(null);
+        setMobile("");
+        setMobileValid(null);
+        setEmail("");
+        setEmailValid(null);
+        setNotes("");
     };
 
 

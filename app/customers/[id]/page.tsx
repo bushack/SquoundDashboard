@@ -8,6 +8,7 @@ import { deleteCustomerSafe, fetchCustomerSafe } from "@/lib/customers";
 import { deleteRequest, fetchRequests } from "@/lib/requests";
 import { labelStyle, tabButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
+import { DialogProvider, useDialog } from "@/context/dialogContext";
 
 // UI Components.
 import Layout from "../../components/layout";
@@ -32,6 +33,8 @@ type Tab = "details" | "edit" | "requests" | "newRequest";
 export default function CustomerDetailPage() {
 
   const router = useRouter();
+
+  const { showDialog } = useDialog();
 
   // Customer data.
   const { id } = useParams();
@@ -125,20 +128,25 @@ export default function CustomerDetailPage() {
   // Handle delete customer requests.
   const handleDeleteCustomer = async (id: number) => {
 
-    const confirmed = confirm(MESSAGES.CONFIRM_DELETE_CUSTOMER);
-    if (confirmed == false) {
-      return;
-    }
+    showDialog({
+      title: MESSAGES.CONFIRM_DELETE_CUSTOMER_TITLE,
+      message: MESSAGES.CONFIRM_DELETE_CUSTOMER_MSG,
+      onConfirm: async () => {
+        try {
+          const result = await deleteCustomerSafe(id);
 
-    const result = await deleteCustomerSafe(id);
-
-    if (!result.success) {
-      console.error(error);
-      displayErrorMessage(MESSAGES.GENERIC_ERROR);
-    } else {
-      displaySuccessMessage(MESSAGES.CUSTOMER_DELETED);
-      router.back();
-    }
+          if (!result.success) {
+            // TODO: Handle failed delete without error?
+          } else {
+            router.back();
+            //TODO : Display confirmation.
+          }
+        } catch {
+          // TODO: Handle error?
+          console.error(MESSAGES.CONFIRM_DELETE_CUSTOMER_ERROR, error);
+        }
+      },
+    });
   };
 
 
@@ -149,7 +157,7 @@ export default function CustomerDetailPage() {
       return;
     }
 
-    const confirmed = confirm(MESSAGES.CONFIRM_DELETE_REQUEST);
+    /*const confirmed = confirm(MESSAGES.CONFIRM_DELETE_REQUEST);
     if (confirmed == false) {
       return;
     }
@@ -162,7 +170,27 @@ export default function CustomerDetailPage() {
     } else {
       //displaySuccessMessage(MESSAGES.REQUEST_DELETED);
       loadRequests(customer.id);
-    }
+    }*/
+
+    showDialog({
+      title: MESSAGES.CONFIRM_DELETE_REQUEST_TITLE,
+      message: MESSAGES.CONFIRM_DELETE_REQUEST_MSG,
+      onConfirm: async () => {
+        try {
+          const { error } = await deleteRequest(id);
+
+          if (error) {
+            // TODO: Handle failed delete without error?
+          } else {
+            loadRequests(customer.id);
+            //TODO : Display confirmation.
+          }
+        } catch {
+          // TODO: Handle error?
+          console.error(MESSAGES.CONFIRM_DELETE_CUSTOMER_ERROR, error);
+        }
+      },
+    });
   };
 
 
