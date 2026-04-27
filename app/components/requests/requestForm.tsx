@@ -14,7 +14,7 @@ import { Material } from "@/types/material";
 import { Money } from "@/types/money";
 
 // Config and constants.
-import { UI_MESSAGE_TIMEOUT, CURRENCY_INPUT_MAX_DIGITS } from "@/config/app";
+import { UI_TOAST_TIMEOUT, CURRENCY_INPUT_MAX_DIGITS } from "@/config/app";
 import { MESSAGES } from "@/constants/messages";
 
 
@@ -59,14 +59,14 @@ export default function RequestForm({
     // Display UI success message.
     const displaySuccessMessage = (message: string) => {
         setSuccessMessage(message);
-        setTimeout(() => setSuccessMessage(""), UI_MESSAGE_TIMEOUT);
+        setTimeout(() => setSuccessMessage(""), UI_TOAST_TIMEOUT);
     };
 
 
     // Display UI error message.
     const displayErrorMessage = (message: string) => {
         setErrorMessage(message);
-        setTimeout(() => setErrorMessage(""), UI_MESSAGE_TIMEOUT);
+        setTimeout(() => setErrorMessage(""), UI_TOAST_TIMEOUT);
     };
 
 

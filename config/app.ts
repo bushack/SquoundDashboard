@@ -6,6 +6,6 @@ export const FOOTER_TEXT = "Squound";
 export const SIDEBAR_TITLE = "";
 
 // UI config.
-export const UI_MESSAGE_TIMEOUT = 5000;         // Milliseconds
+export const UI_TOAST_TIMEOUT = 5000;           // Milliseconds
 
 export const CURRENCY_INPUT_MAX_DIGITS = 7;     // Upper-limit for currency values input by user (9,999,999).
