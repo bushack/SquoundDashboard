@@ -9,6 +9,7 @@ import { deleteRequest, fetchRequests } from "@/lib/requests";
 import { labelStyle, tabButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
+import { ToastProvider, useToast } from "@/context/toastContext";
 
 // UI Components.
 import Layout from "../../components/layout";
@@ -23,8 +24,7 @@ import type { Customer } from "@/types/customer";
 import type { Material } from "@/types/material";
 import type { Request } from "@/types/request";
 
-// Config and constants.
-import { UI_MESSAGE_TIMEOUT } from "@/config/app";
+// Constants.
 import { MESSAGES } from "@/constants/messages";
 
 type Tab = "details" | "edit" | "requests" | "newRequest";
@@ -35,6 +35,7 @@ export default function CustomerDetailPage() {
   const router = useRouter();
 
   const { showDialog } = useDialog();
+  const { showToast } = useToast();
 
   // Customer data.
   const { id } = useParams();
@@ -129,21 +130,23 @@ export default function CustomerDetailPage() {
   const handleDeleteCustomer = async (id: number) => {
 
     showDialog({
-      title: MESSAGES.CONFIRM_DELETE_CUSTOMER_TITLE,
-      message: MESSAGES.CONFIRM_DELETE_CUSTOMER_MSG,
+      title: MESSAGES.DELETE_CUSTOMER_TITLE,
+      message: MESSAGES.DELETE_CUSTOMER_MSG,
       onConfirm: async () => {
         try {
           const result = await deleteCustomerSafe(id);
 
           if (!result.success) {
-            // TODO: Handle failed delete without error?
+            showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
+            console.log(MESSAGES.ERROR_GENERIC_MSG);
           } else {
             router.back();
-            //TODO : Display confirmation.
+            showToast(MESSAGES.DELETE_CUSTOMER_SUCCESS, "success");
+            console.log(MESSAGES.DELETE_CUSTOMER_SUCCESS);
           }
         } catch {
-          // TODO: Handle error?
-          console.error(MESSAGES.CONFIRM_DELETE_CUSTOMER_ERROR, error);
+          showToast(MESSAGES.DELETE_CUSTOMER_ERROR, "error");
+          console.error(MESSAGES.DELETE_CUSTOMER_ERROR, error);
         }
       },
     });

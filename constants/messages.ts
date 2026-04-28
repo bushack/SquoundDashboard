@@ -11,9 +11,10 @@ export const MESSAGES = {
     CONFIRM_CREATE_CUSTOMER_MSG: "Add customer to the database?",
     CONFIRM_CREATE_CUSTOMER_ERROR: "An error occurred while attempting to create the customer",
 
-    CONFIRM_DELETE_CUSTOMER_TITLE: "Delete customer",
-    CONFIRM_DELETE_CUSTOMER_MSG: "Are you sure you want to delete this customer?\n\nThis action is irreversible and will result in the deletion of all data associated with the customer.\n\nContinue?",
-    CONFIRM_DELETE_CUSTOMER_ERROR: "An error occurred while attempting to delete the customer",
+    DELETE_CUSTOMER_TITLE: "Delete customer",
+    DELETE_CUSTOMER_MSG: "Are you sure you want to delete this customer?\n\nThis action is irreversible and will result in the deletion of all data associated with the customer.\n\nContinue?",
+    DELETE_CUSTOMER_SUCCESS: "Customer deleted",
+    DELETE_CUSTOMER_ERROR: "An error occurred while attempting to delete the customer",
 
     CONFIRM_EDIT_CUSTOMER_TITLE: "Edit customer",
     CONFIRM_EDIT_CUSTOMER_MSG: "Submit changes?",

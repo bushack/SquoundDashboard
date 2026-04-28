@@ -10,16 +10,22 @@ export default function GenericToast ({
     type
 }: Properties) {
 
-    const bg =
-        type ==="success"
-        ? "bg-green-600"
+    const bgColor =
+        type === "success"
+        ? "#479141"
         : type === "error"
-        ? "bg-red-600"
-        : "bg-grey-800";
+        ? "red"
+        : "grey";
 
     return (
         
+        /*
         <div className={`${bg} text-white px-4 py-2 rounded shadow`}>
+            {message}
+        </div>
+        */
+
+        <div style={{background: `${bgColor}`, color: "white", padding: "10px 50px", borderRadius: "10px"}}>
             {message}
         </div>
     );

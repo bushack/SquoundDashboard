@@ -43,11 +43,27 @@ export function ToastProvider({ children }: { children: ReactNode}) {
         <ToastContext.Provider value={{ showToast }}>
             {children}
 
-            <div className="fixed bottom-4 right-4 flex flex-col gap-2 z-50">
+            <div
+                style={{
+                    position: "fixed",
+                    bottom: "40px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    maxWidth: "320px",
+                    borderRadius: "10px",
+                    fontSize: "10pt",
+                    pointerEvents: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "8px",
+                    zIndex: 9999
+                }}
+            >
                 {toasts.map((toast) => (
-                    <GenericToast
-                        key={toast.id} {...toast}
-                    />
+                    <div key={toast.id} style={{ pointerEvents: "auto", marginTop: "8px"}}>
+                        <GenericToast {...toast}/>
+                    </div>
                 ))}
             </div>
         </ToastContext.Provider>
