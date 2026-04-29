@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { addCustomerSafe, updateCustomerSafe } from "@/lib/customers";
-import { useDialog } from "@/context/dialogContext";
 import { untabbedCard, tabbedCard, dangerButton, heading, inputStyleStretch, labelStyle, primaryButton } from "@/styles/ui";
 
 import { Customer } from "@/types/customer";
-import { DialogProvider } from "@/context/dialogContext"
+import { DialogProvider, useDialog } from "@/context/dialogContext";
+import { ToastProvider, useToast } from "@/context/toastContext";
 
 import { MESSAGES } from "@/constants/messages";
 
@@ -25,6 +25,7 @@ export default function CustomerForm({
 }: Properties) {
 
     const { showDialog } = useDialog();
+    const { showToast } = useToast();
     
     // Customer metadata.
     const [forename, setForename] = useState("");
@@ -103,8 +104,8 @@ export default function CustomerForm({
 
         if (editingCustomer) {
             showDialog({
-                title: MESSAGES.CONFIRM_EDIT_CUSTOMER_TITLE,
-                message: MESSAGES.CONFIRM_EDIT_CUSTOMER_MSG,
+                title: MESSAGES.EDIT_CUSTOMER_TITLE,
+                message: MESSAGES.EDIT_CUSTOMER_MSG,
                 onConfirm: async () => {
                     
                     try {
@@ -124,23 +125,23 @@ export default function CustomerForm({
                         });
 
                         if (!result.success) {
-                            console.error(error);
-                            //TODO: Display UI message.
-                            alert("Error updating customer");
+                            console.error(MESSAGES.ERROR_GENERIC_MSG, error);
+                            showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
                         } else {
-                            alert("Customer updated");
-                            //TODO: Display UI message.
+                            console.log(MESSAGES.EDIT_CUSTOMER_SUCCESS);
+                            showToast(MESSAGES.EDIT_CUSTOMER_SUCCESS, "success");
                             onSubmit();
                         }
                     } catch {
-                        console.error(MESSAGES.CONFIRM_EDIT_CUSTOMER_ERROR, error);
+                        console.error(MESSAGES.EDIT_CUSTOMER_ERROR, error);
+                        showToast(MESSAGES.EDIT_CUSTOMER_ERROR, "error");
                     }
                 },
             });
         } else {
             showDialog({
-                title: MESSAGES.CONFIRM_CREATE_CUSTOMER_TITLE,
-                message: MESSAGES.CONFIRM_CREATE_CUSTOMER_MSG,
+                title: MESSAGES.CREATE_CUSTOMER_TITLE,
+                message: MESSAGES.CREATE_CUSTOMER_MSG,
                 onConfirm: async () => {                
                     try {
                         // Adding new customer.
@@ -158,16 +159,16 @@ export default function CustomerForm({
                         });
 
                         if (!result.success) {
-                            console.error(error);
-                            alert("Error adding customer");
-                            //TODO: Display UI message.
+                            console.error(MESSAGES.ERROR_GENERIC_MSG, error);
+                            showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
                         } else {
-                            alert("Customer added");
-                            //TODO: Display UI message.
+                            console.log(MESSAGES.CREATE_CUSTOMER_SUCCESS);
+                            showToast(MESSAGES.CREATE_CUSTOMER_SUCCESS, "success");
                             clearForm();
                         }
                     } catch {
-                        console.error(MESSAGES.CONFIRM_CREATE_CUSTOMER_ERROR, error);
+                        console.error(MESSAGES.CREATE_CUSTOMER_ERROR, error);
+                        showToast(MESSAGES.CREATE_CUSTOMER_ERROR, "error");
                     }
                 }
             });

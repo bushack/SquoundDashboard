@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups";
 import { addRequest } from "@/lib/requests";
 import { tabbedCard, dangerButton200, dropdownStyle, heading, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
+import { DialogProvider, useDialog } from "@/context/dialogContext";
+import { ToastProvider, useToast } from "@/context/toastContext";
 
 import CurrencyInput from "../currency/currencyInput";
 
@@ -29,6 +31,10 @@ export default function RequestForm({
     onSuccess
 }: Properties) {
 
+    // UI.
+    const { showDialog } = useDialog();
+    const { showToast } = useToast();
+
     // Request metadata.
     const [categoryId, setCategoryId] = useState("");
     const [materialId, setMaterialId] = useState("");
@@ -47,27 +53,9 @@ export default function RequestForm({
 
     // Anti-spam.
     const [isBusy, setIsBusy] = useState<Boolean>(false);
-    
-    // UI feedback.
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
 
     // Currency formatting regex (strict, enforces two decimal places).
     const priceRegex = /^\d+(\.\d{2})?$/;
-
-
-    // Display UI success message.
-    const displaySuccessMessage = (message: string) => {
-        setSuccessMessage(message);
-        setTimeout(() => setSuccessMessage(""), UI_TOAST_TIMEOUT);
-    };
-
-
-    // Display UI error message.
-    const displayErrorMessage = (message: string) => {
-        setErrorMessage(message);
-        setTimeout(() => setErrorMessage(""), UI_TOAST_TIMEOUT);
-    };
 
 
     // Load lookup menu data.
@@ -122,31 +110,31 @@ export default function RequestForm({
 
         // Validate category.
         if (!categoryId.trim()) {
-            displayErrorMessage("Category is required");
+            alert("Category is required");
             return;
         }
         
         // Validate price.
         if (minPrice && maxPrice && minPrice.pence > maxPrice.pence) {
-            displayErrorMessage(MESSAGES.ERROR_PRICE_VALIDATION);
+            alert(MESSAGES.PRICE_VALIDATION_ALERT);
             return;
         }
 
         // Validate width.
         if (minWidthMm && maxWidthMm && Number(minWidthMm) > Number(maxWidthMm)) {
-            displayErrorMessage(MESSAGES.ERROR_WIDTH_VALIDATION);
+            alert(MESSAGES.WIDTH_VALIDATION_ALERT);
             return;
         }
 
         // Validate height.
         if (minHeightMm && maxHeightMm && Number(minHeightMm) > Number(maxHeightMm)) {
-            displayErrorMessage(MESSAGES.ERROR_HEIGHT_VALIDATION);
+            alert(MESSAGES.HEIGHT_VALIDATION_ALERT);
             return;
         }
 
         // Validate depth.
         if (minDepthMm && maxDepthMm && Number(minDepthMm) > Number(maxDepthMm)) {
-            displayErrorMessage(MESSAGES.ERROR_DEPTH_VALIDATION);
+            alert(MESSAGES.DEPTH_VALIDATION_ALERT);
             return;
         }
 
@@ -168,10 +156,11 @@ export default function RequestForm({
             });
         
             if (error) {
-                console.error(error);
-                displayErrorMessage(MESSAGES.GENERIC_ERROR);
+                console.error(MESSAGES.CREATE_REQUEST_ERROR, error);
+                showToast(MESSAGES.CREATE_REQUEST_ERROR, "error");
             } else {
-                displaySuccessMessage(MESSAGES.REQUEST_CREATED);
+                console.log(MESSAGES.CREATE_REQUEST_SUCCESS);
+                showToast(MESSAGES.CREATE_REQUEST_SUCCESS, "success");
         
                 // Reset form.
                 handleReset();
@@ -364,10 +353,6 @@ export default function RequestForm({
                     >
                         Reset
                     </button>
-
-                    {/* Where to put messages? Modal/dialog box? */}
-                    { successMessage && <span style={{color: "green"}}>{successMessage}</span>}
-                    { errorMessage && <span style={{color: "red"}}>{errorMessage}</span>}
                 </div>
             </form>
         </div>

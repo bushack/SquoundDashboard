@@ -31,8 +31,8 @@ export default function Layout({ children, headerText, sidebarTitle, footerText 
   const handleSignOut = async () => {
 
     showDialog({
-      title: MESSAGES.CONFIRM_SIGN_OUT_TITLE,
-      message: MESSAGES.CONFIRM_SIGN_OUT_MSG,
+      title: MESSAGES.SIGN_OUT_TITLE,
+      message: MESSAGES.SIGN_OUT_MSG,
       onConfirm: async () => {
         try {
           await supabase.auth.signOut();
@@ -40,7 +40,7 @@ export default function Layout({ children, headerText, sidebarTitle, footerText 
           // TODO: Currently only returning to login page here. Improve?
         } catch {
           // TODO: Handle sign out error?
-          console.error(MESSAGES.CONFIRM_SIGN_OUT_ERROR, error);
+          console.error(MESSAGES.SIGN_OUT_ERROR, error);
         }
       },
     });

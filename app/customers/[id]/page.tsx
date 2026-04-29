@@ -137,16 +137,16 @@ export default function CustomerDetailPage() {
           const result = await deleteCustomerSafe(id);
 
           if (!result.success) {
+            console.error(MESSAGES.ERROR_GENERIC_MSG);
             showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
-            console.log(MESSAGES.ERROR_GENERIC_MSG);
           } else {
-            router.back();
-            showToast(MESSAGES.DELETE_CUSTOMER_SUCCESS, "success");
             console.log(MESSAGES.DELETE_CUSTOMER_SUCCESS);
+            showToast(MESSAGES.DELETE_CUSTOMER_SUCCESS, "success");
+            router.back();
           }
         } catch {
-          showToast(MESSAGES.DELETE_CUSTOMER_ERROR, "error");
           console.error(MESSAGES.DELETE_CUSTOMER_ERROR, error);
+          showToast(MESSAGES.DELETE_CUSTOMER_ERROR, "error");
         }
       },
     });
@@ -176,21 +176,23 @@ export default function CustomerDetailPage() {
     }*/
 
     showDialog({
-      title: MESSAGES.CONFIRM_DELETE_REQUEST_TITLE,
-      message: MESSAGES.CONFIRM_DELETE_REQUEST_MSG,
+      title: MESSAGES.DELETE_REQUEST_TITLE,
+      message: MESSAGES.DELETE_REQUEST_MSG,
       onConfirm: async () => {
         try {
           const { error } = await deleteRequest(id);
 
           if (error) {
-            // TODO: Handle failed delete without error?
+            console.error(MESSAGES.ERROR_GENERIC_MSG, error);
+            showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
           } else {
+            console.log(MESSAGES.DELETE_REQUEST_SUCCESS);
+            showToast(MESSAGES.DELETE_REQUEST_SUCCESS, "success");
             loadRequests(customer.id);
-            //TODO : Display confirmation.
           }
         } catch {
-          // TODO: Handle error?
-          console.error(MESSAGES.CONFIRM_DELETE_CUSTOMER_ERROR, error);
+          console.error(MESSAGES.DELETE_REQUEST_ERROR, error);
+          showToast(MESSAGES.DELETE_REQUEST_ERROR, "error");
         }
       },
     });
