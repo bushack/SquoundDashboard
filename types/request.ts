@@ -1,12 +1,15 @@
 "use client"
 
+import { Money } from "@/types/money";
+
+
 export type Request = {
     id: number;
     customer_id: number;
     category_id: number;
     material_id?: number;
-    min_price_pence?: number;
-    max_price_pence?: number;
+    min_price?: Money;
+    max_price?: Money;
     min_width_mm?: number;
     max_width_mm?: number;
     min_height_mm?: number;

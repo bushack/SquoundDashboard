@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups";
+import { greaterThan } from "@/lib/money";
 import { addRequest } from "@/lib/requests";
 import { tabbedCard, dangerButton200, dropdownStyle, heading, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
@@ -115,7 +116,7 @@ export default function RequestForm({
         }
         
         // Validate price.
-        if (minPrice && maxPrice && minPrice.pence > maxPrice.pence) {
+        if (minPrice && maxPrice && greaterThan(minPrice, maxPrice)) {
             alert(MESSAGES.PRICE_VALIDATION_ALERT);
             return;
         }

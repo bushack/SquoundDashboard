@@ -1,2 +1,22 @@
 
+User Interface
+==============
+
 Implement standardised colours for success/error/info toasts
+Table layout for customer requests
+Compatibility with narrow displays (phone\tablet)
+
+
+Search
+======
+
+Customisable search parameters
+Persistant state when navigating away from page
+Multi-page results
+
+
+
+Security
+========
+
+Whole site needs securing

@@ -1,6 +1,7 @@
 "use client";
 
-import { supabase } from "./supabaseClient"
+import { supabase } from "./supabaseClient";
+import { Request } from "@/types/request";
 //TODO: Import and use the 'Request' type instead of using type 'any'.
 //TODO: Use safe functions (see 'lib/customers' for examples).
 
@@ -37,6 +38,32 @@ export const fetchRequests = async (customerId: number) => {
   .eq("customer_id", customerId);
 
   return { data, error };
+};
+
+
+export const fetchRequestsMapped = async (customerId: number) : Request[] => {
+  
+  const { data, error } = await fetchRequests(customerId);
+
+  return data.map((row) => ({
+    id: row.id,
+    customer_id: row.customer_id,
+    category_id: row.category_id,
+    material_id: row.material_id,
+    min_price: row.min_price_pence != null ? { pence: row.min_price_pence, currency: "GBP" } : null,
+    max_price: row.max_price_pence != null ? { pence: row.max_price_pence, currency: "GBP" } : null,
+    min_width_mm: row.min_width_mm,
+    max_width_mm: row.max_width_mm,
+    min_height_mm: row.min_height_mm,
+    max_height_mm: row.max_height_mm,
+    min_depth_mm: row.min_depth_mm,
+    max_depth_mm: row.max_depth_mm,
+    description: row.description,
+
+    // Relational joins.
+    categories: { name: row.categories.name },
+    materials: { name: row.materials.name },
+  }));
 };
 
 

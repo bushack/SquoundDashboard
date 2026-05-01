@@ -2,22 +2,13 @@
 import { Money } from "@/types/money";
 
 
-// Converts a Money object to a string object (formatted as GBP).
-/*export const toGbp = (money: Money) : string => {
+// Safety helper.
+export const assertSameCurrency = (a: Money, b: Money) => {
 
-    return new Intl.NumberFormat("en-GB", {
-        style: "currency",
-        currency: money.currency,
-    }).format(fromMoney(money));
-};*/
-
-/*export const toGbp = (pence: number) : string => {
-
-    return new Intl.NumberFormat("en-GB", {
-        style: "currency",
-        currency: "GBP",
-    }).format(Math.round(pence / 100));
-};*/
+    if (a.currency !== b.currency) {
+        throw new Error("Currency mismatch");
+    }
+};
 
 
 // Converts a number object (as pounds) to a Money object (as pence).
@@ -57,4 +48,59 @@ export const parseCurrencyInput = (pounds: string) : Money => {
     }
 
     return toMoney(parsedInput);
+};
+
+
+// Format data for UI.
+export const format = (money: Money) : string => {
+
+    return new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: money.currency,
+    }).format(money.pence / 100);
+};
+
+
+// Addition.
+export const add = (a: Money, b: Money) : Money => {
+    
+    assertSameCurrency(a, b);
+    return { pence: a.pence + b.pence, currency: a.currency };
+};
+
+
+// Subtraction.
+export const subtract = (a: Money, b: Money) : Money => {
+
+    assertSameCurrency(a, b);
+    return { pence: a.pence - b.pence, currency: a.currency };
+};
+
+
+// Multiplication (rounded).
+export const multiply = (money: Money, factor: number) : Money => {
+
+    return { pence: Math.round(money.pence * factor), currency: money.currency };
+};
+
+
+// Division (rounded).
+export const divide = (money: Money, divisor: number) : Money => {
+
+    return { pence: Math.round(money.pence / divisor), currency: money.currency };
+};
+
+
+// Equality.
+export const equalTo = (a: Money, b: Money) : boolean => {
+    
+    return (a.currency === b.currency) && (a.pence === b.pence);
+};
+
+
+// Greater-than.
+export const greaterThan = (a: Money, b: Money) : boolean => {
+
+    assertSameCurrency(a, b);
+    return (a.pence > b.pence);
 };

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { deleteCustomerSafe, fetchCustomerSafe } from "@/lib/customers";
-import { deleteRequest, fetchRequests } from "@/lib/requests";
+import { deleteRequest, fetchRequestsMapped } from "@/lib/requests";
 import { labelStyle, tabButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
@@ -15,8 +15,11 @@ import { ToastProvider, useToast } from "@/context/toastContext";
 import Layout from "../../components/layout";
 import CustomerCard from "../../components/customers/customerCard";
 import CustomerForm from "../../components/customers/customerForm";
+import GenericTable from "../../components/generic/genericTable";
 import RequestCard from "../../components/requests/requestCard";
 import RequestForm from "../../components/requests/requestForm";
+
+import { columns } from "../../components/requests/requestColumns";
 
 // Types.
 import type { Category } from "@/types/category";
@@ -91,13 +94,22 @@ export default function CustomerDetailPage() {
   // Load customer requests data.
   const loadRequests = async (id: number) => {
 
-    const { data, error } = await fetchRequests(id);
+    /*const { data, error } = await fetchRequests(id);
 
     if (error) {
       console.error(error);
     } else {
       setRequests(data || []);
       console.log("Successfully loaded request data");
+    }*/
+
+
+    // n
+    const result = await fetchRequestsMapped(id);
+
+    if (result) {
+      setRequests(result || []);
+      console.log("Successfully fetched request data");
     }
   };
 
@@ -292,7 +304,7 @@ export default function CustomerDetailPage() {
             )}
               
             {/* Existing Requests content */}
-            {customer && activeTab === "requests" && (
+            {/*customer && activeTab === "requests" && (
               <div>
                 {requests.map((r) => (
                   <RequestCard
@@ -301,6 +313,19 @@ export default function CustomerDetailPage() {
                     onDelete={handleDeleteRequest}
                   />
                 ))}
+              </div>
+            )*/}
+
+            {/* Existing Requests content */}
+            {customer && activeTab === "requests" && (
+              <div>
+                <GenericTable
+                  data={requests}
+                  //loading={loading}       // TODO: Implement loading msg
+                  columns={columns}
+                  getRowKey={(r) => r.id}
+                  onRowClick={(r) => null}  // TODO: Open new tab?
+                />
               </div>
             )}
 
