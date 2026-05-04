@@ -7,8 +7,9 @@ Table layout for customer requests
 Compatibility with narrow displays (phone\tablet)
 
 
-Search
-======
+
+Customer Search
+===============
 
 Customisable search parameters
 Persistant state when navigating away from page
@@ -16,7 +17,35 @@ Multi-page results
 
 
 
+Request Search (Finder Page)
+============================
+
+Filter is not working correctly
+Height filter does not exclude any rows when height === 900 AND price 9000-11000
+Currently the new table view simply displays every request in the db
+    - modify requestService so that it uses the new filter and queryBuilder utilities
+    - consider renaming SimpleRequest to something that better reflects the fact that it is a composite object
+Need to show/hide filter display when appropriate
+Remove old request card display at bottom of screen (it is now superceded by the table)
+
+
+
+Money
+=====
+
+Money type should be used throughout, wherever finanical data is being processed
+When communicating with database, conversion to/from Money should take place at first/last possible moment
+
+
+
+Measurements
+============
+
+Do we want to use millimetres in the app, or convert to centimetres?
+
+
+
 Security
 ========
 
-Whole site needs securing
+Whole site/db needs securing

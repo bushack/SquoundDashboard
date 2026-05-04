@@ -1,8 +1,8 @@
 
 import Link from "next/link";
 
-import { Request } from "@/types/request";
-import { format } from "@/lib/money";
+import { Request, SimpleRequest } from "@/types/request";
+import { format, formatZeroDecimal } from "@/lib/money";
 
 
   export const columns: Column<Request>[] = [
@@ -99,4 +99,37 @@ import { format } from "@/lib/money";
         </Link>
       ),
     },*/
+  ];
+
+
+  export const simpleRequestColumns: Column<SimpleRequest>[] = [
+    {
+      key: "customer_name",
+      header: "Customer",
+      accessor: (sr) => sr.customer_name,
+    },
+    {
+      key: "product_type",
+      header: "Product Type",
+      accessor: (sr) => sr.product_type,
+    },
+    {
+      key: "max_price",
+      header: "Max Price",
+      accessor: (sr) => sr.max_price ? formatZeroDecimal(sr.max_price) : null,
+    },
+    {
+      key: "view",
+      header: "New tab",
+      accessor: (sr) => (
+        <Link
+          href={`/customers/${sr.customer_id}`}
+          onClick={(e) => e.stopPropagation()}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          View
+        </Link>
+      ),
+    },
   ];

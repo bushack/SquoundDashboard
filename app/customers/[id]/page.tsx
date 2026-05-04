@@ -318,15 +318,13 @@ export default function CustomerDetailPage() {
 
             {/* Existing Requests content */}
             {customer && activeTab === "requests" && (
-              <div>
-                <GenericTable
-                  data={requests}
-                  //loading={loading}       // TODO: Implement loading msg
-                  columns={columns}
-                  getRowKey={(r) => r.id}
-                  onRowClick={(r) => null}  // TODO: Open new tab?
-                />
-              </div>
+              <GenericTable
+                data={requests}
+                //loading={loading}       // TODO: Implement loading msg
+                columns={columns}
+                getRowKey={(r) => r.id}
+                onRowClick={(r) => null}  // TODO: Open new tab?
+              />
             )}
 
             {/* Add Request content */}

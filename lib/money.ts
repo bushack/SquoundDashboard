@@ -51,7 +51,21 @@ export const parseCurrencyInput = (pounds: string) : Money => {
 };
 
 
-// Format data for UI.
+// Format data for user interface.
+// Money object to string, ie. 1000 becomes £1,000
+export const formatZeroDecimal = (money: Money) : string => {
+
+    return new Intl.NumberFormat("en-GB", {
+        style: "currency",
+        currency: money.currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(money.pence / 100);
+};
+
+
+// Format data for user interface.
+// Money object to string, ie. 1000 becomes £1,000.00
 export const format = (money: Money) : string => {
 
     return new Intl.NumberFormat("en-GB", {

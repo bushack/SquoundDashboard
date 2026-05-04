@@ -21,4 +21,13 @@ export type Request = {
     // Relational joins.
     categories?: { name: string };
     materials?: { name: string };
-  };
+};
+
+
+export type SimpleRequest = {
+  id: number;
+  max_price?: Money;
+  customer_id: number;
+  customer_name: string;
+  product_type: string;
+};

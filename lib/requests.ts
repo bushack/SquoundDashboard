@@ -2,7 +2,9 @@
 
 import { supabase } from "./supabaseClient";
 import { Request } from "@/types/request";
-//TODO: Import and use the 'Request' type instead of using type 'any'.
+import { QueryBuilder } from "@/utils/queryBuilder";
+import { buildDimensionFilter, buildPriceFilter } from "@/utils/filters";
+//TODO: Make use of the 'Request' type instead of using type 'any'.
 //TODO: Use safe functions (see 'lib/customers' for examples).
 
 const TABLE_NAME = "requests";
@@ -77,37 +79,47 @@ export const searchRequests = async (filters: any) => {
     materials (name)
   `);
 
-  if (filters.category_id) {
-    query = query.eq("category_id", filters.category_id);
+  const qb = new QueryBuilder();
+
+  // Category.
+  if (filters.category_id != null) {
+    qb.addAnd("category_id", "eq", filters.category_id);
   }
 
-  if (filters.material_id) {
-    query = query.eq("material_id", filters.material_id);
+  // Material.
+  if (filters.material_id != null) {
+    qb.addAnd("material_id", "eq", filters.material_id);
   }
 
-  if (filters.min_width_mm) {
-    query = query.gte("min_width_mm", filters.min_width_mm);
+  // Price.
+  {
+    const priceFilter = buildPriceFilter(
+      filters.min_price,
+      filters.max_price,
+      true // Include NULLs.
+    );
+
+    if (priceFilter) {
+      qb.addOr(priceFilter);
+    }
   }
 
-  if (filters.max_width_mm) {
-    query = query.lte("max_width_mm", filters.max_width_mm);
+  // Dimensions.
+  {
+    const dimensionFilter = buildDimensionFilter(
+      filters.width_mm,
+      filters.height_mm,
+      filters.depth_mm,
+      true
+    );
+
+    if (dimensionFilter) {
+      qb.addOr(dimensionFilter);
+    }
   }
 
-  if (filters.min_height_mm) {
-    query = query.gte("min_height_mm", filters.min_height_mm);
-  }
-
-  if (filters.max_height_mm) {
-    query = query.lte("max_height_mm", filters.max_height_mm);
-  }
-
-  if (filters.min_depth_mm) {
-    query = query.gte("min_depth_mm", filters.min_depth_mm);
-  }
-
-  if (filters.max_depth_mm) {
-    query = query.lte("max_depth_mm", filters.max_depth_mm);
-  }
+  // Append the queries in the builder to the query variable.
+  query = qb.apply(query);
 
   const { data, error } = await query;
 

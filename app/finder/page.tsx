@@ -4,7 +4,16 @@ import { useState, useEffect } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups"
 import { searchRequests } from "@/lib/requests"
 import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200, heading } from "@/styles/ui";
+import { simpleRequestColumns } from "../components/requests/requestColumns";
+
+import CurrencyInput from "../components/currency/currencyInput";
+import GenericTable from "../components/generic/genericTable";
 import Layout from "../components/layout"
+
+// t
+import { fetchRequests } from "@/services/requestService";
+import { mapRawRequests } from "@/mappers/requestMapper";
+import { SimpleRequest } from "@/types/request";
 
 
 export default function FinderPage() {
@@ -17,20 +26,18 @@ export default function FinderPage() {
   const [categoryId, setCategoryId] = useState("");
   const [materialId, setMaterialId] = useState("");
 
-  // Dimensions (width).
-  const [minWidthMm, setMinWidthMm] = useState("");
-  const [maxWidthMm, setMaxWidthMm] = useState("");
+  // Price.
+  const [minPrice, setMinPrice] = useState<Money | null>(null);
+  const [maxPrice, setMaxPrice] = useState<Money | null>(null);
 
-  // Dimensions (height).
-  const [minHeightMm, setMinHeightMm] = useState("");
-  const [maxHeightMm, setMaxHeightMm] = useState("");
-
-  // Dimensions (depth).
-  const [minDepthMm, setMinDepthMm] = useState("");
-  const [maxDepthMm, setMaxDepthMm] = useState("");
+  // Dimensions.
+  const [widthMm, setWidthMm] = useState("");
+  const [heightMm, setHeightMm] = useState("");
+  const [depthMm, setDepthMm] = useState("");
 
   // Results.
   const [results, setResults] = useState<any[]>([]);
+  const [requests, setRequests] = useState<SimpleRequest[]>([]);
 
 
   // Fetch lookup data when component loads.
@@ -52,12 +59,11 @@ export default function FinderPage() {
     const { data, error } = await searchRequests({
       category_id: categoryId ? Number(categoryId) : null,
       material_id: materialId ? Number(materialId) : null,
-      min_width_mm: minWidthMm ? Number(minWidthMm) : null,
-      max_width_mm: maxWidthMm ? Number(maxWidthMm) : null,
-      min_height_mm: minHeightMm ? Number(minHeightMm) : null,
-      max_height_mm: maxHeightMm ? Number(maxHeightMm) : null,
-      min_depth_mm: minDepthMm ? Number(minDepthMm) : null,
-      max_depth_mm: maxDepthMm ? Number(maxDepthMm) : null,
+      min_price: minPrice ? Number(minPrice.pence) : null,
+      max_price: maxPrice ? Number(maxPrice.pence) : null,
+      width_mm: widthMm ? Number(widthMm) : null,
+      height_mm: heightMm ? Number(heightMm) : null,
+      depth_mm: depthMm ? Number(depthMm) : null,
     });
 
     if (error) {
@@ -66,6 +72,10 @@ export default function FinderPage() {
     } else {
       setResults(data || []);
     }
+
+    // t
+    const rawRequests = await fetchRequests();
+    setRequests(mapRawRequests(rawRequests));
   };
 
 
@@ -76,20 +86,18 @@ export default function FinderPage() {
     setCategoryId("");
     setMaterialId("");
 
-    // Dimensions (width).
-    setMinWidthMm("");
-    setMaxWidthMm("");
+    // Price.
+    setMinPrice(null);
+    setMaxPrice(null);
 
-    // Dimensions (height).
-    setMinHeightMm("");
-    setMaxHeightMm("");
-
-    // Dimensions (depth).
-    setMinDepthMm("");
-    setMaxDepthMm("");
+    // Dimensions.
+    setWidthMm("");
+    setHeightMm("");
+    setDepthMm("");
 
     // Clear results.
     setResults([]);
+    setRequests([]);
   };
 
 
@@ -137,69 +145,57 @@ export default function FinderPage() {
             )) }
           </select>
 
-          {/* Width (min/max) inputs */}
-          <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Width (min/max) (mm):</h3>
+          {/* Price (min/max) inputs */}
+          <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Price (£):</h3>
+          <CurrencyInput
+              id="minPrice"
+              name="minPriceInput"
+              value={minPrice}
+              placeholder={"Minimum price (£)"}
+              onChange={setMinPrice}
+          />
+
+          <CurrencyInput
+              id="maxPrice"
+              name="maxPriceInput"
+              value={maxPrice}
+              placeholder={"Maximum price (£)"}
+              onChange={setMaxPrice}
+          />
+
+          {/* Width input */}
+          <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Width (mm):</h3>
           <input
-            id="minWidth"
-            name="minWidthInput"
+            id="width"
+            name="widthInput"
             type="number"
-            placeholder="Minimum width (mm)"
-            value={minWidthMm}
-            onChange={(e) => setMinWidthMm(e.target.value)}
+            placeholder="Width (mm)"
+            value={widthMm}
+            onChange={(e) => setWidthMm(e.target.value)}
             style={inputStyle200}
           />
 
+          {/* Height input */}
+          <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Height (mm):</h3>
           <input
-            id="maxWidth"
-            name="maxWidthInput"
+            id="height"
+            name="heightInput"
             type="number"
-            placeholder="Maximum width (mm)"
-            value={maxWidthMm}
-            onChange={(e) => setMaxWidthMm(e.target.value)}
+            placeholder="Height (mm)"
+            value={heightMm}
+            onChange={(e) => setHeightMm(e.target.value)}
             style={inputStyle200}
           />
 
-          {/* Height (min/max) inputs */}
-          <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Height (min/max) (mm):</h3>
+          {/* Depth input */}
+          <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Depth (mm):</h3>
           <input
-            id="minHeight"
-            name="minHeightInput"
+            id="depth"
+            name="depthInput"
             type="number"
-            placeholder="Minimum height (mm)"
-            value={minHeightMm}
-            onChange={(e) => setMinHeightMm(e.target.value)}
-            style={inputStyle200}
-          />
-
-          <input
-            id="maxHeight"
-            name="maxHeightInput"
-            type="number"
-            placeholder="Maximum height (mm)"
-            value={maxHeightMm}
-            onChange={(e) => setMaxHeightMm(e.target.value)}
-            style={inputStyle200}
-          />
-
-          {/* Depth (min/max) inputs */}
-          <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Depth (min/max) (mm):</h3>
-          <input
-            id="minDepth"
-            name="minDepthInput"
-            type="number"
-            placeholder="Minimum depth (mm)"
-            value={minDepthMm}
-            onChange={(e) => setMinDepthMm(e.target.value)}
-            style={inputStyle200}
-          />
-
-          <input
-            id="maxDepth"
-            name="maxDepthInput"
-            type="number"
-            placeholder="Maximum depth (mm)"
-            value={maxDepthMm}
-            onChange={(e) => setMaxDepthMm(e.target.value)}
+            placeholder="Depth (mm)"
+            value={depthMm}
+            onChange={(e) => setDepthMm(e.target.value)}
             style={inputStyle200}
           />
 
@@ -222,6 +218,14 @@ export default function FinderPage() {
             </button>
           </div>
       </div>
+
+      <GenericTable
+        data={requests}
+        //loading={loading}
+        columns={simpleRequestColumns}
+        getRowKey={(r) => r.id}
+        onRowClick={(r) => null}
+      />
 
       {/* Results map - hidden if results.length is zero */}
       {results.length > 0 && <div style={untabbedCard}>
@@ -247,7 +251,8 @@ export default function FinderPage() {
                 <strong>{r.materials?.name} {r.categories?.name} wanted</strong><br />
                 Width: { r.min_width_mm || "*" }mm min - { r.max_width_mm || "*" }mm max<br />
                 Height: { r.min_height_mm || "*" }mm min - { r.max_height_mm || "*" }mm max<br />
-                Depth: { r.min_depth_mm || "*" }mm min - { r.max_depth_mm || "*" }mm max
+                Depth: { r.min_depth_mm || "*" }mm min - { r.max_depth_mm || "*" }mm max<br />
+                Price: { r.min_price || "*" } min - { r.max_price || "*" } max
               </p>
             </div>
           </a>
