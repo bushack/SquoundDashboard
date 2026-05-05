@@ -2,18 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups"
-import { searchRequests } from "@/lib/requests"
-import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200, heading } from "@/styles/ui";
+import { fetchRequests } from "@/services/requestService";
+import { mapToSimpleRequests } from "@/mappers/requestMapper";
+import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200 } from "@/styles/ui";
 import { simpleRequestColumns } from "../components/requests/requestColumns";
+import { SimpleRequest } from "@/types/request";
 
 import CurrencyInput from "../components/currency/currencyInput";
 import GenericTable from "../components/generic/genericTable";
 import Layout from "../components/layout"
-
-// t
-import { fetchRequests } from "@/services/requestService";
-import { mapRawRequests } from "@/mappers/requestMapper";
-import { SimpleRequest } from "@/types/request";
 
 
 export default function FinderPage() {
@@ -23,25 +20,25 @@ export default function FinderPage() {
   const [materials, setMaterials] = useState<any[]>([]);
 
   // Identifiers (categories/materials).
-  const [categoryId, setCategoryId] = useState("");
-  const [materialId, setMaterialId] = useState("");
+  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [materialId, setMaterialId] = useState<number | null>(null);
 
   // Price.
   const [minPrice, setMinPrice] = useState<Money | null>(null);
   const [maxPrice, setMaxPrice] = useState<Money | null>(null);
 
   // Dimensions.
-  const [widthMm, setWidthMm] = useState("");
-  const [heightMm, setHeightMm] = useState("");
-  const [depthMm, setDepthMm] = useState("");
+  const [widthMm, setWidthMm] = useState<number | null>(null);
+  const [heightMm, setHeightMm] = useState<number | null>(null);
+  const [depthMm, setDepthMm] = useState<number | null>(null);
 
-  // Results.
-  const [results, setResults] = useState<any[]>([]);
+  // Requests.
   const [requests, setRequests] = useState<SimpleRequest[]>([]);
 
 
   // Fetch lookup data when component loads.
   useEffect(() => {
+
     const loadLookups = async () => {
       const { data: categoryData } = await fetchCategories();
       const { data: materialData } = await fetchMaterials();
@@ -56,26 +53,18 @@ export default function FinderPage() {
 
   // Fetch filtered data from database.
   const handleSearch = async () => {
-    const { data, error } = await searchRequests({
-      category_id: categoryId ? Number(categoryId) : null,
-      material_id: materialId ? Number(materialId) : null,
-      min_price: minPrice ? Number(minPrice.pence) : null,
-      max_price: maxPrice ? Number(maxPrice.pence) : null,
-      width_mm: widthMm ? Number(widthMm) : null,
-      height_mm: heightMm ? Number(heightMm) : null,
-      depth_mm: depthMm ? Number(depthMm) : null,
+    
+    const rawRequests = await fetchRequests({
+      category_id: categoryId ? categoryId : null,
+      material_id: materialId ? materialId : null,
+      min_price: minPrice ? minPrice : null,
+      max_price: maxPrice ? maxPrice : null,
+      width_mm: widthMm ? widthMm : null,
+      height_mm: heightMm ? heightMm : null,
+      depth_mm: depthMm ? depthMm : null,
     });
 
-    if (error) {
-      console.error(error);
-      alert("Search failed");
-    } else {
-      setResults(data || []);
-    }
-
-    // t
-    const rawRequests = await fetchRequests();
-    setRequests(mapRawRequests(rawRequests));
+    setRequests(mapToSimpleRequests(rawRequests));
   };
 
 
@@ -83,20 +72,19 @@ export default function FinderPage() {
   const handleReset = async () => {
     
     // Identifiers (categories/materials).
-    setCategoryId("");
-    setMaterialId("");
+    setCategoryId(null);
+    setMaterialId(null);
 
     // Price.
     setMinPrice(null);
     setMaxPrice(null);
 
     // Dimensions.
-    setWidthMm("");
-    setHeightMm("");
-    setDepthMm("");
+    setWidthMm(null);
+    setHeightMm(null);
+    setDepthMm(null);
 
-    // Clear results.
-    setResults([]);
+    // Clear array.
     setRequests([]);
   };
 
@@ -226,38 +214,6 @@ export default function FinderPage() {
         getRowKey={(r) => r.id}
         onRowClick={(r) => null}
       />
-
-      {/* Results map - hidden if results.length is zero */}
-      {results.length > 0 && <div style={untabbedCard}>
-        
-        {results.length === 1 && <h3 style={heading}>1 result</h3>}
-        {results.length > 1 && <h3 style={heading}>{results.length} results</h3>}
-
-        {/* On-click launch new browser tab */}
-        {results.map((r) => (
-          <a
-            href={`/customers/${r.customers?.id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            key={r.id}
-          >
-            <div
-              style={{ ...untabbedCard, cursor: "pointer", border: "3px solid #ddd" }}
-            >
-              <h3 style={{ fontSize: "16pt", fontWeight: "bold", marginBottom: "10px"}}>
-                {r.customers?.forename} {r.customers?.surname}
-              </h3>
-              <p>
-                <strong>{r.materials?.name} {r.categories?.name} wanted</strong><br />
-                Width: { r.min_width_mm || "*" }mm min - { r.max_width_mm || "*" }mm max<br />
-                Height: { r.min_height_mm || "*" }mm min - { r.max_height_mm || "*" }mm max<br />
-                Depth: { r.min_depth_mm || "*" }mm min - { r.max_depth_mm || "*" }mm max<br />
-                Price: { r.min_price || "*" } min - { r.max_price || "*" } max
-              </p>
-            </div>
-          </a>
-        ))}
-      </div>}
     </Layout>
   );
 };

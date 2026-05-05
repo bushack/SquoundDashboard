@@ -119,6 +119,11 @@ import { format, formatZeroDecimal } from "@/lib/money";
       accessor: (sr) => sr.max_price ? formatZeroDecimal(sr.max_price) : null,
     },
     {
+      key: "max_width_mm",
+      header: "Max Width",
+      accessor: (sr) => sr.max_width_mm ? sr.max_width_mm : null,
+    },
+    {
       key: "view",
       header: "New tab",
       accessor: (sr) => (

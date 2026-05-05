@@ -1,7 +1,10 @@
 
+import { Money } from "@/types/money";
+
+
 export const buildPriceFilter = (
-    min?: number,
-    max?: number,
+    min?: Money,
+    max?: Money,
     includeNull = true
 ): string | null => {
 
@@ -9,13 +12,13 @@ export const buildPriceFilter = (
 
     if (min && max) {
         // Both min and max specified.
-        conditions.push(`and(or(max_price_pence.gte.${min},max_price_pence.is.null),or(min_price_pence.lte.${max},min_price_pence.is.null))`);
+        conditions.push(`and(or(max_price_pence.gte.${min.pence},max_price_pence.is.null),or(min_price_pence.lte.${max.pence},min_price_pence.is.null))`);
     } else if (min) {
         // Only min specified.
-        conditions.push(`max_price_pence.gte.${min}`);
+        conditions.push(`max_price_pence.gte.${min.pence}`);
     } else if (max) {
         // Only max specified.
-        conditions.push(`max_price_pence.lte.${max}`);
+        conditions.push(`max_price_pence.lte.${max.pence}`);
     }
 
     if (includeNull) {

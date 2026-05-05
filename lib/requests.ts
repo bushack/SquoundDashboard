@@ -2,6 +2,7 @@
 
 import { supabase } from "./supabaseClient";
 import { Request } from "@/types/request";
+import { RequestFilter } from "@/filters/requestFilter";
 import { QueryBuilder } from "@/utils/queryBuilder";
 import { buildDimensionFilter, buildPriceFilter } from "@/utils/filters";
 //TODO: Make use of the 'Request' type instead of using type 'any'.
@@ -69,9 +70,9 @@ export const fetchRequestsMapped = async (customerId: number) : Request[] => {
 };
 
 
-export const searchRequests = async (filters: any) => {
+export const searchRequests = async (filter: RequestFilter) => {
   let query = supabase
-    .from("requests")
+    .from(TABLE_NAME)
     .select(`
     *,
     customers (*),
@@ -82,20 +83,20 @@ export const searchRequests = async (filters: any) => {
   const qb = new QueryBuilder();
 
   // Category.
-  if (filters.category_id != null) {
-    qb.addAnd("category_id", "eq", filters.category_id);
+  if (filter.category_id != null) {
+    qb.addAnd("category_id", "eq", filter.category_id);
   }
 
   // Material.
-  if (filters.material_id != null) {
-    qb.addAnd("material_id", "eq", filters.material_id);
+  if (filter.material_id != null) {
+    qb.addAnd("material_id", "eq", filter.material_id);
   }
 
   // Price.
   {
     const priceFilter = buildPriceFilter(
-      filters.min_price,
-      filters.max_price,
+      filter.min_price,
+      filter.max_price,
       true // Include NULLs.
     );
 
@@ -107,9 +108,9 @@ export const searchRequests = async (filters: any) => {
   // Dimensions.
   {
     const dimensionFilter = buildDimensionFilter(
-      filters.width_mm,
-      filters.height_mm,
-      filters.depth_mm,
+      filter.width_mm,
+      filter.height_mm,
+      filter.depth_mm,
       true
     );
 
