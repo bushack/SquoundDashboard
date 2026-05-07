@@ -12,17 +12,22 @@ export const buildPriceFilter = (
 
     if (min && max) {
         // Both min and max specified.
-        conditions.push(`and(or(max_price_pence.gte.${min.pence},max_price_pence.is.null),or(min_price_pence.lte.${max.pence},min_price_pence.is.null))`);
+        conditions.push(`and(or(max_price_pence.gte.${min.pence},max_price_pence.is.null),or(min_price_pence.lte.${max.pence},min_price_pence.is.null))`
+        );
     } else if (min) {
         // Only min specified.
-        conditions.push(`max_price_pence.gte.${min.pence}`);
+        conditions.push(
+            `or(max_price_pence.gte.${min.pence},max_price_pence.is.null)`
+        );
     } else if (max) {
         // Only max specified.
-        conditions.push(`max_price_pence.lte.${max.pence}`);
+        conditions.push(
+            `or(min_price_pence.lte.${max.pence},min_price_pence.is.null)`
+        );
     }
 
     if (includeNull) {
-        conditions.push(`max_price_pence.is.null`);
+        //conditions.push(`max_price_pence.is.null`);
     }
 
     if (conditions.length === 0) {

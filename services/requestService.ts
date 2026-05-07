@@ -88,6 +88,7 @@ export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]
     qb.addAnd("material_id", "eq", filter.material_id);
   }
 
+  const combinedFilterParts: string[] = [];
   // Price.
   {
     const priceFilter = buildPriceFilter(
@@ -97,7 +98,7 @@ export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]
     );
 
     if (priceFilter) {
-      qb.addOr(priceFilter);
+      combinedFilterParts.push(priceFilter);
     }
   }
 
@@ -111,12 +112,20 @@ export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]
     );
 
     if (dimensionFilter) {
-      qb.addOr(dimensionFilter);
+      combinedFilterParts.push(dimensionFilter);
     }
   }
 
   // Append the queries in the builder to the query variable.
   query = qb.apply(query);
+  
+  const finalFilter = combinedFilterParts.length > 0
+    ? `and(${combinedFilterParts.join(",")})`
+    : null;
+
+  if (finalFilter) {
+    query = query.or(finalFilter);
+  }
 
   const { data, error } = await query;
 

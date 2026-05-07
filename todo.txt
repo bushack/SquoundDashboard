@@ -3,7 +3,6 @@ User Interface
 ==============
 
 Implement standardised colours for success/error/info toasts
-Table layout for customer requests
 Compatibility with narrow displays (phone\tablet)
 
 
@@ -22,7 +21,7 @@ Request Search (Finder Page)
 
 Filter is not working correctly
 Height filter does not exclude any rows when height === 900 AND price 9000-11000
-Currently the new table view simply displays every request in the db
+Throws error when zero results?
     - modify requestService so that it uses the new filter and queryBuilder utilities
     - consider renaming SimpleRequest to something that better reflects the fact that it is a composite object
 Need to show/hide filter display when appropriate
