@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { RequestFilter } from "@/filters/requestFilter";
 import { QueryBuilder } from "@/utils/queryBuilder";
 import { buildDimensionFilter, buildPriceFilter } from "@/utils/filters";
+import { applyDimensionFilter, applyPriceFilter } from "@/utils/filters";
 
 
 const TABLE_NAME = "requests";
@@ -80,15 +81,20 @@ export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]
 
   // Category.
   if (filter.category_id != null) {
-    qb.addAnd("category_id", "eq", filter.category_id);
+    //qb.addAnd("category_id", "eq", filter.category_id);
+    query = query.eq("category_id", filter.category_id);
   }
 
   // Material.
   if (filter.material_id != null) {
-    qb.addAnd("material_id", "eq", filter.material_id);
+    //qb.addAnd("material_id", "eq", filter.material_id);
+    query = query.eq("material_id", filter.material_id);
   }
-
-  const combinedFilterParts: string[] = [];
+  
+  query = applyPriceFilter(query, filter.min_price, filter.max_price);
+  query = applyDimensionFilter(query, filter.width_mm, filter.height_mm, filter.depth_mm);
+  
+  /*const combinedFilterParts: string[] = [];
   // Price.
   {
     const priceFilter = buildPriceFilter(
@@ -125,7 +131,7 @@ export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]
 
   if (finalFilter) {
     query = query.or(finalFilter);
-  }
+  }*/
 
   const { data, error } = await query;
 
@@ -133,6 +139,8 @@ export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]
     console.error(error);
     throw new Error(error.message);
   }
+
+  console.log("data size: ", data.length);
 
   return data ?? [];
 };

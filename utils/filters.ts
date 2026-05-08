@@ -38,6 +38,26 @@ export const buildPriceFilter = (
 }
 
 
+export const applyPriceFilter = (query, min?: Money, max?: Money) => {
+    
+    if (min) {
+        //query = query.gte("max_price_pence", min_pence);
+        query = query.or(`max_price_pence.gte.${min.pence},max_price_pence.is.null`);
+    }
+
+    if (max) {
+        //query = query.lte("min_price_pence", max_pence);
+        query = query.or(`min_price_pence.lte.${max.pence},min_price_pence.is.null`);
+    }
+
+    /*if (includeNull) {
+        query = query.or("min_price_pence.is.null,max_price_pence.is.null");
+    }*/
+
+    return query;
+}
+
+
 export const buildDimensionFilter = (
     width?: number,
     height?: number,
@@ -97,4 +117,44 @@ export const buildDimensionFilter = (
 
     // IMPORTANT: Wrap everything in AND.
     return `and(${conditions.join(",")})`;
+}
+
+
+export const applyDimensionFilter = (query, width_mm?: number, height_mm?: number, depth_mm?: number, includeNull = true) => {
+    
+    if (width_mm) {
+        //query = query.gte("max_width_mm", width_mm);
+        //query = query.lte("min_width_mm", width_mm);
+        query = query.or(`max_width_mm.gte.${width_mm},max_width_mm.is.null`);
+        query = query.or(`min_width_mm.lte.${width_mm},min_width_mm.is.null`);
+    }
+
+    if (height_mm) {
+        //query = query.gte("max_height_mm", height_mm);
+        //query = query.lte("min_height_mm", height_mm);
+        query = query.or(`max_height_mm.gte.${height_mm},max_height_mm.is.null`);
+        query = query.or(`min_height_mm.lte.${height_mm},min_height_mm.is.null`);
+    }
+
+    if (depth_mm) {
+        //query = query.gte("max_depth_mm", depth_mm);
+        //query = query.lte("min_depth_mm", depth_mm);
+        query = query.or(`max_depth_mm.gte.${depth_mm},max_depth_mm.is.null`);
+        query = query.or(`min_depth_mm.lte.${depth_mm},min_depth_mm.is.null`);
+    }
+
+    /*if (includeNull) {
+        query = query.or(
+            [
+                "min_width_mm.is.null",
+                "max_width_mm.is.null",
+                "min_height_mm.is.null",
+                "max_height_mm.is.null",
+                "min_depth_mm.is.null",
+                "max_depth_mm.is.null"
+            ].join(",")
+        );
+    }*/
+
+    return query;
 }
