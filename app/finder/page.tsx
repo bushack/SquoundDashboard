@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { fetchCategories, fetchMaterials } from "@/lib/lookups"
+import { fetchCategories, fetchMaterials } from "@/lib/lookups";
 import { fetchRequests } from "@/services/requestService";
 import { mapToSimpleRequests } from "@/mappers/requestMapper";
 import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200 } from "@/styles/ui";
@@ -10,10 +10,14 @@ import { SimpleRequest } from "@/types/request";
 
 import CurrencyInput from "../components/currency/currencyInput";
 import GenericTable from "../components/generic/genericTable";
-import Layout from "../components/layout"
+import Layout from "../components/layout";
+import ExpandablePanel from "../components/generic/expandablePanel";
 
 
 export default function FinderPage() {
+
+  // Toggle filter visibility.
+  const [showFilter, setShowFilter] = useState<boolean>(true);
 
   // Arrays (categories/materials).
   const [categories, setCategories] = useState<any[]>([]);
@@ -53,6 +57,9 @@ export default function FinderPage() {
 
   // Fetch filtered data from database.
   const handleSearch = async () => {
+
+    // Hide filter on submit.
+    setShowFilter(false);
     
     const rawRequests = await fetchRequests({
       category_id: categoryId ? categoryId : null,
@@ -86,107 +93,118 @@ export default function FinderPage() {
 
     // Clear array.
     setRequests([]);
+
+    // Show filter.
+    setShowFilter(true);
   };
 
 
   return (
     <Layout headerText="Home / Customers / Find">
 
-      {/* Dropdown menus and inputs */}
       <div style={untabbedCard}>
-        <h1 style={{fontSize: "22px", fontWeight: "bold", marginBottom: "5px"}}>Customer Finder</h1>
-        <h2 style={{fontSize: "10pt", fontWeight: "normal", marginBottom: "25px"}}>Match a product with potential customers</h2>
 
-        {/* Category dropdown menu */}
-        <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Category:</h3>
-          <select
-            id="category"
-            name="categorySelect"
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-            style={dropdownStyle}
-          >
-            <option value="">Select category</option>
+        <ExpandablePanel
+          heading="Customer Finder"
+          subheading="Match a product with potential customers"
+          expandedButtonText="Hide Filter ▲"
+          collapsedButtonText="Show Filter ▼"
+          expanded={showFilter}
+          onToggle={() => setShowFilter(!showFilter)}
+        >
 
-            { categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            )) }
-          </select>
+          {/* Category dropdown menu */}
+          <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px", marginTop: "20px"}}>Category:</h3>
+            <select
+              id="category"
+              name="categorySelect"
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              style={dropdownStyle}
+            >
+              <option value="">Select category</option>
+
+              { categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              )) }
+            </select>
 
           {/* Material dropdown menu */}
           <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Material:</h3>
-          <select
-            id="material"
-            name="materialSelect"
-            value={materialId}
-            onChange={(e) => setMaterialId(e.target.value)}
-            style={dropdownStyle}
-          >
-            <option value="">Select material</option>
+            <select
+              id="material"
+              name="materialSelect"
+              value={materialId}
+              onChange={(e) => setMaterialId(e.target.value)}
+              style={dropdownStyle}
+            >
+              <option value="">Select material</option>
 
-            { materials.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name}
-              </option>
-            )) }
-          </select>
+              { materials.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              )) }
+            </select>
 
           {/* Price (min/max) inputs */}
           <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Price (£):</h3>
-          <CurrencyInput
-              id="minPrice"
-              name="minPriceInput"
-              value={minPrice}
-              placeholder={"Minimum price (£)"}
-              onChange={setMinPrice}
-          />
+            <CurrencyInput
+                id="minPrice"
+                name="minPriceInput"
+                value={minPrice}
+                placeholder={"Minimum price (£)"}
+                onChange={setMinPrice}
+            />
 
-          <CurrencyInput
-              id="maxPrice"
-              name="maxPriceInput"
-              value={maxPrice}
-              placeholder={"Maximum price (£)"}
-              onChange={setMaxPrice}
-          />
+            <CurrencyInput
+                id="maxPrice"
+                name="maxPriceInput"
+                value={maxPrice}
+                placeholder={"Maximum price (£)"}
+                onChange={setMaxPrice}
+            />
 
           {/* Width input */}
           <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Width (mm):</h3>
-          <input
-            id="width"
-            name="widthInput"
-            type="number"
-            placeholder="Width (mm)"
-            value={widthMm}
-            onChange={(e) => setWidthMm(e.target.value)}
-            style={inputStyle200}
-          />
+            <input
+              id="width"
+              name="widthInput"
+              type="number"
+              placeholder="Width (mm)"
+              value={widthMm}
+              onChange={(e) => setWidthMm(e.target.value)}
+              style={inputStyle200}
+            />
 
           {/* Height input */}
           <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Height (mm):</h3>
-          <input
-            id="height"
-            name="heightInput"
-            type="number"
-            placeholder="Height (mm)"
-            value={heightMm}
-            onChange={(e) => setHeightMm(e.target.value)}
-            style={inputStyle200}
-          />
+            <input
+              id="height"
+              name="heightInput"
+              type="number"
+              placeholder="Height (mm)"
+              value={heightMm}
+              onChange={(e) => setHeightMm(e.target.value)}
+              style={inputStyle200}
+            />
 
           {/* Depth input */}
           <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Depth (mm):</h3>
-          <input
-            id="depth"
-            name="depthInput"
-            type="number"
-            placeholder="Depth (mm)"
-            value={depthMm}
-            onChange={(e) => setDepthMm(e.target.value)}
-            style={inputStyle200}
-          />
+            <input
+              id="depth"
+              name="depthInput"
+              type="number"
+              placeholder="Depth (mm)"
+              value={depthMm}
+              onChange={(e) => setDepthMm(e.target.value)}
+              style={inputStyle200}
+            />
+        </ExpandablePanel>
 
+        <div>
           {/* Submit & Reset buttons */}
           <div style={{ marginTop: "10px" }}>
             <button
@@ -205,6 +223,7 @@ export default function FinderPage() {
               Reset
             </button>
           </div>
+        </div>
       </div>
 
       <GenericTable
@@ -214,6 +233,7 @@ export default function FinderPage() {
         getRowKey={(r) => r.id}
         onRowClick={(r) => null}
       />
+
     </Layout>
   );
 };
