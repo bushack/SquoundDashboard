@@ -1,18 +1,15 @@
-
 "use client"
 
 import { useEffect, useRef, useState } from "react";
-import { buttonStyle } from "@/styles/ui";
+import { primaryButton } from "@/styles/ui";
 
 
 type Properties = {
     heading: string,
     subheading: string,
-    expandedButtonText: string,
-    collapsedButtonText: string,
+    buttonText: string,
     children: React.ReactNode,
     expanded: boolean,
-    //defaultExpanded?: boolean,
     onToggle: () => void;
 };
 
@@ -20,12 +17,10 @@ type Properties = {
 export default function ExpandablePanel({
     heading,
     subheading,
-    expandedButtonText,
-    collapsedButtonText,
+    buttonText,
     children,
     expanded,
     onToggle,
-    //defaultExpanded = false
 }: Properties) {
     
     //const [expanded, setExpanded] = useState(defaultExpanded);
@@ -45,12 +40,14 @@ export default function ExpandablePanel({
         
         <div>
             <h1 style={{fontSize: "22px", fontWeight: "bold", marginBottom: "5px"}}>{heading}</h1>
-            <h2 style={{fontSize: "10pt", fontWeight: "normal", marginBottom: "25px"}}>{subheading}</h2>
+            <h2 style={{fontSize: "10pt", fontWeight: "normal", marginBottom: "15px"}}>{subheading}</h2>
 
             <button
-                style={{...buttonStyle, minWidth: "200px", maxWidth: "200px"}}
-                onClick={onToggle}>
-                    {expanded ? expandedButtonText : collapsedButtonText}
+                hidden={expanded}
+                style={{...primaryButton, minWidth: "200px", maxWidth: "200px"}}
+                onClick={onToggle}
+            >
+                {buttonText}
             </button>
 
             <div hidden={!expanded}>

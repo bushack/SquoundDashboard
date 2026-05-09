@@ -38,6 +38,7 @@ export default function FinderPage() {
 
   // Requests.
   const [requests, setRequests] = useState<SimpleRequest[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
 
   // Fetch lookup data when component loads.
@@ -56,11 +57,14 @@ export default function FinderPage() {
 
 
   // Fetch filtered data from database.
-  const handleSearch = async () => {
+  const handleSubmit = async () => {
 
     // Hide filter on submit.
     setShowFilter(false);
     
+    // Show loading label.
+    setLoading(true);
+
     const rawRequests = await fetchRequests({
       category_id: categoryId ? categoryId : null,
       material_id: materialId ? materialId : null,
@@ -72,6 +76,8 @@ export default function FinderPage() {
     });
 
     setRequests(mapToSimpleRequests(rawRequests));
+
+    setLoading(false);
   };
 
 
@@ -95,7 +101,7 @@ export default function FinderPage() {
     setRequests([]);
 
     // Show filter.
-    setShowFilter(true);
+    //setShowFilter(true);
   };
 
 
@@ -106,111 +112,108 @@ export default function FinderPage() {
 
         <ExpandablePanel
           heading="Customer Finder"
-          subheading="Match a product with potential customers"
-          expandedButtonText="Hide Filter ▲"
-          collapsedButtonText="Show Filter ▼"
+          subheading="Enter the specification of a product to find potential customers"
+          buttonText="Filter"
           expanded={showFilter}
           onToggle={() => setShowFilter(!showFilter)}
         >
 
           {/* Category dropdown menu */}
           <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px", marginTop: "20px"}}>Category:</h3>
-            <select
-              id="category"
-              name="categorySelect"
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              style={dropdownStyle}
-            >
-              <option value="">Select category</option>
+          <select
+            id="category"
+            name="categorySelect"
+            value={categoryId ?? ""}
+            onChange={(e) => setCategoryId(e.target.value === "" ? null : Number(e.target.value))}
+            style={dropdownStyle}
+          >
+            <option value="">Select category</option>
 
-              { categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              )) }
-            </select>
+            { categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            )) }
+          </select>
 
           {/* Material dropdown menu */}
           <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Material:</h3>
-            <select
-              id="material"
-              name="materialSelect"
-              value={materialId}
-              onChange={(e) => setMaterialId(e.target.value)}
-              style={dropdownStyle}
-            >
-              <option value="">Select material</option>
+          <select
+            id="material"
+            name="materialSelect"
+            value={materialId ?? ""}
+            onChange={(e) => setMaterialId(e.target.value === "" ? null : Number(e.target.value))}
+            style={dropdownStyle}
+          >
+            <option value="">Select material</option>
 
-              { materials.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.name}
-                </option>
-              )) }
-            </select>
+            { materials.map((m) => (
+              <option key={m.id} value={m.id}>
+                {m.name}
+              </option>
+            )) }
+          </select>
 
           {/* Price (min/max) inputs */}
           <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Price (£):</h3>
-            <CurrencyInput
-                id="minPrice"
-                name="minPriceInput"
-                value={minPrice}
-                placeholder={"Minimum price (£)"}
-                onChange={setMinPrice}
-            />
+          <CurrencyInput
+              id="minPrice"
+              name="minPriceInput"
+              value={minPrice ?? ""}
+              placeholder={"Minimum price (£)"}
+              onChange={setMinPrice}
+          />
 
-            <CurrencyInput
-                id="maxPrice"
-                name="maxPriceInput"
-                value={maxPrice}
-                placeholder={"Maximum price (£)"}
-                onChange={setMaxPrice}
-            />
+          <CurrencyInput
+              id="maxPrice"
+              name="maxPriceInput"
+              value={maxPrice ?? ""}
+              placeholder={"Maximum price (£)"}
+              onChange={setMaxPrice}
+          />
 
           {/* Width input */}
           <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Width (mm):</h3>
-            <input
-              id="width"
-              name="widthInput"
-              type="number"
-              placeholder="Width (mm)"
-              value={widthMm}
-              onChange={(e) => setWidthMm(e.target.value)}
-              style={inputStyle200}
-            />
+          <input
+            id="width"
+            name="widthInput"
+            type="number"
+            placeholder="Width (mm)"
+            value={widthMm ?? ""}
+            onChange={(e) => setWidthMm(e.target.value === "" ? null : Number(e.target.value))}
+            style={inputStyle200}
+          />
 
           {/* Height input */}
           <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Height (mm):</h3>
-            <input
-              id="height"
-              name="heightInput"
-              type="number"
-              placeholder="Height (mm)"
-              value={heightMm}
-              onChange={(e) => setHeightMm(e.target.value)}
-              style={inputStyle200}
-            />
+          <input
+            id="height"
+            name="heightInput"
+            type="number"
+            placeholder="Height (mm)"
+            value={heightMm ?? ""}
+            onChange={(e) => setHeightMm(e.target.value === "" ? null : Number(e.target.value))}
+            style={inputStyle200}
+          />
 
           {/* Depth input */}
           <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Depth (mm):</h3>
-            <input
-              id="depth"
-              name="depthInput"
-              type="number"
-              placeholder="Depth (mm)"
-              value={depthMm}
-              onChange={(e) => setDepthMm(e.target.value)}
-              style={inputStyle200}
-            />
-        </ExpandablePanel>
+          <input
+            id="depth"
+            name="depthInput"
+            type="number"
+            placeholder="Depth (mm)"
+            value={depthMm ?? ""}
+            onChange={(e) => setDepthMm(e.target.value === "" ? null : Number(e.target.value))}
+            style={inputStyle200}
+          />
 
-        <div>
           {/* Submit & Reset buttons */}
           <div style={{ marginTop: "10px" }}>
             <button
               type="submit"
               style={primaryButton200}
-              onClick={handleSearch}
+              onClick={handleSubmit}
             >
               Submit
             </button>
@@ -223,16 +226,17 @@ export default function FinderPage() {
               Reset
             </button>
           </div>
-        </div>
-      </div>
+        </ExpandablePanel>
 
       <GenericTable
         data={requests}
-        //loading={loading}
+        loading={loading}
+        hidden={showFilter}
         columns={simpleRequestColumns}
         getRowKey={(r) => r.id}
         onRowClick={(r) => null}
       />
+      </div>
 
     </Layout>
   );
