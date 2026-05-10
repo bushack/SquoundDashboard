@@ -2,7 +2,7 @@
 import { Money } from "@/types/money";
 
 
-export const buildPriceFilter = (
+/*export const buildPriceFilter = (
     min?: Money,
     max?: Money,
     includeNull = true
@@ -35,9 +35,10 @@ export const buildPriceFilter = (
     }
 
     return conditions.join(",");
-}
+}*/
 
 
+// Note: NULLs included by default.
 export const applyPriceFilter = (query, min?: Money, max?: Money) => {
     
     if (min) {
@@ -58,7 +59,7 @@ export const applyPriceFilter = (query, min?: Money, max?: Money) => {
 }
 
 
-export const buildDimensionFilter = (
+/*export const buildDimensionFilter = (
     width?: number,
     height?: number,
     depth?: number,
@@ -117,9 +118,10 @@ export const buildDimensionFilter = (
 
     // IMPORTANT: Wrap everything in AND.
     return `and(${conditions.join(",")})`;
-}
+}*/
 
 
+// Note: NULLs included by default.
 export const applyDimensionFilter = (query, width_mm?: number, height_mm?: number, depth_mm?: number, includeNull = true) => {
     
     if (width_mm) {

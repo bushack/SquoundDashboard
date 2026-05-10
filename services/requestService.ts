@@ -1,7 +1,6 @@
 
 import { supabase } from "@/lib/supabaseClient";
 import { RequestFilter } from "@/filters/requestFilter";
-import { QueryBuilder } from "@/utils/queryBuilder";
 import { buildDimensionFilter, buildPriceFilter } from "@/utils/filters";
 import { applyDimensionFilter, applyPriceFilter } from "@/utils/filters";
 
@@ -38,46 +37,15 @@ export type RawRequest = {
 };
 
 
-/*export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]> => {
-    
-    const { data, error } = await supabase
-    .from(TABLE_NAME)
-    .select(`
-        id,
-        max_price_pence,
-        customers (
-            id,
-            forename,
-            surname
-        ),
-        categories (
-            name
-        ),
-        materials (
-            name
-        )`
-    );
-
-    if (error) {
-        console.error(error);
-        throw new Error(error.message);
-    }
-
-    return data ?? [];
-};*/
-
-
 export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]> => {
   let query = supabase
     .from(TABLE_NAME)
     .select(`
-    *,
-    customers (*),
-    categories (name),
-    materials (name)
-  `);
-
-  const qb = new QueryBuilder();
+      *,
+      customers (*),
+      categories (name),
+      materials (name)
+    `);
 
   // Category.
   if (filter.category_id != null) {
@@ -93,45 +61,6 @@ export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]
   
   query = applyPriceFilter(query, filter.min_price, filter.max_price);
   query = applyDimensionFilter(query, filter.width_mm, filter.height_mm, filter.depth_mm);
-  
-  /*const combinedFilterParts: string[] = [];
-  // Price.
-  {
-    const priceFilter = buildPriceFilter(
-      filter.min_price,
-      filter.max_price,
-      true // Include NULLs.
-    );
-
-    if (priceFilter) {
-      combinedFilterParts.push(priceFilter);
-    }
-  }
-
-  // Dimensions.
-  {
-    const dimensionFilter = buildDimensionFilter(
-      filter.width_mm,
-      filter.height_mm,
-      filter.depth_mm,
-      true
-    );
-
-    if (dimensionFilter) {
-      combinedFilterParts.push(dimensionFilter);
-    }
-  }
-
-  // Append the queries in the builder to the query variable.
-  query = qb.apply(query);
-  
-  const finalFilter = combinedFilterParts.length > 0
-    ? `and(${combinedFilterParts.join(",")})`
-    : null;
-
-  if (finalFilter) {
-    query = query.or(finalFilter);
-  }*/
 
   const { data, error } = await query;
 
@@ -139,8 +68,6 @@ export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]
     console.error(error);
     throw new Error(error.message);
   }
-
-  console.log("data size: ", data.length);
 
   return data ?? [];
 };

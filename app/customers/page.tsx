@@ -1,19 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { deleteCustomer, fetchCustomersSafe } from "../../lib/customers";
-import { untabbedCard, heading, inputStyleStretch, textStyle } from "../../styles/ui";
+import { fetchCustomersSafe } from "@/services/customerService";
+import { inputStyleStretch } from "../../styles/ui";
+import { columns } from "../components/customers/customerColumns";
 import { useRouter } from "next/navigation";
+import { mapToCustomers } from "@/mappers/customerMapper";
+
+import type { Customer } from "@/types/customer";
 
 import Layout from "../components/layout";
-import { columns } from "../components/customers/customerColumns";
-import GenericDialog from "../components/generic/genericDialog";
 import GenericTable from "../components/generic/genericTable";
 
 
 export default function CustomersPage() {
 
-  const [customers, setCustomers] = useState<any[]>([]);
+  // Data.
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [dialogOpen, setDialogOpen] = useState<boolean>(true)
@@ -22,22 +26,25 @@ export default function CustomersPage() {
 
   const loadCustomers = async () => {
 
+    // TODO: Early exit if search filter parameters are all NULL (avoids fetching all customers)
+
     setLoading(true);
 
-    const result = await fetchCustomersSafe();
+    const result = await fetchCustomersSafe({forename: "m", surname: "coll"});  // temp testing filter!
 
     if (!result.success) {
-      //TODO: Display UI message.
+      // TODO: Show dialog.
     }
     else if (result.success && result.data) {
-      setCustomers(result.data || []);
+      setCustomers(mapToCustomers(result.data));
     }
 
     setLoading(false);
   };
   
 
-  const filteredCustomers = customers.filter((customer) => {
+  // DEPRECIATED: Old basic filtering system.
+  const filteredCustomers = customers?.filter((customer) => {
     const term = searchTerm.toLowerCase();
 
     return (

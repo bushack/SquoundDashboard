@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { deleteCustomerSafe, fetchCustomerSafe } from "@/lib/customers";
-import { deleteRequest, fetchRequestsMapped } from "@/lib/requests";
 import { labelStyle, tabButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
@@ -15,17 +14,11 @@ import { ToastProvider, useToast } from "@/context/toastContext";
 import Layout from "../../components/layout";
 import CustomerCard from "../../components/customers/customerCard";
 import CustomerForm from "../../components/customers/customerForm";
-import GenericTable from "../../components/generic/genericTable";
-import RequestCard from "../../components/requests/requestCard";
 import RequestForm from "../../components/requests/requestForm";
-
-import { columns } from "../../components/requests/requestColumns";
+import RequestTable from "../../components/requests/requestTable";
 
 // Types.
-import type { Category } from "@/types/category";
 import type { Customer } from "@/types/customer";
-import type { Material } from "@/types/material";
-import type { Request } from "@/types/request";
 
 // Constants.
 import { MESSAGES } from "@/constants/messages";
@@ -45,9 +38,6 @@ export default function CustomerDetailPage() {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [cleanAddress, setCleanAddress] = useState<string>();
   const [cleanPhone, setCleanPhone] = useState<string>();
-
-  // Requests data.
-  const [requests, setRequests] = useState<Request[]>([]);
 
   // Tabbing.
   const [activeTab, setActiveTab] = useState<Tab>("details");
@@ -91,29 +81,6 @@ export default function CustomerDetailPage() {
   };
 
 
-  // Load customer requests data.
-  const loadRequests = async (id: number) => {
-
-    /*const { data, error } = await fetchRequests(id);
-
-    if (error) {
-      console.error(error);
-    } else {
-      setRequests(data || []);
-      console.log("Successfully loaded request data");
-    }*/
-
-
-    // n
-    const result = await fetchRequestsMapped(id);
-
-    if (result) {
-      setRequests(result || []);
-      console.log("Successfully fetched request data");
-    }
-  };
-
-
   // Runs when component loads.
   // NOTE: Dependancy array [id], only re-run function if 'id' changes.
   useEffect(() => {
@@ -133,7 +100,7 @@ export default function CustomerDetailPage() {
 
     // Load page data.
     loadCustomer(numericId);
-    loadRequests(numericId);
+    //loadRequests(numericId);
 
   }, [id]);
 
@@ -165,52 +132,6 @@ export default function CustomerDetailPage() {
   };
 
 
-  // Handle 'Delete Request'.
-  const handleDeleteRequest = async (id: number) => {
-
-    if (!customer) {
-      return;
-    }
-
-    /*const confirmed = confirm(MESSAGES.CONFIRM_DELETE_REQUEST);
-    if (confirmed == false) {
-      return;
-    }
-
-    const { error } = await deleteRequest(id);
-
-    if (error) {
-      console.error(error);
-      //displayErrorMessage(MESSAGES.GENERIC_ERROR);
-    } else {
-      //displaySuccessMessage(MESSAGES.REQUEST_DELETED);
-      loadRequests(customer.id);
-    }*/
-
-    showDialog({
-      title: MESSAGES.DELETE_REQUEST_TITLE,
-      message: MESSAGES.DELETE_REQUEST_MSG,
-      onConfirm: async () => {
-        try {
-          const { error } = await deleteRequest(id);
-
-          if (error) {
-            console.error(MESSAGES.ERROR_GENERIC_MSG, error);
-            showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
-          } else {
-            console.log(MESSAGES.DELETE_REQUEST_SUCCESS);
-            showToast(MESSAGES.DELETE_REQUEST_SUCCESS, "success");
-            loadRequests(customer.id);
-          }
-        } catch {
-          console.error(MESSAGES.DELETE_REQUEST_ERROR, error);
-          showToast(MESSAGES.DELETE_REQUEST_ERROR, "error");
-        }
-      },
-    });
-  };
-
-
   const handleCancel = async () => {
 
     //loadCustomer(id);
@@ -227,6 +148,7 @@ export default function CustomerDetailPage() {
 
   // Render.
   return (
+
     <Layout
       headerText={`Home / Customers / ${customer?.forename} ${customer?.surname}`}
     >
@@ -302,28 +224,23 @@ export default function CustomerDetailPage() {
                 onSubmit={() => handleSubmit()}
               />
             )}
-              
-            {/* Existing Requests content */}
-            {/*customer && activeTab === "requests" && (
-              <div>
-                {requests.map((r) => (
-                  <RequestCard
-                    key={r.id}
-                    request={r}
-                    onDelete={handleDeleteRequest}
-                  />
-                ))}
-              </div>
-            )*/}
 
             {/* Existing Requests content */}
+            {/*{customer && activeTab === "requests" && (
+              <div style={tabbedCard}>
+                <GenericTable
+                  data={requests}
+                  //loading={loading}       // TODO: Implement loading msg
+                  columns={columns}
+                  getRowKey={(r) => r.id}
+                  onRowClick={(r) => null}  // TODO: Open new tab?
+                />
+              </div>
+            )}*/}
+
             {customer && activeTab === "requests" && (
-              <GenericTable
-                data={requests}
-                //loading={loading}       // TODO: Implement loading msg
-                columns={columns}
-                getRowKey={(r) => r.id}
-                onRowClick={(r) => null}  // TODO: Open new tab?
+              <RequestTable
+                customer={customer}
               />
             )}
 
@@ -331,7 +248,7 @@ export default function CustomerDetailPage() {
             {customer && activeTab === "newRequest" && (
               <RequestForm
                 customer={customer}
-                onSuccess={() => loadRequests(customer.id)}
+                onSuccess={() => null}
               />
             )}
           </div>

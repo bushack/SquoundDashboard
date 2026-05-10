@@ -34,7 +34,7 @@ export async function fetchCustomerSafe(id: number) {
 
 
 // Fetches all customer entries from the database.
-const fetchCustomers = async () => {
+/*const fetchCustomers = async () => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .select("*")
@@ -57,7 +57,7 @@ export async function fetchCustomersSafe() {
       success: false, error
     };
   }
-};
+};*/
 
 
 // Add a new customer entry to the database.

@@ -17,7 +17,7 @@ import { Material } from "@/types/material";
 import { Money } from "@/types/money";
 
 // Config and constants.
-import { UI_TOAST_TIMEOUT, CURRENCY_INPUT_MAX_DIGITS } from "@/config/app";
+import { CURRENCY_INPUT_MAX_DIGITS } from "@/config/app";
 import { MESSAGES } from "@/constants/messages";
 
 

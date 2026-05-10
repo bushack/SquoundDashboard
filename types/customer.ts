@@ -3,6 +3,7 @@ export type Customer = {
     id: number;
     forename: string;
     surname: string;
+    name?: string;
     address_line_1?: string;
     address_line_2?: string;
     town_city?: string;

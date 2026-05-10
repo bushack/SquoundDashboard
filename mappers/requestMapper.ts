@@ -1,6 +1,6 @@
 
-import { RawRequest } from "@/services/requestService";
-import { SimpleRequest } from "@/types/request";
+import type { RawRequest } from "@/services/requestService";
+import type { SimpleRequest } from "@/types/request";
 
 
 // Maps the raw data of a single RawRequest to a SimpleRequest.
