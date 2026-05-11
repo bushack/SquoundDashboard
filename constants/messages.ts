@@ -7,6 +7,9 @@ export const MESSAGES = {
     SIGN_OUT_ERROR: "An error occurred while attempting to sign out",
     
     // Customers.
+    SEARCH_CUSTOMER_TITLE: "Customer search",
+    SEARCH_CUSTOMER_MSG: "Please enter a minimum of one search parameter",
+
     CREATE_CUSTOMER_TITLE: "Create customer",
     CREATE_CUSTOMER_MSG: "Create a new customer?",
     CREATE_CUSTOMER_SUCCESS: "Customer created",
@@ -28,6 +31,9 @@ export const MESSAGES = {
     CANCEL_EDIT_CUSTOMER_ERROR: "An error occurred while attempting to cancel the update",
     
     // Requests.
+    SEARCH_REQUESTS_TITLE: "Customer Finder",
+    SEARCH_REQUESTS_MSG: "Please enter a minimum of one search parameter",
+
     CREATE_REQUEST_TITLE: "Create request",
     CREATE_REQUEST_MSG: "Create a new request?",
     CREATE_REQUEST_SUCCESS: "Request created",

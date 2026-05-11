@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { columns } from "./requestColumns";
 import { deleteRequest, fetchRequestsMapped } from "@/lib/requests";
-import { heading, tabbedCard } from "@/styles/ui";
+import { headingStyle, tabbedCard } from "@/styles/ui";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 import { ToastProvider, useToast } from "@/context/toastContext";
 
@@ -85,7 +85,7 @@ export default function RequestTable({
     return (
         
         <div style={tabbedCard}>
-            <h1 style={heading}>Existing Requests</h1>
+            <h1 style={headingStyle}>Existing Requests</h1>
             <GenericTable
                 data={requests}
                 columns={columns}

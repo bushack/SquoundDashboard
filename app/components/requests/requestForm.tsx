@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups";
 import { greaterThan } from "@/lib/money";
 import { addRequest } from "@/lib/requests";
-import { tabbedCard, dangerButton200, dropdownStyle, heading, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
+import { tabbedCard, dangerButton200, dropdownStyle, headingStyle, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 import { ToastProvider, useToast } from "@/context/toastContext";
 
@@ -204,7 +204,7 @@ export default function RequestForm({
     // Render.
     return (
         <div style={tabbedCard}>
-            <h3 style={heading}>New Request</h3>
+            <h3 style={headingStyle}>New Request</h3>
             <form
                 onSubmit={handleSubmit}
             >

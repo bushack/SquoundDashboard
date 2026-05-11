@@ -27,12 +27,19 @@ export type SafeResult<T> =
     | { success: false, error: unknown };
 
 
+// Note:
+// Performance of ILIKE '%value%' can suffer from inefficiency on large datasets.
+// Should this happen, potential solutions include:
+// Trigram indexes (pg_trgm),
+// Full text searches,
+// Prefix-only searches (value%)
 export const fetchCustomersSafe = async (filter: CustomerFilter): Promise<SafeResult<RawCustomer[]>> => {
 
     let query = supabase
     .from(TABLE_NAME)
     .select("*")
-    .order("surname", { ascending: true });
+    .order("surname", { ascending: true })
+    .order("forename", { ascending: true });
 
     if (filter.id != null) {
         query = query.eq("id", filter.id);
@@ -42,6 +49,8 @@ export const fetchCustomersSafe = async (filter: CustomerFilter): Promise<SafeRe
         
         // Trim whitespace and use wildcards (%${name}%)
         const cleanedForename = filter.forename.trim();
+
+        // Note: See comment above regarding use of ILIKE '%value%'.
         query = query.ilike("forename", `%${cleanedForename}%`);
     }
 
@@ -49,6 +58,8 @@ export const fetchCustomersSafe = async (filter: CustomerFilter): Promise<SafeRe
         
         // Trim whitespace.
         const cleanedSurname = filter.surname.trim();
+
+        // Note: See comment above regarding use of ILIKE '%value%'.
         query = query.ilike("surname", `%${cleanedSurname}%`);
     }
 

@@ -11,14 +11,14 @@ import { Customer } from "@/types/customer";
       accessor: (c) => c.id,
     },
     {
-      key: "surname",
-      header: "Surname",
-      accessor: (c) => c.surname,
+      key: "name",
+      header: "Name",
+      accessor: (c) => c.name,
     },
     {
-      key: "forename",
-      header: "Forename",
-      accessor: (c) => c.forename,
+      key: "location",
+      header: "Location",
+      accessor: (c) => c.town_city,
     },
     {
       key: "phone",

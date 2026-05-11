@@ -124,6 +124,16 @@ import { format, formatZeroDecimal } from "@/lib/money";
       accessor: (sr) => sr.max_width_mm ? sr.max_width_mm : null,
     },
     {
+      key: "max_height_mm",
+      header: "Max Height",
+      accessor: (sr) => sr.max_height_mm ? sr.max_height_mm : null,
+    },
+    {
+      key: "max_depth_mm",
+      header: "Max Depth",
+      accessor: (sr) => sr.max_depth_mm ? sr.max_depth_mm : null,
+    },
+    {
       key: "view",
       header: "New tab",
       accessor: (sr) => (

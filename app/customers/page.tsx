@@ -2,15 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { fetchCustomersSafe } from "@/services/customerService";
-import { inputStyleStretch } from "../../styles/ui";
+import { dangerButton200, inputStyleStretch, inputStyle200, labelStyle, primaryButton200, untabbedCard } from "../../styles/ui";
 import { columns } from "../components/customers/customerColumns";
 import { useRouter } from "next/navigation";
 import { mapToCustomers } from "@/mappers/customerMapper";
+import { DialogProvider, useDialog } from "@/context/dialogContext";
+
+import { MESSAGES } from "@/constants/messages";
 
 import type { Customer } from "@/types/customer";
 
-import Layout from "../components/layout";
+import ExpandablePanel from "../components/generic/expandablePanel";
 import GenericTable from "../components/generic/genericTable";
+import Layout from "../components/layout";
 
 
 export default function CustomersPage() {
@@ -18,73 +22,144 @@ export default function CustomersPage() {
   // Data.
   const [customers, setCustomers] = useState<Customer[]>([]);
   
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [dialogOpen, setDialogOpen] = useState<boolean>(true)
+  // For toggling filter visibility.
+  const [showFilter, setShowFilter] = useState<boolean>(true);
+  const [loading, setLoading] = useState(false);
+
+  const [id, setId] = useState<number | null>(null);
+  const [forename, setForename] = useState<string | null>(null);
+  const [surname, setSurname] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(true);
+
+  const {showDialog} = useDialog();
+
   const router = useRouter();
-  
 
-  const loadCustomers = async () => {
 
-    // TODO: Early exit if search filter parameters are all NULL (avoids fetching all customers)
+  const handleSubmit = async () => {
+
+    // Disallow all NULL parameters (avoids fetching all customers).
+    if ([id, forename, surname].every(v => v === null)) {
+      showDialog({
+        title: MESSAGES.SEARCH_CUSTOMER_TITLE,
+        message: MESSAGES.SEARCH_CUSTOMER_MSG,
+        onConfirm: () => null
+      });
+      return;
+    }
+    
+    setShowFilter(false);
 
     setLoading(true);
 
-    const result = await fetchCustomersSafe({forename: "m", surname: "coll"});  // temp testing filter!
+    const result = await fetchCustomersSafe({id: id, forename: forename, surname: surname});
 
     if (!result.success) {
-      // TODO: Show dialog.
-    }
-    else if (result.success && result.data) {
+      showDialog({
+        title: MESSAGES.ERROR_GENERIC_TITLE,
+        message: MESSAGES.ERROR_GENERIC_MSG,
+        onConfirm: () => null
+      });
+    } else if (result.success && result.data) {
       setCustomers(mapToCustomers(result.data));
     }
 
     setLoading(false);
   };
-  
-
-  // DEPRECIATED: Old basic filtering system.
-  const filteredCustomers = customers?.filter((customer) => {
-    const term = searchTerm.toLowerCase();
-
-    return (
-      customer.forename?.toLowerCase().includes(term) ||
-      customer.surname?.toLowerCase().includes(term)
-    );
-  });
 
 
-  // Runs code when component loads
-  useEffect(() => {
-    loadCustomers();
-  }, []);
+  const handleReset = async () => {
+    
+    // Clear filter parameters.
+    setId(null);
+    setForename(null);
+    setSurname(null);
+
+    // Clear array.
+    setCustomers([]);
+  };
 
 
   return (
     <Layout headerText="Home / Customers / Search">
 
-      {/* Search input */}
-      <input
-        id="search"
-        name="searchInput"
-        type="text"
-        placeholder="Search"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{
-          ...inputStyleStretch,
-          maxWidth: "400px"
-        }}
-      />
+      <div style={untabbedCard}>
 
-      <GenericTable
-        data={filteredCustomers}
-        loading={loading}
-        columns={columns}
-        getRowKey={(c) => c.id}
-        onRowClick={(c) => router.push(`/customers/${c.id}`)}
-      />
-      
+        {/* Search input */}
+        <ExpandablePanel
+          heading="Customer Search"
+          subheading="Search for a customer by unique id or name"
+          buttonText="Filter"
+          expanded={showFilter}
+          onToggle={() => setShowFilter(!showFilter)}
+        >
+
+          {/* Id input */}
+          <h3 style={labelStyle}>Unique id:</h3>
+          <input
+            id="uniqueId"
+            name="uniqueIdInput"
+            type="text"
+            inputMode="numeric"
+            placeholder="Unique id"
+            value={id ?? ""}
+            onChange={(e) => setId(e.target.value === "" ? null : Number(e.target.value))}
+            style={inputStyle200}
+          />
+
+          {/* Forename input */}
+          <h3 style={labelStyle}>Forename:</h3>
+          <input
+            id="forename"
+            name="forenameInput"
+            type="text"
+            placeholder="Forename"
+            value={forename ?? ""}
+            onChange={(e) => setForename(e.target.value === "" ? null : e.target.value)}
+            style={inputStyle200}
+          />
+
+          {/* Surname input */}
+          <h3 style={labelStyle}>Surname:</h3>
+          <input
+            id="surname"
+            name="surnameInput"
+            type="text"
+            placeholder="Surname"
+            value={surname ?? ""}
+            onChange={(e) => setSurname(e.target.value === "" ? null : e.target.value)}
+            style={inputStyle200}
+          />
+
+          {/* Submit & Reset buttons */}
+          <div style={{ marginTop: "10px" }}>
+            <button
+              type="submit"
+              style={primaryButton200}
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+
+            <button
+              type="reset"
+              style={dangerButton200}
+              onClick={(e) => {e.stopPropagation(); handleReset()}}
+            >
+              Reset
+            </button>
+          </div>
+        </ExpandablePanel>
+
+        <GenericTable
+          data={customers}
+          loading={loading}
+          hidden={showFilter}
+          columns={columns}
+          getRowKey={(c) => c.id}
+          onRowClick={(c) => router.push(`/customers/${c.id}`)}
+        />
+      </div>
     </Layout>
   )
 }

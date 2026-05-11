@@ -7,6 +7,9 @@ import { mapToSimpleRequests } from "@/mappers/requestMapper";
 import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200 } from "@/styles/ui";
 import { simpleRequestColumns } from "../components/requests/requestColumns";
 import { SimpleRequest } from "@/types/request";
+import { DialogProvider, useDialog } from "@/context/dialogContext";
+
+import { MESSAGES } from "@/constants/messages";
 
 import CurrencyInput from "../components/currency/currencyInput";
 import GenericTable from "../components/generic/genericTable";
@@ -16,7 +19,7 @@ import ExpandablePanel from "../components/generic/expandablePanel";
 
 export default function FinderPage() {
 
-  // Toggle filter visibility.
+  // For toggling filter visibility.
   const [showFilter, setShowFilter] = useState<boolean>(true);
 
   // Arrays (categories/materials).
@@ -40,6 +43,8 @@ export default function FinderPage() {
   const [requests, setRequests] = useState<SimpleRequest[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const {showDialog} = useDialog();
+
 
   // Fetch lookup data when component loads.
   useEffect(() => {
@@ -58,6 +63,16 @@ export default function FinderPage() {
 
   // Fetch filtered data from database.
   const handleSubmit = async () => {
+
+    // Disallow all NULL parameters (avoids fetching all requests).
+    if ([categoryId, materialId, minPrice, maxPrice, widthMm, heightMm, depthMm].every(v => v === null)) {
+      showDialog({
+        title: MESSAGES.SEARCH_REQUESTS_TITLE,
+        message: MESSAGES.SEARCH_REQUESTS_MSG,
+        onConfirm: () => null
+      });
+      return;
+    }
 
     // Hide filter on submit.
     setShowFilter(false);
@@ -119,7 +134,7 @@ export default function FinderPage() {
         >
 
           {/* Category dropdown menu */}
-          <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px", marginTop: "20px"}}>Category:</h3>
+          <h3 style={labelStyle}>Category:</h3>
           <select
             id="category"
             name="categorySelect"
@@ -137,7 +152,7 @@ export default function FinderPage() {
           </select>
 
           {/* Material dropdown menu */}
-          <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Material:</h3>
+          <h3 style={labelStyle}>Material:</h3>
           <select
             id="material"
             name="materialSelect"
@@ -155,7 +170,7 @@ export default function FinderPage() {
           </select>
 
           {/* Price (min/max) inputs */}
-          <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Price (£):</h3>
+          <h3 style={labelStyle}>Price (£):</h3>
           <CurrencyInput
               id="minPrice"
               name="minPriceInput"
@@ -173,7 +188,7 @@ export default function FinderPage() {
           />
 
           {/* Width input */}
-          <h3 style={{...labelStyle, fontWeight: "bold", padding: "3px"}}>Width (mm):</h3>
+          <h3 style={labelStyle}>Width (mm):</h3>
           <input
             id="width"
             name="widthInput"
@@ -185,7 +200,7 @@ export default function FinderPage() {
           />
 
           {/* Height input */}
-          <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Height (mm):</h3>
+          <h3 style={labelStyle}>Height (mm):</h3>
           <input
             id="height"
             name="heightInput"
@@ -197,7 +212,7 @@ export default function FinderPage() {
           />
 
           {/* Depth input */}
-          <h3 style={{ ...labelStyle, fontWeight: "bold", padding: "3px" }}>Depth (mm):</h3>
+          <h3 style={labelStyle}>Depth (mm):</h3>
           <input
             id="depth"
             name="depthInput"
@@ -228,16 +243,15 @@ export default function FinderPage() {
           </div>
         </ExpandablePanel>
 
-      <GenericTable
-        data={requests}
-        loading={loading}
-        hidden={showFilter}
-        columns={simpleRequestColumns}
-        getRowKey={(r) => r.id}
-        onRowClick={(r) => null}
-      />
+        <GenericTable
+          data={requests}
+          loading={loading}
+          hidden={showFilter}
+          columns={simpleRequestColumns}
+          getRowKey={(r) => r.id}
+          onRowClick={(r) => null}
+        />
       </div>
-
     </Layout>
   );
 };

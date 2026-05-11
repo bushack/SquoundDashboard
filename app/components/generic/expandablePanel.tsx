@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { primaryButton } from "@/styles/ui";
 
+import GenericHeading from "./genericHeading";
+
 
 type Properties = {
     heading: string,
@@ -39,8 +41,11 @@ export default function ExpandablePanel({
     return (
         
         <div>
-            <h1 style={{fontSize: "22px", fontWeight: "bold", marginBottom: "5px"}}>{heading}</h1>
-            <h2 style={{fontSize: "10pt", fontWeight: "normal", marginBottom: "15px"}}>{subheading}</h2>
+            
+            <GenericHeading
+                heading={heading}
+                subheading={subheading}
+            />
 
             <button
                 hidden={expanded}

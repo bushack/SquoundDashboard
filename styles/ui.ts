@@ -1,6 +1,9 @@
+
 import { theme } from "./themes";
 
-export const header = {
+
+// Header bar,
+export const headerStyle = {
   flexShrink: 0,
   //display: "flex",
   //alignItems: "center",
@@ -14,7 +17,9 @@ export const header = {
   backgroundColor: theme.colours.header,
 };
 
-export const footer = {
+
+// Footer bar.
+export const footerStyle = {
   flexShrink: 0,
   minHeight: "20px",
   padding: "3px",
@@ -25,31 +30,38 @@ export const footer = {
   backgroundColor: theme.colours.footer,
 };
 
-// Main page titles (<h1>).
-export const title = {
-  color: theme.colours.text,
-  fontSize: theme.fontSize.title,
-  fontWeight: theme.fontWeight.title,
-  marginBottom: "10px",
-};
 
-// Main subheadings (<h3>).
-export const heading = {
+// Main headings (<h1>).
+export const headingStyle = {
   color: theme.colours.text,
   fontSize: theme.fontSize.heading,
   fontWeight: theme.fontWeight.heading,
-  marginBottom: "10px",
+  fontFamily: theme.fontFamily.heading,
+  marginBottom: "5px",
 };
 
-// Minor subheadings and labels.
+
+// Main subheadings (<h2>).
+export const subheadingStyle = {
+  color: theme.colours.text,
+  fontSize: theme.fontSize.subheading,
+  fontWeight: theme.fontWeight.subheading,
+  fontFamily: theme.fontFamily.subheading,
+  marginBottom: "20px",
+};
+
+
+// Minor subheadings (<h3>) and labels.
 export const labelStyle = {
-  padding: "0px 10px",
+  padding: "0px",
+  marginTop: "10px",
   marginBottom: "5px",
   width: "100%",
   color: theme.colours.text,
   fontSize: theme.fontSize.label,
   fontWeight: theme.fontWeight.label,
 };
+
 
 // General text, including paragraphs, comments, etc. (<p>).
 export const textStyle = {
@@ -58,6 +70,7 @@ export const textStyle = {
   fontWeight: theme.fontWeight.regular,
   marginBottom: "20px",
 };
+
 
 export const inputStyleFit = {
   padding: "10px",
@@ -71,15 +84,18 @@ export const inputStyleFit = {
   fontWeight: theme.fontWeight.regular,
 };
 
+
 export const inputStyleStretch = {
   ...inputStyleFit,
   width: "100%"
 };
 
+
 export const inputStyle200 = {
   ...inputStyleFit,
   minWidth: "200px"
 };
+
 
 export const buttonStyle = {
   padding: "10px 30px",
@@ -94,17 +110,20 @@ export const buttonStyle = {
   fontWeight: theme.fontWeight.regular,
 };
 
+
 export const primaryButton = {
   ...buttonStyle,
   backgroundColor: theme.colours.primary,
   color: theme.colours.textLight,
 };
 
+
 export const dangerButton = {
   ...buttonStyle,
   backgroundColor: theme.colours.danger,
   color: theme.colours.textLight,
 };
+
 
 export const importantButton = {
   ...buttonStyle,
@@ -114,15 +133,18 @@ export const importantButton = {
   marginBottom: "0px",
 };
 
+
 export const primaryButton200 = {
   ...primaryButton,
   minWidth: "200px"
 };
 
+
 export const dangerButton200 = {
   ...dangerButton,
   minWidth: "200px"
 };
+
 
 export const sidebarButton = {
   ...buttonStyle,
@@ -132,6 +154,7 @@ export const sidebarButton = {
   color: theme.colours.textLight,
   marginBottom: "10px"
 };
+
 
 export const tabButton = {
   ...buttonStyle,
@@ -146,6 +169,7 @@ export const tabButton = {
   borderBottomRightRadius: "0px",
 };
 
+
 export const untabbedCard = {
   //border: "1px solid #e5e7eb",
   borderRadius: "10px",
@@ -155,10 +179,12 @@ export const untabbedCard = {
   backgroundColor: theme.colours.card,
 };
 
+
 export const tabbedCard = {
   ...untabbedCard,
   borderTopLeftRadius: "0px",
 };
+
 
 export const table = {
   width: "100%",
@@ -169,6 +195,7 @@ export const table = {
   backgroundColor: theme.colours.card,
 };
 
+
 export const tableHeader = {
   textAlign: "left",
   padding: "10px 10px",
@@ -176,11 +203,13 @@ export const tableHeader = {
   backgroundColor: theme.colours.important,
 };
 
+
 export const tableRow = {
   padding: "4px 10px",
   border: "1px solid #bbb",
   cursor: "pointer"
 };
+
 
 export const dropdownStyle = {
   border: "1px solid #ccc",

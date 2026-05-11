@@ -1,7 +1,7 @@
 "use client"
 
 import { Customer } from "@/types/customer";
-import { buttonStyle, dangerButton, heading, tabbedCard } from "@/styles/ui";
+import { buttonStyle, dangerButton, headingStyle, tabbedCard } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 
 
@@ -25,8 +25,8 @@ export default function CustomerCard({
 
             {/* Name & Id */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-                <h3 style={heading}>{customer.forename} {customer.surname.toUpperCase()}</h3>
-                <span style={heading }>[{customer.id}]</span>
+                <h3 style={headingStyle}>{customer.forename} {customer.surname.toUpperCase()}</h3>
+                <span style={headingStyle }>[{customer.id}]</span>
             </div>
 
             {/* Address */}

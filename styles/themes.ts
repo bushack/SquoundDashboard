@@ -1,7 +1,6 @@
 export const theme = {
     
     colours: {
-        
         background: "#dedede",      // Background colour of main content
         card: "#f9fafb",            // Background colour of card components
         danger: "#dc2626",
@@ -34,32 +33,33 @@ export const theme = {
         textMuted: "#555",          // Colour of text when disabled or inactive
     },
 
+    
     fontFamily: {
-
-        title: "sans-serif",
         heading: "sans-serif",
+        subheading: "sans-serif",
         label: "sans-serif",
         regular: "sans-serif",
         small: "sans-serif",
     },
 
-    fontSize: {
 
-        title: "30pt",
+    fontSize: {
         heading: "16pt",
+        subheading: "10pt",
         label: "10pt",
         regular: "10pt",
         small: "8pt",
     },
 
-    fontWeight: {
 
-        title: "bold",
+    fontWeight: {
         heading: "bold",
+        subheading: "normal",
         label: "bold",
         regular: "normal",
         small: "normal",
     },
+
 
     margin: {
         vspacing: "15px",

@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { addCustomerSafe, updateCustomerSafe } from "@/lib/customers";
-import { untabbedCard, tabbedCard, dangerButton, heading, inputStyleStretch, labelStyle, primaryButton } from "@/styles/ui";
+import { untabbedCard, tabbedCard, dangerButton, inputStyleStretch, labelStyle, primaryButton } from "@/styles/ui";
 
 import { Customer } from "@/types/customer";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 import { ToastProvider, useToast } from "@/context/toastContext";
 
 import { MESSAGES } from "@/constants/messages";
+
+import GenericHeading from "../generic/genericHeading";
 
 
 type Properties = {
@@ -296,167 +298,176 @@ export default function CustomerForm({
 
 
     return (
+        
         <div style={editingCustomer ? tabbedCard : untabbedCard}>
-            <h3 style={heading}>{editingCustomer ? "Edit Customer" : "Add Customer"}</h3>
+
+            <GenericHeading
+                heading={editingCustomer
+                    ? "Edit Customer"
+                    : "Add Customer"}
+                subheading={editingCustomer
+                    ? "Edit the details of an existing customer"
+                    : "Add a new customer to the database"}
+            />
 
             {/* Editing Existing Customer */}
             <form
                 name="CustomerForm"
-                style={{ maxWidth: "400px" }}
+                style={{maxWidth: "400px"}}
                 onSubmit={handleSubmit}
             >
 
                 {/* Name inputs */}
-                <h3 style={{ ...labelStyle, padding: "3px" }}>Name:</h3>
-                <div style={{ paddingBottom: "20px"}}>
+                <h3 style={labelStyle}>Name:</h3>
+                <div style={{paddingBottom: "20px"}}>
         
-                {/* Forename input */}
-                <input
-                    autoFocus
-                    required
-                    id="forename"
-                    name="forenameInput"
-                    type="text"
-                    style={inputStyleStretch}
-                    placeholder="Forename [Required]"
-                    value={forename}
-                    onChange={(e) => setForename(e.target.value)}
-                />
-        
-                {/* Surname input */}
-                <input
-                    required
-                    id="surname"
-                    name="surnameInput"
-                    type="text"
-                    style={inputStyleStretch}
-                    placeholder="Surname [Required]"
-                    value={surname}
-                    onChange={(e) => setSurname(e.target.value)}
-                />
+                    {/* Forename input */}
+                    <input
+                        autoFocus
+                        required
+                        id="forename"
+                        name="forenameInput"
+                        type="text"
+                        style={inputStyleStretch}
+                        placeholder="Forename [Required]"
+                        value={forename}
+                        onChange={(e) => setForename(e.target.value)}
+                    />
+            
+                    {/* Surname input */}
+                    <input
+                        required
+                        id="surname"
+                        name="surnameInput"
+                        type="text"
+                        style={inputStyleStretch}
+                        placeholder="Surname [Required]"
+                        value={surname}
+                        onChange={(e) => setSurname(e.target.value)}
+                    />
                 </div>
         
                 {/* Address inputs */}
-                <h3 style={{ ...labelStyle, padding: "3px" }}>Address:</h3>
-                <div style={{ paddingBottom: "20px"}}>
+                <h3 style={labelStyle}>Address:</h3>
+                <div style={{paddingBottom: "20px"}}>
         
-                {/* Address line 1 input */}
-                <input
-                    id="addressL1"
-                    name="addressLine1Input"
-                    type="text"
-                    style={inputStyleStretch}
-                    placeholder="Address line 1 [Optional]"
-                    value={addressLine1}
-                    onChange={(e) => setAddressLine1(e.target.value)}
-                />
-        
-                {/* Address line 2 */}
-                <input
-                    id="addressL2"
-                    name="addressLine2Input"
-                    type="text"
-                    style={inputStyleStretch}
-                    placeholder="Address line 2 [Optional]"
-                    value={addressLine2}
-                    onChange={(e) => setAddressLine2(e.target.value)}
-                />
-        
-                {/* Town/City input */}
-                <input
-                    id="townOrCity"
-                    name="townOrCityInput"
-                    type="text"
-                    style={inputStyleStretch}
-                    placeholder="Town/City [Optional]"
-                    value={townOrCity}
-                    onChange={(e) => setTownOrCity(e.target.value)}
-                />
-        
-                {/* Region input */}
-                <input
-                    id="region"
-                    name="regionInput"
-                    type="text"
-                    style={inputStyleStretch}
-                    placeholder="Region [Optional]"
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                />
-        
-                {/* Postcode input */}
-                <input
-                    id="postcode"
-                    name="postcodeInput"
-                    type="text"
-                    style={{...inputStyleStretch, border: `2px solid ${getBorderColor(postcodeValid)}`}}
-                    placeholder="Postcode [Optional]"
-                    value={postcode}
-                    onChange={(e) => handlePostcodeChange(e.target.value)}
-                />
+                    {/* Address line 1 input */}
+                    <input
+                        id="addressL1"
+                        name="addressLine1Input"
+                        type="text"
+                        style={inputStyleStretch}
+                        placeholder="Address line 1 [Optional]"
+                        value={addressLine1}
+                        onChange={(e) => setAddressLine1(e.target.value)}
+                    />
+            
+                    {/* Address line 2 */}
+                    <input
+                        id="addressL2"
+                        name="addressLine2Input"
+                        type="text"
+                        style={inputStyleStretch}
+                        placeholder="Address line 2 [Optional]"
+                        value={addressLine2}
+                        onChange={(e) => setAddressLine2(e.target.value)}
+                    />
+            
+                    {/* Town/City input */}
+                    <input
+                        id="townOrCity"
+                        name="townOrCityInput"
+                        type="text"
+                        style={inputStyleStretch}
+                        placeholder="Town/City [Optional]"
+                        value={townOrCity}
+                        onChange={(e) => setTownOrCity(e.target.value)}
+                    />
+            
+                    {/* Region input */}
+                    <input
+                        id="region"
+                        name="regionInput"
+                        type="text"
+                        style={inputStyleStretch}
+                        placeholder="Region [Optional]"
+                        value={region}
+                        onChange={(e) => setRegion(e.target.value)}
+                    />
+            
+                    {/* Postcode input */}
+                    <input
+                        id="postcode"
+                        name="postcodeInput"
+                        type="text"
+                        style={{...inputStyleStretch, border: `2px solid ${getBorderColor(postcodeValid)}`}}
+                        placeholder="Postcode [Optional]"
+                        value={postcode}
+                        onChange={(e) => handlePostcodeChange(e.target.value)}
+                    />
                 </div>
         
                 {/* Contact inputs */}
-                <h3 style={{ ...labelStyle, padding: "3px" }}>Contact:</h3>
-                <div style={{ paddingBottom: "20px"}}>
+                <h3 style={labelStyle}>Contact:</h3>
+                <div style={{paddingBottom: "20px"}}>
         
-                {/* Mobile input */}
-                <input
-                    id="phone"
-                    name="phoneInput"
-                    type="tel"
-                    style={{...inputStyleStretch, border: `2px solid ${getBorderColor(mobileValid)}`}}
-                    placeholder="Phone [Optional]"
-                    value={mobile}
-                    onChange={(e) => handleMobileChange(e.target.value)}
-                />
-        
-                {/* Email input */}
-                <input
-                    id="email"
-                    name="emailInput"
-                    type="email"
-                    title="Enter a valid email address"
-                    style={{...inputStyleStretch, border: `2px solid ${getBorderColor(emailValid)}`}}
-                    placeholder="Email [Optional]"
-                    value={email}
-                    onChange={(e) => handleEmailChange(e.target.value)}
-                />
+                    {/* Mobile input */}
+                    <input
+                        id="phone"
+                        name="phoneInput"
+                        type="tel"
+                        style={{...inputStyleStretch, border: `2px solid ${getBorderColor(mobileValid)}`}}
+                        placeholder="Phone [Optional]"
+                        value={mobile}
+                        onChange={(e) => handleMobileChange(e.target.value)}
+                    />
+            
+                    {/* Email input */}
+                    <input
+                        id="email"
+                        name="emailInput"
+                        type="email"
+                        title="Enter a valid email address"
+                        style={{...inputStyleStretch, border: `2px solid ${getBorderColor(emailValid)}`}}
+                        placeholder="Email [Optional]"
+                        value={email}
+                        onChange={(e) => handleEmailChange(e.target.value)}
+                    />
                 </div>
         
                 {/* Notes input */}
-                <h3 style={{ ...labelStyle, padding: "3px" }}>Notes:</h3>
-                <div style={{ marginBottom: "30px"}}>
-                <textarea
-                    id="notes"
-                    name="notesInput"
-                    style={{ ...inputStyleStretch, minHeight: "200px", maxHeight: "500px" }}
-                    placeholder=""
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                />
+                <h3 style={labelStyle}>Notes:</h3>
+                <div style={{marginBottom: "30px"}}>
+                    <textarea
+                        id="notes"
+                        name="notesInput"
+                        style={{...inputStyleStretch, minHeight: "200px", maxHeight: "500px"}}
+                        placeholder=""
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                    />
                 </div>
         
                 {/* Buttons */}
                 <p>
-                {/* Update/Submit button */}
-                <button
-                    type="submit"
-                    style={{ ...primaryButton, marginBottom: "10px", width: "100%" }}
-                >
-                    {editingCustomer ? "Update" : "Submit"}
-                </button>
+                    {/* Update/Submit button */}
+                    <button
+                        type="submit"
+                        style={{...primaryButton, marginBottom: "10px", width: "100%"}}
+                    >
+                        {editingCustomer ? "Update" : "Submit"}
+                    </button>
                 </p>
         
                 <p>
-                {/* Cancel/Reset button */}
-                <button
-                    type="button"
-                    style={{ ...dangerButton, marginBottom: "10px", width: "100%" }}
-                    onClick={(e) => {e.stopPropagation(); {editingCustomer ? handleCancel() : handleReset()}}}
-                >
-                    {editingCustomer ? "Cancel" : "Reset"}
-                </button>
+                    {/* Cancel/Reset button */}
+                    <button
+                        type="button"
+                        style={{...dangerButton, marginBottom: "10px", width: "100%"}}
+                        onClick={(e) => {e.stopPropagation(); {editingCustomer ? handleCancel() : handleReset()}}}
+                    >
+                        {editingCustomer ? "Cancel" : "Reset"}
+                    </button>
                 </p>
             </form>
         </div>

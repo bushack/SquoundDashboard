@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { importantButton, dangerButton, footer, header, primaryButton, sidebarButton } from "@/styles/ui";
+import { importantButton, dangerButton, footerStyle, headerStyle, primaryButton, sidebarButton } from "@/styles/ui";
 import { theme } from "@/styles/themes"
 
 import { FOOTER_TEXT, HEADER_TEXT, SIDEBAR_TITLE } from "@/config/app";
@@ -52,7 +52,7 @@ export default function Layout({ children, headerText, sidebarTitle, footerText 
     <div style={{display: "flex", flexDirection: "column", height: "100vh"}}>
 
       {/* Header */}
-      <header style={header}>
+      <header style={headerStyle}>
           
         {/* Text */ }
         <h1>{headerText || HEADER_TEXT}</h1>
@@ -120,7 +120,7 @@ export default function Layout({ children, headerText, sidebarTitle, footerText 
 
 
       {/* Footer */}
-      <footer style={footer}>
+      <footer style={footerStyle}>
         {footerText || FOOTER_TEXT}
       </footer>
       {/* End of Footer */}

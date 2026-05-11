@@ -10,9 +10,21 @@ Compatibility with narrow displays (phone\tablet)
 Customer Search
 ===============
 
-Customisable search parameters
+Sorting
 Persistant state when navigating away from page
 Multi-page results
+
+
+
+Customer Finder (Request search page)
+=====================================
+
+Remove price range with price and tolerance % ???
+Sorting
+Persistant state when navigating away from page
+Multi-page results
+consider renaming SimpleRequest to something that better reflects the fact that it is a composite object
+
 
 
 Request Table (Customer[id] page)
@@ -20,14 +32,6 @@ Request Table (Customer[id] page)
 
 Add ability to delete requests
 Add ability to sort requests
-
-
-
-Request Search (Finder Page)
-============================
-
-Add ability to sort requests
-consider renaming SimpleRequest to something that better reflects the fact that it is a composite object
 
 
 

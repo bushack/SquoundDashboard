@@ -34,9 +34,11 @@ export default function GenericTable({
 
         <div style={{...textStyle, margin: "5px 2px"}}>
             
-            {/* Show table only if data is not null/empty */}
+            {/* Show loading message while awaiting data */}
             { loading && <div>Loading...</div>}
-            { !loading && data?.length ? (
+
+            {/* Show table only if data is not null/empty */}
+            { !loading && data?.length > 0 && (
             <div hidden={hidden}>
                 <p style={{margin: "3px 1px"}}>{data.length} result(s)</p>
                 <table style={table}>
@@ -67,7 +69,10 @@ export default function GenericTable({
                         ))}
                     </tbody>
                 </table>
-            </div>) : (<p></p>) }
+            </div>)}
+            
+            {/* No results message */}
+            {!loading && !data && (<p hidden={hidden}>No results</p>)}
         </div>
     );
 }

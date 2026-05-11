@@ -44,7 +44,6 @@ export function DialogProvider({ children }: { children: ReactNode }) {
                 isOpen={!!dialog}
                 title={dialog?.title}
                 message={dialog?.message || ""}
-                onClose={closeDialog}
                 onCancel={closeDialog}
                 onConfirm={() => {dialog?.onConfirm?.(); closeDialog();
                 }}
