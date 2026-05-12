@@ -20,7 +20,7 @@ type DialogContextType = {
 const DialogContext = createContext<DialogContextType | undefined>(undefined);
 
 
-export function DialogProvider({ children }: { children: ReactNode }) {
+export function DialogProvider({children}: {children: ReactNode}) {
 
     const [dialog, setDialog] = useState<DialogOptions | null>(null);
 

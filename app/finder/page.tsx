@@ -7,6 +7,8 @@ import { mapToSimpleRequests } from "@/mappers/requestMapper";
 import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200 } from "@/styles/ui";
 import { simpleRequestColumns } from "../components/requests/requestColumns";
 import { SimpleRequest } from "@/types/request";
+
+import { RequestProvider, useRequests } from "@/context/requestContext";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 
 import { MESSAGES } from "@/constants/messages";
@@ -19,8 +21,12 @@ import ExpandablePanel from "../components/generic/expandablePanel";
 
 export default function FinderPage() {
 
+  // Data.
+  const {requests, setRequests} = useRequests();
+
   // For toggling filter visibility.
   const [showFilter, setShowFilter] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Arrays (categories/materials).
   const [categories, setCategories] = useState<any[]>([]);
@@ -38,10 +44,6 @@ export default function FinderPage() {
   const [widthMm, setWidthMm] = useState<number | null>(null);
   const [heightMm, setHeightMm] = useState<number | null>(null);
   const [depthMm, setDepthMm] = useState<number | null>(null);
-
-  // Requests.
-  const [requests, setRequests] = useState<SimpleRequest[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const {showDialog} = useDialog();
 
@@ -74,10 +76,8 @@ export default function FinderPage() {
       return;
     }
 
-    // Hide filter on submit.
+    // Hide filter and show loading label on submit.
     setShowFilter(false);
-    
-    // Show loading label.
     setLoading(true);
 
     const rawRequests = await fetchRequests({
@@ -113,11 +113,19 @@ export default function FinderPage() {
     setDepthMm(null);
 
     // Clear array.
-    setRequests([]);
+    //setRequests([]);
 
     // Show filter.
     //setShowFilter(true);
   };
+
+
+  useEffect(() => {
+    
+    if (requests?.length > 0) {
+      setShowFilter(false);
+    }
+  }, [requests]);
 
 
   return (
@@ -246,7 +254,8 @@ export default function FinderPage() {
         <GenericTable
           data={requests}
           loading={loading}
-          hidden={showFilter}
+          //hidden={showFilter}
+          hidden={requests?.length === 0 && !loading}
           columns={simpleRequestColumns}
           getRowKey={(r) => r.id}
           onRowClick={(r) => null}

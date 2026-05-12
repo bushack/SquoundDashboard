@@ -6,6 +6,8 @@ import { dangerButton200, inputStyleStretch, inputStyle200, labelStyle, primaryB
 import { columns } from "../components/customers/customerColumns";
 import { useRouter } from "next/navigation";
 import { mapToCustomers } from "@/mappers/customerMapper";
+
+import { CustomerProvider, useCustomers } from "@/context/customerContext";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 
 import { MESSAGES } from "@/constants/messages";
@@ -20,7 +22,8 @@ import Layout from "../components/layout";
 export default function CustomersPage() {
 
   // Data.
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  //const [customers, setCustomers] = useState<Customer[]>([]);
+  const {customers, setCustomers} = useCustomers();
   
   // For toggling filter visibility.
   const [showFilter, setShowFilter] = useState<boolean>(true);
@@ -48,11 +51,15 @@ export default function CustomersPage() {
       return;
     }
     
+    // Hide filter and show loading label on submit.
     setShowFilter(false);
-
     setLoading(true);
 
-    const result = await fetchCustomersSafe({id: id, forename: forename, surname: surname});
+    const result = await fetchCustomersSafe({
+      id,
+      forename,
+      surname
+    });
 
     if (!result.success) {
       showDialog({
@@ -76,8 +83,16 @@ export default function CustomersPage() {
     setSurname(null);
 
     // Clear array.
-    setCustomers([]);
+    //setCustomers([]);
   };
+
+
+  useEffect(() => {
+
+    if (customers?.length > 0) {
+      setShowFilter(false);
+    }
+  }, [customers]);
 
 
   return (
@@ -154,7 +169,8 @@ export default function CustomersPage() {
         <GenericTable
           data={customers}
           loading={loading}
-          hidden={showFilter}
+          //hidden={showFilter}
+          hidden={customers?.length === 0 && !loading}
           columns={columns}
           getRowKey={(c) => c.id}
           onRowClick={(c) => router.push(`/customers/${c.id}`)}

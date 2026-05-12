@@ -48,11 +48,11 @@ export default function ExpandablePanel({
             />
 
             <button
-                hidden={expanded}
+                //hidden={expanded}
                 style={{...primaryButton, minWidth: "200px", maxWidth: "200px"}}
                 onClick={onToggle}
             >
-                {buttonText}
+                {expanded ? `${buttonText} ↑` : `${buttonText} ↓`}
             </button>
 
             <div hidden={!expanded}>
