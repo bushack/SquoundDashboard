@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups";
-import { fetchRequests } from "@/services/requestService";
+import { fetchRequestsSafe } from "@/services/requestService";
 import { mapToSimpleRequests } from "@/mappers/requestMapper";
 import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200 } from "@/styles/ui";
 import { simpleRequestColumns } from "../components/requests/requestColumns";
@@ -76,11 +76,10 @@ export default function FinderPage() {
       return;
     }
 
-    // Hide filter and show loading label on submit.
+    // Hide filter and show loading label prior to fetching.
     setShowFilter(false);
     setLoading(true);
-
-    const rawRequests = await fetchRequests({
+    const result = await fetchRequestsSafe({
       category_id: categoryId ? categoryId : null,
       material_id: materialId ? materialId : null,
       min_price: minPrice ? minPrice : null,
@@ -90,7 +89,15 @@ export default function FinderPage() {
       depth_mm: depthMm ? depthMm : null,
     });
 
-    setRequests(mapToSimpleRequests(rawRequests));
+    if (!result.success) {
+      showDialog({
+        title: MESSAGES.ERROR_GENERIC_TITLE,
+        message: MESSAGES.ERROR_GENERIC_MSG,
+        onConfirm: () => null
+      });
+    } else if (result.success && result.data) {
+      setRequests(mapToSimpleRequests(result.data));
+    }
 
     setLoading(false);
   };

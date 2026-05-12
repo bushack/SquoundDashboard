@@ -2,6 +2,8 @@
 import { supabase } from "@/lib/supabaseClient";
 import { CustomerFilter } from "@/filters/customerFilter";
 
+import type { SafeResult } from "@/types/safeResult";
+
 
 const TABLE_NAME = "customers";
 
@@ -20,11 +22,6 @@ export type RawCustomer = {
     email?: string,
     notes?: string,
 };
-
-
-export type SafeResult<T> = 
-    | { success: true, data: T }
-    | { success: false, error: unknown };
 
 
 // Note:
@@ -69,7 +66,7 @@ export const fetchCustomersSafe = async (filter: CustomerFilter): Promise<SafeRe
         if (error) {
             return {
                 success: false,
-                error
+                error: error?.message ?? "Customers not found"
             };
         }
 
@@ -81,7 +78,7 @@ export const fetchCustomersSafe = async (filter: CustomerFilter): Promise<SafeRe
     } catch (error: any) {
         return {
             success: false,
-            error
+            error: error instanceof Error ? error.message : "Unknown error"
         };
     }
 };

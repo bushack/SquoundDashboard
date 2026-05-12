@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from "react";
 import { columns } from "./requestColumns";
-import { deleteRequest, fetchRequestsMapped } from "@/lib/requests";
+import { deleteRequestSafe } from "@/services/requestService";
+import { fetchRequestsMapped } from "@/lib/requests";
 import { headingStyle, tabbedCard } from "@/styles/ui";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 import { ToastProvider, useToast } from "@/context/toastContext";
@@ -51,20 +52,18 @@ export default function RequestTable({
             title: MESSAGES.DELETE_REQUEST_TITLE,
             message: MESSAGES.DELETE_REQUEST_MSG,
             onConfirm: async () => {
-                try {
-                    const { error } = await deleteRequest(id);
 
-                    if (error) {
-                        console.error(MESSAGES.ERROR_GENERIC_MSG, error);
-                        showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
-                    } else {
-                        console.log(MESSAGES.DELETE_REQUEST_SUCCESS);
-                        showToast(MESSAGES.DELETE_REQUEST_SUCCESS, "success");
-                        loadRequests(customer.id);
-                    }
-                } catch {
-                    console.error(MESSAGES.DELETE_REQUEST_ERROR, error);
+                const result = await deleteRequestSafe(id);
+
+                if (!result.success) {
+
+                    console.error(MESSAGES.DELETE_REQUEST_ERROR, result.error);
                     showToast(MESSAGES.DELETE_REQUEST_ERROR, "error");
+                } else if (result.success && result.data) {
+                    
+                    console.log(MESSAGES.DELETE_REQUEST_SUCCESS);
+                    showToast(MESSAGES.DELETE_REQUEST_SUCCESS, "success");
+                    loadRequests(customer.id);
                 }
             },
         });

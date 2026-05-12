@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchCategories, fetchMaterials } from "@/lib/lookups";
 import { greaterThan } from "@/lib/money";
-import { addRequest } from "@/lib/requests";
+import { addRequestSafe } from "@/services/requestService";
 import { tabbedCard, dangerButton200, dropdownStyle, headingStyle, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 import { ToastProvider, useToast } from "@/context/toastContext";
@@ -142,7 +142,7 @@ export default function RequestForm({
         try {
             setIsBusy(true);
         
-            const { error } = await addRequest({
+            const result = await addRequestSafe({
                 customer_id: customer.id,
                 category_id: categoryId ? Number(categoryId) : null,
                 material_id: materialId ? Number(materialId) : null,
@@ -156,10 +156,10 @@ export default function RequestForm({
                 max_depth_mm: maxDepthMm ? Number(maxDepthMm) : null
             });
         
-            if (error) {
-                console.error(MESSAGES.CREATE_REQUEST_ERROR, error);
+            if (!result.success) {
+                console.error(MESSAGES.CREATE_REQUEST_ERROR, result.error);
                 showToast(MESSAGES.CREATE_REQUEST_ERROR, "error");
-            } else {
+            } else if (result.success && result.data) {
                 console.log(MESSAGES.CREATE_REQUEST_SUCCESS);
                 showToast(MESSAGES.CREATE_REQUEST_SUCCESS, "success");
         

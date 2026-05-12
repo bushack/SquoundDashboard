@@ -1,8 +1,11 @@
 
 import { supabase } from "@/lib/supabaseClient";
 import { RequestFilter } from "@/filters/requestFilter";
+
 import { buildDimensionFilter, buildPriceFilter } from "@/utils/filters";
 import { applyDimensionFilter, applyPriceFilter } from "@/utils/filters";
+
+import type { SafeResult } from "@/types/safeResult";
 
 
 const TABLE_NAME = "requests";
@@ -37,7 +40,109 @@ export type RawRequest = {
 };
 
 
-export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]> => {
+export const addRequestSafe = async (request: any): Promise<SafeResult<RawRequest>> => {
+  
+  try {
+    const {data, error} = await supabase
+    .from(TABLE_NAME)
+    .insert([request])
+    .select();
+  
+    // On error or no data.
+    if (error || !data) {
+      return {
+        success: false,
+        error: error?.message ?? "Request not created"
+      };
+    }
+
+    // On success.
+    return {
+      success: true,
+      data
+    };
+
+  // On unknown error.
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error"
+    };
+  }
+};
+
+
+export const deleteRequestSafe = async (requestId: number): Promise<SafeResult<RawRequest>> => {
+  
+  try {
+    const {data, error} = await supabase
+    .from(TABLE_NAME)
+    .delete()
+    .eq("id", requestId)
+    .select();
+
+    // On error or no data.
+    if (error || !data) {
+      return {
+        success: false,
+        error: error?.message ?? "Request not deleted"
+      };
+    }
+
+    return {
+      success: true,
+      data
+    };
+
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error"
+    }
+  };
+};
+
+
+export const fetchRequestSafe = async (requestId: number): Promise<SafeResult<RawRequest>> => {
+  
+  try {
+    const {data, error} = await supabase
+    .from(TABLE_NAME)
+    .select(`
+      *,
+      categories (name),
+      materials (name),
+      customer (forename, surname)
+    `)
+    .eq("id", requestId)
+    .single();
+
+    // On error or no data.
+    if (error || !data) {
+      return {
+        success: false,
+        error: error?.message ?? "Request not found"
+      };
+    }
+
+    // On success.
+    return {
+      success: true,
+      data
+    };
+
+  // On unknown error.
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error"
+    };
+  }
+};
+
+
+export const fetchRequestsSafe = async (filter: RequestFilter): Promise<SafeResult<RawRequest[]>> => {
+
   let query = supabase
     .from(TABLE_NAME)
     .select(`
@@ -62,12 +167,28 @@ export const fetchRequests = async (filter: RequestFilter): Promise<RawRequest[]
   query = applyPriceFilter(query, filter.min_price, filter.max_price);
   query = applyDimensionFilter(query, filter.width_mm, filter.height_mm, filter.depth_mm);
 
-  const { data, error } = await query;
+  try {
+    const {data, error} = await query;
 
-  if (error) {
-    console.error(error);
-    throw new Error(error.message);
+    // On error or no data.
+    if (error || !data) {
+      return {
+        success: false,
+        error: error?.message ?? "Requests not found"
+      };
+    }
+
+    // On success.
+    return {
+      success: true,
+      data
+    };
+
+  // On unknown error.
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error"
+    };
   }
-
-  return data ?? [];
 };

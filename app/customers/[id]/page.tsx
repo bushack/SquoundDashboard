@@ -4,13 +4,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { deleteCustomerSafe, fetchCustomerSafe } from "@/lib/customers";
+import { deleteCustomerSafe, fetchCustomerSafe } from "@/lib/customers";  // DEPRECIATED (use customerService)
 import { labelStyle, tabButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 import { ToastProvider, useToast } from "@/context/toastContext";
 
-// UI Components.
+// User interface.
 import Layout from "../../components/layout";
 import CustomerCard from "../../components/customers/customerCard";
 import CustomerForm from "../../components/customers/customerForm";
@@ -30,11 +30,12 @@ export default function CustomerDetailPage() {
 
   const router = useRouter();
 
-  const { showDialog } = useDialog();
-  const { showToast } = useToast();
+  // User interface.
+  const {showDialog} = useDialog();
+  const {showToast} = useToast();
+  const {id} = useParams();
 
-  // Customer data.
-  const { id } = useParams();
+  // Data.
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [cleanAddress, setCleanAddress] = useState<string>();
   const [cleanPhone, setCleanPhone] = useState<string>();
@@ -98,15 +99,12 @@ export default function CustomerDetailPage() {
       return;
     }
 
-    // Load page data.
+    // Load data.
     loadCustomer(numericId);
-    //loadRequests(numericId);
-
   }, [id]);
+  
 
-
-  // Handle delete customer requests.
-  const handleDeleteCustomer = async (id: number) => {
+  const handleDelete = async (id: number) => {
 
     showDialog({
       title: MESSAGES.DELETE_CUSTOMER_TITLE,
@@ -133,8 +131,7 @@ export default function CustomerDetailPage() {
 
 
   const handleCancel = async () => {
-
-    //loadCustomer(id);
+    
     setActiveTab("details");
   };
 
@@ -212,7 +209,7 @@ export default function CustomerDetailPage() {
                 customer={customer}
                 cleanAddress={cleanAddress}
                 cleanPhone={cleanPhone}
-                onDelete={handleDeleteCustomer}
+                onDelete={handleDelete}
               />
             )}
 
