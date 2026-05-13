@@ -43,6 +43,7 @@ export type RawRequest = {
 export const addRequestSafe = async (request: any): Promise<SafeResult<RawRequest>> => {
   
   try {
+    // Note: Inserts new request and returns the new data via select().
     const {data, error} = await supabase
     .from(TABLE_NAME)
     .insert([request])
@@ -50,6 +51,7 @@ export const addRequestSafe = async (request: any): Promise<SafeResult<RawReques
   
     // On error or no data.
     if (error || !data) {
+      console.error("Request not created: ", error ? error : "Unknown error");
       return {
         success: false,
         error: error?.message ?? "Request not created"
@@ -57,6 +59,7 @@ export const addRequestSafe = async (request: any): Promise<SafeResult<RawReques
     }
 
     // On success.
+    console.log(`Request [${data.id}] created`, data);
     return {
       success: true,
       data
@@ -64,6 +67,7 @@ export const addRequestSafe = async (request: any): Promise<SafeResult<RawReques
 
   // On unknown error.
   } catch (error: any) {
+    console.error("Request not created due to unknown error", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error"
@@ -75,6 +79,7 @@ export const addRequestSafe = async (request: any): Promise<SafeResult<RawReques
 export const deleteRequestSafe = async (requestId: number): Promise<SafeResult<RawRequest>> => {
   
   try {
+    // Note: Deletes existing request and returns deleted data via select().
     const {data, error} = await supabase
     .from(TABLE_NAME)
     .delete()
@@ -83,18 +88,24 @@ export const deleteRequestSafe = async (requestId: number): Promise<SafeResult<R
 
     // On error or no data.
     if (error || !data) {
+      console.error(`Request [${requestId}] not deleted`, error ? error : "Unknown error");
       return {
         success: false,
-        error: error?.message ?? "Request not deleted"
+        error: error?.message ?? `Request [${requestId}] not deleted`
       };
     }
 
+    // On success.
+    console.log(`Request [${requestId}] deleted`, data);
     return {
       success: true,
       data
     };
 
+
+  // On unknown error.
   } catch (error: any) {
+    console.error(`Request [${requestId}] not deleted due to unknown error`, error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error"
@@ -112,13 +123,14 @@ export const fetchRequestSafe = async (requestId: number): Promise<SafeResult<Ra
       *,
       categories (name),
       materials (name),
-      customer (forename, surname)
+      customers (forename, surname)
     `)
     .eq("id", requestId)
     .single();
 
     // On error or no data.
     if (error || !data) {
+      console.error(`Request [${requestId}] not found`, error ? error : "Unknown error");
       return {
         success: false,
         error: error?.message ?? "Request not found"
@@ -126,6 +138,7 @@ export const fetchRequestSafe = async (requestId: number): Promise<SafeResult<Ra
     }
 
     // On success.
+    console.log(`Request [${requestId}] found`, data);
     return {
       success: true,
       data
@@ -133,6 +146,7 @@ export const fetchRequestSafe = async (requestId: number): Promise<SafeResult<Ra
 
   // On unknown error.
   } catch (error: any) {
+    console.error(`Request [${requestId}] not found due to unknown error`, error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error"
@@ -172,6 +186,7 @@ export const fetchRequestsSafe = async (filter: RequestFilter): Promise<SafeResu
 
     // On error or no data.
     if (error || !data) {
+      console.error(`Requests not found`, error ? error : "Unknown error");
       return {
         success: false,
         error: error?.message ?? "Requests not found"
@@ -179,6 +194,7 @@ export const fetchRequestsSafe = async (filter: RequestFilter): Promise<SafeResu
     }
 
     // On success.
+    console.log(`Requests found`, data);
     return {
       success: true,
       data
@@ -186,6 +202,47 @@ export const fetchRequestsSafe = async (filter: RequestFilter): Promise<SafeResu
 
   // On unknown error.
   } catch (error: any) {
+    console.error(`Requests not found due to unknown error`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error"
+    };
+  }
+};
+
+
+export const fetchRequestsByCustomerSafe = async (customerId: number): Promise<SafeResult<RawRequest[]>> => {
+
+  try{
+    const {data, error} = await supabase
+    .from(TABLE_NAME)
+    .select(`
+      *,
+      customers (*),
+      categories (name),
+      materials (name)
+    `)
+    .eq("customer_id", customerId);
+
+    // On error or no data.
+    if (error || !data) {
+      console.error(`Requests not found`, error ? error : "Unknown error");
+      return {
+        success: false,
+        error: error?.message ?? "Requests not found"
+      };
+    }
+
+    // On success.
+    console.log(`Requests found`, data);
+    return {
+      success: true,
+      data
+    };
+
+  // On unknown error.
+  } catch (error: any) {
+    console.error(`Requests not found due to unknown error`, error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error"

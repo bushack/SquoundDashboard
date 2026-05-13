@@ -74,14 +74,12 @@ export default function RequestForm({
         console.error(categoryError);
       } else {
         setCategories(categoryData || []);
-        console.log("Successfully loaded category data");
       }
   
       if (materialError) {
         console.error(materialError);
       } else {
         setMaterials(materialData || []);
-        console.log("Successfully loaded material data");
       }
     };
 
@@ -157,10 +155,8 @@ export default function RequestForm({
             });
         
             if (!result.success) {
-                console.error(MESSAGES.CREATE_REQUEST_ERROR, result.error);
                 showToast(MESSAGES.CREATE_REQUEST_ERROR, "error");
             } else if (result.success && result.data) {
-                console.log(MESSAGES.CREATE_REQUEST_SUCCESS);
                 showToast(MESSAGES.CREATE_REQUEST_SUCCESS, "success");
         
                 // Reset form.

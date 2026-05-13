@@ -6,7 +6,6 @@ import { fetchRequestsSafe } from "@/services/requestService";
 import { mapToSimpleRequests } from "@/mappers/requestMapper";
 import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200 } from "@/styles/ui";
 import { simpleRequestColumns } from "../components/requests/requestColumns";
-import { SimpleRequest } from "@/types/request";
 
 import { RequestProvider, useRequests } from "@/context/requestContext";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
@@ -23,6 +22,9 @@ export default function FinderPage() {
 
   // Data.
   const {requests, setRequests} = useRequests();
+
+  // User interface.
+  const {showDialog} = useDialog();
 
   // For toggling filter visibility.
   const [showFilter, setShowFilter] = useState<boolean>(true);
@@ -44,8 +46,6 @@ export default function FinderPage() {
   const [widthMm, setWidthMm] = useState<number | null>(null);
   const [heightMm, setHeightMm] = useState<number | null>(null);
   const [depthMm, setDepthMm] = useState<number | null>(null);
-
-  const {showDialog} = useDialog();
 
 
   // Fetch lookup data when component loads.

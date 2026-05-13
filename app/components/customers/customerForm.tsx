@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { addCustomerSafe, updateCustomerSafe } from "@/lib/customers";
+import { addCustomerSafe, updateCustomerSafe } from "@/services/customerService";
 import { untabbedCard, tabbedCard, dangerButton, inputStyleStretch, labelStyle, primaryButton } from "@/styles/ui";
 
 import { Customer } from "@/types/customer";
@@ -103,40 +103,33 @@ export default function CustomerForm({
             alert("Please enter a valid email address");
             return;
         }
-
+        
         if (editingCustomer) {
             showDialog({
                 title: MESSAGES.EDIT_CUSTOMER_TITLE,
                 message: MESSAGES.EDIT_CUSTOMER_MSG,
                 onConfirm: async () => {
-                    
-                    try {
-                        // Editing existing customer.
-                        const result = await updateCustomerSafe({
-                            id: editingCustomer.id,
-                            forename: forename.trim(),
-                            surname: surname.trim(),
-                            address_line_1: addressLine1 || null,
-                            address_line_2: addressLine2 || null,
-                            town_city: townOrCity || null,
-                            region: region || null,
-                            postcode: postcode || null,
-                            mobile: mobile || null,
-                            email: email || null,
-                            notes: notes || null
-                        });
 
-                        if (!result.success) {
-                            console.error(MESSAGES.ERROR_GENERIC_MSG, error);
-                            showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
-                        } else {
-                            console.log(MESSAGES.EDIT_CUSTOMER_SUCCESS);
-                            showToast(MESSAGES.EDIT_CUSTOMER_SUCCESS, "success");
-                            onSubmit();
-                        }
-                    } catch {
-                        console.error(MESSAGES.EDIT_CUSTOMER_ERROR, error);
+                    // Editing existing customer.
+                    const result = await updateCustomerSafe({
+                        id: editingCustomer.id,
+                        forename: forename.trim(),
+                        surname: surname.trim(),
+                        address_line_1: addressLine1 || null,
+                        address_line_2: addressLine2 || null,
+                        town_city: townOrCity || null,
+                        region: region || null,
+                        postcode: postcode || null,
+                        mobile: mobile || null,
+                        email: email || null,
+                        notes: notes || null
+                    });
+
+                    if (!result.success) {
                         showToast(MESSAGES.EDIT_CUSTOMER_ERROR, "error");
+                    } else if (result.success && result.data) {
+                        showToast(MESSAGES.EDIT_CUSTOMER_SUCCESS, "success");
+                        onSubmit();
                     }
                 },
             });
@@ -144,33 +137,27 @@ export default function CustomerForm({
             showDialog({
                 title: MESSAGES.CREATE_CUSTOMER_TITLE,
                 message: MESSAGES.CREATE_CUSTOMER_MSG,
-                onConfirm: async () => {                
-                    try {
-                        // Adding new customer.
-                        const result = await addCustomerSafe ({
-                            forename: forename.trim(),
-                            surname: surname.trim(),
-                            address_line_1: addressLine1 || null,
-                            address_line_2: addressLine2 || null,
-                            town_city: townOrCity || null,
-                            region: region || null,
-                            postcode: postcode || null,
-                            mobile: mobile || null,
-                            email: email || null,
-                            notes: notes || null
-                        });
+                onConfirm: async () => {
+                    
+                    // Creating new customer.
+                    const result = await addCustomerSafe ({
+                        forename: forename.trim(),
+                        surname: surname.trim(),
+                        address_line_1: addressLine1 || null,
+                        address_line_2: addressLine2 || null,
+                        town_city: townOrCity || null,
+                        region: region || null,
+                        postcode: postcode || null,
+                        mobile: mobile || null,
+                        email: email || null,
+                        notes: notes || null
+                    });
 
-                        if (!result.success) {
-                            console.error(MESSAGES.ERROR_GENERIC_MSG, error);
-                            showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
-                        } else {
-                            console.log(MESSAGES.CREATE_CUSTOMER_SUCCESS);
-                            showToast(MESSAGES.CREATE_CUSTOMER_SUCCESS, "success");
-                            clearForm();
-                        }
-                    } catch {
-                        console.error(MESSAGES.CREATE_CUSTOMER_ERROR, error);
+                    if (!result.success) {
                         showToast(MESSAGES.CREATE_CUSTOMER_ERROR, "error");
+                    } else if (result.success && result.data) {
+                        showToast(MESSAGES.CREATE_CUSTOMER_SUCCESS, "success");
+                        clearForm();
                     }
                 }
             });

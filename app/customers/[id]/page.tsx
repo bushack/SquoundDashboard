@@ -4,8 +4,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { deleteCustomerSafe, fetchCustomerSafe } from "@/lib/customers";  // DEPRECIATED (use customerService)
-import { labelStyle, tabButton } from "@/styles/ui";
+import { deleteCustomerSafe, fetchCustomerSafe } from "@/services/customerService";
+import { textStyle, tabButton } from "@/styles/ui";
 import { theme } from "@/styles/themes";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 import { ToastProvider, useToast } from "@/context/toastContext";
@@ -34,6 +34,7 @@ export default function CustomerDetailPage() {
   const {showDialog} = useDialog();
   const {showToast} = useToast();
   const {id} = useParams();
+  const [loading, setLoading] = useState<boolean>(false);
 
   // Data.
   const [customer, setCustomer] = useState<Customer | null>(null);
@@ -47,12 +48,16 @@ export default function CustomerDetailPage() {
   // Load customer details data.
   const loadCustomer = async (id: number) => {
 
+    setLoading(true);
     const result = await fetchCustomerSafe(id);
 
     if (!result.success) {
-      // TODO: Display UI message.
-    }
-    else if (result.success && result.data) {
+      showDialog({
+          title: MESSAGES.ERROR_GENERIC_TITLE,
+          message: MESSAGES.ERROR_GENERIC_MSG,
+          onConfirm: () => null
+      });
+    } else if (result.success && result.data) {
 
       const customer = result.data;
 
@@ -76,9 +81,9 @@ export default function CustomerDetailPage() {
         customer.mobile ?
         customer.mobile.replace(/\s+/g, "") : ""
       );
-
-      console.log("Successfully loaded customer data");
     }
+
+    setLoading(false);
   };
 
 
@@ -110,20 +115,14 @@ export default function CustomerDetailPage() {
       title: MESSAGES.DELETE_CUSTOMER_TITLE,
       message: MESSAGES.DELETE_CUSTOMER_MSG,
       onConfirm: async () => {
-        try {
-          const result = await deleteCustomerSafe(id);
 
-          if (!result.success) {
-            console.error(MESSAGES.ERROR_GENERIC_MSG);
-            showToast(MESSAGES.ERROR_GENERIC_MSG, "error");
-          } else {
-            console.log(MESSAGES.DELETE_CUSTOMER_SUCCESS);
-            showToast(MESSAGES.DELETE_CUSTOMER_SUCCESS, "success");
-            router.back();
-          }
-        } catch {
-          console.error(MESSAGES.DELETE_CUSTOMER_ERROR, error);
+        const result = await deleteCustomerSafe(id);
+
+        if (!result.success) {
           showToast(MESSAGES.DELETE_CUSTOMER_ERROR, "error");
+        } else if (result.success && result.data) {
+          showToast(MESSAGES.DELETE_CUSTOMER_SUCCESS, "success");
+          router.back();
         }
       },
     });
@@ -141,17 +140,14 @@ export default function CustomerDetailPage() {
     loadCustomer(id);
     setActiveTab("details");
   };
+  
 
-
-  // Render.
   return (
 
-    <Layout
-      headerText={`Home / Customers / ${customer?.forename} ${customer?.surname}`}
-    >
+    <Layout headerText={`Home / Customers / ${customer?.forename} ${customer?.surname}`}>
 
-      {/* Loading label */}
-      {!customer && <p style={labelStyle}>Loading...</p>}
+      {/* Display loading message while awaiting data */}
+      {loading && <div style={textStyle}>Loading...</div>}
 
       {customer && (
         <div>

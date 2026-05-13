@@ -1,3 +1,11 @@
+General
+=======
+
+Migrate Category and Material functions from lib/lookups.ts -> services/xxx.ts
+Complete finder[id] page to allow viewing of individual requests
+When customer is deleted, UI returns to CustomerSearch page but deleted customer is still visible in table
+
+
 
 User Interface
 ==============
