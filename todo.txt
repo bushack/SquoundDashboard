@@ -1,8 +1,9 @@
 General
 =======
 
-Migrate Category and Material functions from lib/lookups.ts -> services/xxx.ts
 Complete finder[id] page to allow viewing of individual requests
+Add ability to delete requests
+Add ability to sort requests
 When customer is deleted, UI returns to CustomerSearch page but deleted customer is still visible in table
 
 
@@ -30,14 +31,6 @@ Remove price range with price and tolerance % ???
 Sorting
 Multi-page results?
 consider renaming SimpleRequest to something that better reflects the fact that it is a composite object
-
-
-
-Request Table (Customer[id] page)
-=================================
-
-Add ability to delete requests
-Add ability to sort requests
 
 
 

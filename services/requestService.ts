@@ -164,7 +164,8 @@ export const fetchRequestsSafe = async (filter: RequestFilter): Promise<SafeResu
       customers (*),
       categories (name),
       materials (name)
-    `);
+    `)
+    .order("surname", {foreignTable: "customers", ascending: true});
 
   // Category.
   if (filter.category_id != null) {
@@ -195,6 +196,7 @@ export const fetchRequestsSafe = async (filter: RequestFilter): Promise<SafeResu
 
     // On success.
     console.log(`Requests found`, data);
+    //console.log(data?.map((r)=>r.customers.surname));
     return {
       success: true,
       data

@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { fetchCategories, fetchMaterials } from "@/lib/lookups";
+import { fetchCategoriesSafe } from "@/services/categoryService";
+import { fetchMaterialsSafe } from "@/services/materialService";
 import { fetchRequestsSafe } from "@/services/requestService";
 import { mapToSimpleRequests } from "@/mappers/requestMapper";
 import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200 } from "@/styles/ui";
@@ -52,11 +53,32 @@ export default function FinderPage() {
   useEffect(() => {
 
     const loadLookups = async () => {
-      const { data: categoryData } = await fetchCategories();
-      const { data: materialData } = await fetchMaterials();
-
-      setCategories(categoryData || []);
-      setMaterials(materialData || []);
+      const [categoryResult, materialResult] = await Promise.all([
+        fetchCategoriesSafe(),
+        fetchMaterialsSafe()
+      ]);
+  
+      if (!categoryResult.success) {
+        setCategories([]);
+        showDialog({
+          title: MESSAGES.ERROR_LOOKUP_TITLE,
+          message: MESSAGES.ERROR_LOOKUP_MSG,
+          onConfirm: () => null
+        });
+      } else if (categoryResult.success && categoryResult.data) {
+        setCategories(categoryResult.data ?? []);
+      }
+  
+      if (!materialResult.success) {
+        setMaterials([]);
+        showDialog({
+          title: MESSAGES.ERROR_LOOKUP_TITLE,
+          message: MESSAGES.ERROR_LOOKUP_MSG,
+          onConfirm: () => null
+        });
+      } else if (materialResult.success && materialResult.data) {
+        setMaterials(materialResult.data ?? []);
+      }
     };
 
     loadLookups();

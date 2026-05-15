@@ -1,10 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { fetchCategories, fetchMaterials } from "@/lib/lookups";
-import { greaterThan } from "@/lib/money";
+import { fetchCategoriesSafe } from "@/services/categoryService";
+import { fetchMaterialsSafe } from "@/services/materialService";
 import { addRequestSafe } from "@/services/requestService";
-import { tabbedCard, dangerButton200, dropdownStyle, headingStyle, inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
+import { greaterThan } from "@/lib/money";
+import { tabbedCard, dangerButton200, dropdownStyle, headingStyle,
+    inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 import { ToastProvider, useToast } from "@/context/toastContext";
 
@@ -32,9 +34,9 @@ export default function RequestForm({
     onSuccess
 }: Properties) {
 
-    // UI.
-    const { showDialog } = useDialog();
-    const { showToast } = useToast();
+    // User interface.
+    const {showDialog} = useDialog();
+    const {showToast} = useToast();
 
     // Request metadata.
     const [categoryId, setCategoryId] = useState("");
@@ -61,25 +63,32 @@ export default function RequestForm({
 
     // Load lookup menu data.
     const loadLookups = async () => {
-  
-      const [
-        { data: categoryData, error: categoryError },
-        { data: materialData, error: materialError }
-      ] = await Promise.all([
-        fetchCategories(),
-        fetchMaterials()
+        
+      const [categoryResult, materialResult] = await Promise.all([
+        fetchCategoriesSafe(),
+        fetchMaterialsSafe()
       ]);
   
-      if (categoryError) {
-        console.error(categoryError);
-      } else {
-        setCategories(categoryData || []);
+      if (!categoryResult.success) {
+        setCategories([]);
+        showDialog({
+          title: MESSAGES.ERROR_LOOKUP_TITLE,
+          message: MESSAGES.ERROR_LOOKUP_MSG,
+          onConfirm: () => null
+        });
+      } else if (categoryResult.success && categoryResult.data) {
+        setCategories(categoryResult.data ?? []);
       }
   
-      if (materialError) {
-        console.error(materialError);
-      } else {
-        setMaterials(materialData || []);
+      if (!materialResult.success) {
+        setMaterials([]);
+        showDialog({
+          title: MESSAGES.ERROR_LOOKUP_TITLE,
+          message: MESSAGES.ERROR_LOOKUP_MSG,
+          onConfirm: () => null
+        });
+      } else if (materialResult.success && materialResult.data) {
+        setMaterials(materialResult.data ?? []);
       }
     };
 
@@ -205,7 +214,7 @@ export default function RequestForm({
                 onSubmit={handleSubmit}
             >
                 {/* Category dropdown menu */}
-                <h3 style={{ ...labelStyle, padding: "3px" }}>Category:</h3>
+                <h3 style={labelStyle}>Category:</h3>
 
                 <select
                     id="category"
@@ -218,13 +227,13 @@ export default function RequestForm({
 
                 {categories.map((c) => (
                     <option key={c.id} value={c.id}>
-                        { c.name }
+                        {c.name}
                     </option>
                 ))}
                 </select>
 
                 {/* Material dropdown menu */}
-                <h3 style={{ ...labelStyle, padding: "3px" }}>Material:</h3>
+                <h3 style={labelStyle}>Material:</h3>
                 
                 <select
                     id="material"
@@ -243,7 +252,7 @@ export default function RequestForm({
                 </select>
 
                 {/* Min Price input */}
-                <h3 style={{...labelStyle, padding: "3px"}}>Price (min/max) (£):</h3>
+                <h3 style={labelStyle}>Price (min/max) (£):</h3>
                 <CurrencyInput
                     id="minPrice"
                     name="minPriceInput"
@@ -262,7 +271,7 @@ export default function RequestForm({
                 />
 
                 {/* Min Width input */}
-                <h3 style={{...labelStyle, padding: "3px"}}>Width (min/max) (mm):</h3>
+                <h3 style={labelStyle}>Width (min/max) (mm):</h3>
                 <input
                     id="minWidth"
                     name="minWidthInput"
@@ -285,7 +294,7 @@ export default function RequestForm({
                 />
 
                 {/* Min Height input */}
-                <h3 style={{...labelStyle, padding: "3px"}}>Height (min/max) (mm):</h3>
+                <h3 style={labelStyle}>Height (min/max) (mm):</h3>
                 <input
                     id="minHeight"
                     name="minHeightInput"
@@ -308,7 +317,7 @@ export default function RequestForm({
                 />
 
                 {/* Min Depth input */}
-                <h3 style={{...labelStyle, padding: "3px"}}>Depth (min/max) (mm):</h3>
+                <h3 style={labelStyle}>Depth (min/max) (mm):</h3>
                 <input
                     id="minDepth"
                     name="minDepthInput"
@@ -331,13 +340,13 @@ export default function RequestForm({
                 />
 
                 {/* Buttons */}
-                <div style={{ marginTop: "10px" }}>
+                <div style={{marginTop: "10px"}}>
                 
                     {/* Submit button */}
                     <button
                         type="submit"
                         disabled={isBusy}
-                        style={ primaryButton200 }
+                        style={primaryButton200}
                     >
                         Submit
                     </button>
@@ -345,7 +354,7 @@ export default function RequestForm({
                     {/* Reset button */}
                     <button
                         type="reset"
-                        style={ dangerButton200 }
+                        style={dangerButton200}
                         onClick={() => handleReset()}
                     >
                         Reset

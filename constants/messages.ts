@@ -54,6 +54,10 @@ export const MESSAGES = {
     CANCEL_EDIT_REQUEST_SUCCESS: "Request update cancelled",
     CANCEL_EDIT_REQUEST_ERROR: "Edit request error",
 
+    // Lookups.
+    ERROR_LOOKUP_TITLE: "Lookup error",
+    ERROR_LOOKUP_MSG: "An error occurred while fetching lookup data",
+
     // Alerts.
     PRICE_VALIDATION_ALERT: "Minimum price cannot be greater than maximum price",
     WIDTH_VALIDATION_ALERT: "Minimum width cannot be greater than maximum width",
