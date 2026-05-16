@@ -11,6 +11,4 @@ export type RequestFilter = {
     width_mm?: number;
     height_mm?: number;
     depth_mm?: number;
-
-    sort_by: string;
 };

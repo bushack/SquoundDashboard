@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchCategoriesSafe } from "@/services/categoryService";
 import { fetchMaterialsSafe } from "@/services/materialService";
-import { fetchRequestsSafe } from "@/services/requestService";
-import { mapToSimpleRequests } from "@/mappers/requestMapper";
+import { getRequests } from "@/services/requestService";
 import { untabbedCard, dropdownStyle, inputStyle200, labelStyle, primaryButton200, dangerButton200 } from "@/styles/ui";
 import { simpleRequestColumns } from "../components/requests/requestColumns";
 
@@ -13,16 +12,47 @@ import { DialogProvider, useDialog } from "@/context/dialogContext";
 
 import { MESSAGES } from "@/constants/messages";
 
+import type { RequestSortOptions } from "@/sorters/requestSorter";
+
 import CurrencyInput from "../components/currency/currencyInput";
 import GenericTable from "../components/generic/genericTable";
 import Layout from "../components/layout";
 import ExpandablePanel from "../components/generic/expandablePanel";
 
 
+type SortPreset =
+  | "customerAsc"
+  | "customerDesc"
+  | "productAsc"
+  | "productDesc";
+
+
+const SORT_MAP: Record<SortPreset, RequestSortOptions> = {
+  
+  customerAsc: {
+    field: "customerName",
+    direction: "asc",
+  },
+  customerDesc: {
+    field: "customerName",
+    direction: "desc",
+  },
+  productAsc: {
+    field: "productType",
+    direction: "asc",
+  },
+  productDesc: {
+    field: "productType",
+    direction: "desc",
+  },
+};
+
+
 export default function FinderPage() {
 
   // Data.
   const {requests, setRequests} = useRequests();
+  const [sortPreset, setSortPreset] = useState<SortPreset>("customerAsc");
 
   // User interface.
   const {showDialog} = useDialog();
@@ -88,7 +118,7 @@ export default function FinderPage() {
   // Fetch filtered data from database.
   const handleSubmit = async () => {
 
-    // Disallow all NULL parameters (avoids fetching all requests).
+    // Disallow all inputs set as NULL (avoids fetching all requests).
     if ([categoryId, materialId, minPrice, maxPrice, widthMm, heightMm, depthMm].every(v => v === null)) {
       showDialog({
         title: MESSAGES.SEARCH_REQUESTS_TITLE,
@@ -101,7 +131,7 @@ export default function FinderPage() {
     // Hide filter and show loading label prior to fetching.
     setShowFilter(false);
     setLoading(true);
-    const result = await fetchRequestsSafe({
+    const result = await getRequests({
       category_id: categoryId ? categoryId : null,
       material_id: materialId ? materialId : null,
       min_price: minPrice ? minPrice : null,
@@ -109,18 +139,19 @@ export default function FinderPage() {
       width_mm: widthMm ? widthMm : null,
       height_mm: heightMm ? heightMm : null,
       depth_mm: depthMm ? depthMm : null,
-    });
+    //}, {field: "customerName", direction: "desc"});
+    }, SORT_MAP[sortPreset]);
 
     if (!result.success) {
+      setRequests([]);
       showDialog({
         title: MESSAGES.ERROR_GENERIC_TITLE,
         message: MESSAGES.ERROR_GENERIC_MSG,
         onConfirm: () => null
       });
-    } else if (result.success && result.data) {
-      setRequests(mapToSimpleRequests(result.data));
-    }
+    } 
 
+    setRequests(result.data ?? []);
     setLoading(false);
   };
 
@@ -149,12 +180,12 @@ export default function FinderPage() {
   };
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     
     if (requests?.length > 0) {
       setShowFilter(false);
     }
-  }, [requests]);
+  }, [requests]);*/
 
 
   return (
@@ -170,8 +201,33 @@ export default function FinderPage() {
           onToggle={() => setShowFilter(!showFilter)}
         >
 
+          {/* Sort By dropdown menu */}
+          <h3 htmlFor="sort" style={labelStyle}>
+            Sort by:
+          </h3>
+          <select
+            id="sort"
+            name="sortOption"
+            value={sortPreset}
+            onChange={(e) => setSortPreset(e.target.value as SortPreset)}
+            style={dropdownStyle}
+          >
+            <option value="customerAsc">
+              Customer Name (A-Z)
+            </option>
+            <option value="customerDesc">
+              Customer Name (Z-A)
+            </option>
+            <option value="productAsc">
+              Product Type (A-Z)
+            </option>
+            <option value="productDesc">
+              Product Type (Z-A)
+            </option>
+          </select>
+
           {/* Category dropdown menu */}
-          <h3 style={labelStyle}>Category:</h3>
+          <h3 style={labelStyle}>Product Type:</h3>
           <select
             id="category"
             name="categorySelect"
@@ -189,7 +245,6 @@ export default function FinderPage() {
           </select>
 
           {/* Material dropdown menu */}
-          <h3 style={labelStyle}>Material:</h3>
           <select
             id="material"
             name="materialSelect"

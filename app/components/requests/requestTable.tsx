@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { simpleRequestColumns } from "./requestColumns";
 import { headingStyle, tabbedCard } from "@/styles/ui";
-import { deleteRequestSafe, fetchRequestsByCustomerSafe } from "@/services/requestService";
+import { deleteRequestSafe, fetchRequestsByCustomerSafe } from "@/repositories/requestRepository";
 import { mapToSimpleRequests } from "@/mappers/requestMapper";
 import { DialogProvider, useDialog } from "@/context/dialogContext";
 import { ToastProvider, useToast } from "@/context/toastContext";

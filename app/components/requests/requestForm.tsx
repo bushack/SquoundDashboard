@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { fetchCategoriesSafe } from "@/services/categoryService";
 import { fetchMaterialsSafe } from "@/services/materialService";
-import { addRequestSafe } from "@/services/requestService";
+import { addRequestSafe } from "@/repositories/requestRepository";
 import { greaterThan } from "@/lib/money";
 import { tabbedCard, dangerButton200, dropdownStyle, headingStyle,
     inputStyle200, labelStyle, primaryButton200 } from "@/styles/ui";
